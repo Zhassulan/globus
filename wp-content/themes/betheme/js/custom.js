@@ -187,7 +187,7 @@ function printCard(card) {
                       <b>Год основания:</b>
                     </div>
                     <div>
-                      ${card.found}
+                      ${new Date(card.found).getFullYear()}
                     </div>
                     <div>
                       <b>Тип учебного заведения:</b>
