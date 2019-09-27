@@ -1,11 +1,10 @@
 <?php
-    $dir = dirname(__FILE__);
-    require_once($dir.'\lib.php');
+    require_once get_theme_root().'/betheme/lib.php';
 ?>
 <div class="search_container">
     
     <div>
-      <h2>43 программы обучения в 9  странах — выберите то, что подходит именно вам</h2>
+      <h2>Большое количество программ обучения во мноих странах — выберите то, что подходит именно вам</h2>
     </div>
 
   <div>

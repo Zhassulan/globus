@@ -1,24 +1,21 @@
 // Zhass JS for search ---->>>
-const OPTION_NULL = 'Не выбрано';
-const URL_ROOT = 'http://localhost/learn/';
-const URL_SEARCH_RESULTS = URL_ROOT + '?page_id=81';
 
-function addNullOptionDropdown(dropDownId)    {
-    jQuery("#" + dropDownId).append(new Option(OPTION_NULL, -1));
+var URL_SEARCH;
+var URL_SEARCH_RESULTS;
+
+if (window.location.origin.indexOf('localhost') != -1)    {
+    URL_SEARCH = window.location.origin + '/learn/';
+    URL_SEARCH_RESULTS = window.location.origin + '/learn/?page_id=81/';
+}   else {
+    URL_SEARCH = window.location.origin + '/poisk/';
+    URL_SEARCH_RESULTS = window.location.origin + '/results/';
 }
+console.log('URL_SEARCH = ' + URL_SEARCH);
+console.log('URL_SEARCH_RESULTS = ' + URL_SEARCH_RESULTS);
 
-function getSortedListByAlpFromArr(arr) {
-    let list = arr.sort(function(a, b){
-        if (a.name < b.name) { return -1; }
-        if (a.name > b.name) { return 1; }
-        return 0;
-    });
-    return list;
-}
-
-function fillDropdown(dropdownId, countries)   {
-    for(let i = 0; i < countries.length; i++) {
-        jQuery("#" + dropdownId).append(new Option(countries[i].name, countries[i].id));
+function fillDropdown(dropdownId, arr)   {
+    for(let i = 0; i < arr.length; i++) {
+        jQuery("#" + dropdownId).append(new Option(arr[i].name, arr[i].id));
     }
 }
 
@@ -35,9 +32,6 @@ function getAll(query, dropdownName)  {
         success: function (data) {
             fillDropdown(dropdownName, data);
             setDropdownState(dropdownName, getDropdownState(dropdownName));
-        },
-        error: function () {
-            return "error";
         }
     });
 }
@@ -67,63 +61,17 @@ function fillAllDropdowns()   {
     getAllPrograms();
     getAllSpecialities();
     getAllLanguages();
-    /*
-    let listCountries = getSortedListByAlpFromArr(COUNTRIES);
-    for(let i = 0; i < listCountries.length; i++) {
-        jQuery("#country").append(new Option(listCountries[i].name, listCountries[i].id));
-    }
-    */
 }
 
 // On load page
 jQuery("document").ready(function() {
-    fillAllDropdowns();
     let currentURL = window.location.href;
-    let idx = currentURL.indexOf(URL_SEARCH_RESULTS);
-    if (idx != -1)  {
+    if (currentURL == URL_SEARCH || currentURL == URL_SEARCH_RESULTS)  {
+        fillAllDropdowns();
+    }
+    if (currentURL == URL_SEARCH_RESULTS)  {
         printSearchResults();
     }
-});
-
-/*
-function addProgDef() {
-    jQuery("#program").children().remove();
-    jQuery.each(programsOptsDef, function (key, val) {
-        jQuery("#program").append(jQuery("<option></option>")
-            .attr("value", key)
-            .text(val));
-    });
-}
-
-function addProgFr() {
-    jQuery("#program").children().remove();
-    jQuery.each(programsOptsFr, function (key, val) {
-        jQuery("#program").append(jQuery("<option></option>")
-            .attr("value", key)
-            .text(val));
-    });
-}
-
-*/
-
-jQuery("#country").on('change', function () {
-    let selectedCountry = jQuery("#country").val();
-    console.log(selectedCountry);
-    /*
-    if (selectedCountry == 'country_fr') {
-        console.log('Loading program values for France..');
-        addProgFr();
-    }
-    */
-    /*
-    var data = {
-        'action': 'my_action',
-        'query': 'get_all_countries'
-    };
-    jQuery.get( window.wp_data.ajax_url, data, function(response) {
-        console.log('Получено с сервера: ' + response);
-    });
-    */
 });
 
 jQuery("#program").on('change', function () {
@@ -133,9 +81,9 @@ jQuery("#program").on('change', function () {
 function on_click_search() {
     console.log('Opening search results page..');
     let currentURL = window.location.href;
-    let idx = currentURL.indexOf(URL_SEARCH_RESULTS);
     saveAllDropdownState();
-    if (idx != -1)  {
+    if (currentURL == URL_SEARCH_RESULTS)  {
+        fillAllDropdowns();
         printSearchResults();
     }   else    {
         window.location = URL_SEARCH_RESULTS;
@@ -145,7 +93,7 @@ function on_click_search() {
 function printSearchResults() {
     console.log('Printing results..');
     printSearchHeader();
-    search(localStorage.getItem("country"), localStorage.getItem("program"), localStorage.getItem("language"));
+    search(localStorage.getItem("country"), localStorage.getItem("program"), localStorage.getItem("specialty"), localStorage.getItem("language"));
 }
 
 function printSearchHeader() {
@@ -230,7 +178,11 @@ function saveDropdownState(dropdownName, value)    {
 }
 
 function getDropdownState(dropdownName) {
-    return localStorage.getItem(dropdownName);
+    if (!localStorage.getItem(dropdownName)) {
+        localStorage.getItem(dropdownName);
+    }   else {
+        return 0;
+    }
 }
 
 function saveAllDropdownState() {
@@ -241,7 +193,6 @@ function saveAllDropdownState() {
 }
 
 function setDropdownState(dropdownName, value) {
-    console.log('Setting dropdown ' + dropdownName + ' value ' + value);
     jQuery("#" + dropdownName).val(value);
 }
 
@@ -252,14 +203,15 @@ function setAllDropdownState()  {
     setDropdownState('language', getDropdownState('language'));
 }
 
-function search(countryId, programId, languageId)  {
+function search(countryId, programId, specialtyId, languageId)  {
     printWait();
-    console.log('Searching with parameters country = ' + countryId + ", program = " + programId + ", language = " + languageId);
+    console.log('Searching with parameters country = ' + countryId + ', program = ' + programId + ', specialty = ' + specialtyId + ', language = ' + languageId);
     var data = {
         'action': 'my_action',
         'query': 'search',
         'country': countryId,
         'program': programId,
+        'specialty': specialtyId,
         'language': languageId
     };
     jQuery.ajax({

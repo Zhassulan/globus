@@ -88,9 +88,9 @@ function getAllLanguages()    {
     return getAll('language');
 }
 
-function search($countryId, $programId, $languageId)    {
+function search($countryId, $programId, $specialtyd, $languageId)    {
     $conn = getConnection();
-    if ($res = $conn->query('CALL search('.$countryId.', '.$programId.', '.$languageId.')'))   {
+    if ($res = $conn->query('CALL search('.$countryId.', '.$programId.', '.$specialtyd.', '.$languageId.')'))   {
         while($row = $res->fetch_assoc()) {
             $arr[] = new SearchResult($row['id'], $row['name'], $row['found'], $row['type'], $row['location'], $row['url'], $row['url_pic'], $row['languages'], $row['programs']);
         }

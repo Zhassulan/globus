@@ -251,7 +251,7 @@ function my_action() {
                 echo getAllLanguages();
                 break;
             case 'search':
-                echo search($_GET['country'], $_GET['program'], $_GET['language']);
+                echo search($_GET['country'], $_GET['program'], $_GET['specialty'], $_GET['language']);
                 break;
         }
     }
