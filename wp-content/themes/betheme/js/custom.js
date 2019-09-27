@@ -253,6 +253,7 @@ function setAllDropdownState()  {
 }
 
 function search(countryId, programId, languageId)  {
+    printWait();
     console.log('Searching with parameters country = ' + countryId + ", program = " + programId + ", language = " + languageId);
     var data = {
         'action': 'my_action',
@@ -267,14 +268,42 @@ function search(countryId, programId, languageId)  {
         url: window.wp_data.ajax_url,
         data: data,
         success: function (data) {
-            for(let i = 0; i < data.length; i++) {
-                printCard(data[i]);
+            if (data)   {
+                clearResults();
+                for(let i = 0; i < data.length; i++) {
+                    printCard(data[i]);
+                }
+            }   else {
+                printNoResults();
             }
         },
         error: function () {
             return "error";
         }
     });
+}
+
+function printNoResults()   {
+    let html = `
+        <div>
+            <h4><b>Ничего не найдено</b></h4>
+        </div>
+    `;
+    setDiv("found_objects", html);
+}
+
+function printWait()   {
+    let html = `
+        <div>
+            <h4><b>Идёт поиск..</b></h4>
+        </div>
+    `;
+    setDiv("found_objects", html);
+}
+
+function clearResults() {
+    let html = ``;
+    setDiv("found_objects", html);
 }
 
 // <<<--------------Zhass JS for search
