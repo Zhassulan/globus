@@ -45,7 +45,7 @@
 
 .card {
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 35% 65%;
     grid-template-rows: auto auto;
     grid-template-areas:
         "img ."
@@ -61,7 +61,7 @@
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-.img {
+.img_my {
     grid-area: img;
     padding: 5px 5px 5px 5px;
 }
@@ -69,17 +69,20 @@
 .desc {
     display: grid;
     grid-template-rows: auto auto;
-    grid-template-areas: "desc_txt" "more_info_btn";
+    grid-template-areas:
+            "desc_txt"
+            "more_info_btn";
     grid-column-gap: 5px;
     grid-row-gap: 5px;
 }
 
 .desc_txt {
     grid-area: desc_txt;
+    font-size: small;
 }
 
 .desc_title {
-    font-size: 1.5em;
+    font-size: 1.2em;
 }
 
 .more_info_btn {

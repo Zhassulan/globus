@@ -67,6 +67,7 @@ function fillAllDropdowns()   {
 jQuery("document").ready(function() {
     let currentURL = window.location.href;
     if (currentURL == URL_SEARCH || currentURL == URL_SEARCH_RESULTS)  {
+        initLocalStorage();
         fillAllDropdowns();
     }
     if (currentURL == URL_SEARCH_RESULTS)  {
@@ -122,13 +123,13 @@ function printCard(card) {
     let html = `
         <div>
           <div class="card">
-            <div class="img">
-              <img src="${card.url_pic}">
+            <div class="img_my">
+              <img src="${emptyString(card.url_pic)}">
             </div>
             <div class="desc">
               <div class="desc_txt">
                 <div class="desc_title">
-                  ${card.name}
+                  ${emptyString(card.name)}
                 </div>
                 <div class="text_container">
                     <div>
@@ -141,31 +142,31 @@ function printCard(card) {
                       <b>Тип учебного заведения:</b>
                     </div>
                     <div>
-                      ${card.type}
+                      ${emptyString(card.type)}
                     </div>
                     <div>
                       <b>Расположение:</b>
                     </div>
                     <div>
-                      ${card.location}
+                      ${emptyString(card.location)}
                     </div>
                     <div>
                       <b>Язык обучения:</b>
                     </div>
                     <div>
-                      ${card.languages}
+                      ${emptyString(card.languages)}
                     </div>
                     <div>
                       <b>Программы:</b>
                     </div>
                     <div>
-                      ${card.programs}
+                      ${emptyString(card.programs)}
                     </div>
                 </div>
               </div>
             </div>
             <div class="mor_info_btn">
-              <a href="${card.url }">Подробно</a>
+              <a href="${emptyString(card.url)}">Подробно</a>
             </div>
           </div>
         </div>`;
@@ -178,11 +179,8 @@ function saveDropdownState(dropdownName, value)    {
 }
 
 function getDropdownState(dropdownName) {
-    if (!localStorage.getItem(dropdownName)) {
-        localStorage.getItem(dropdownName);
-    }   else {
-        return 0;
-    }
+    console.log('Getting dropdown "' + dropdownName + '" state..');
+    return localStorage.getItem(dropdownName);
 }
 
 function saveAllDropdownState() {
@@ -193,6 +191,7 @@ function saveAllDropdownState() {
 }
 
 function setDropdownState(dropdownName, value) {
+    console.log('Setting dropdown "' + dropdownName + '" state to "' + value + '"');
     jQuery("#" + dropdownName).val(value);
 }
 
@@ -258,4 +257,29 @@ function clearResults() {
     setDiv("found_objects", html);
 }
 
+function initLocalStorage() {
+    if (!localStorage.getItem('country')) {
+        console.log('Setting to default value 0 dropdown "country"');
+        saveDropdownState('country', 0);
+    }
+    if (!localStorage.getItem('program')) {
+        console.log('Setting to default value 0 dropdown "program"');
+        saveDropdownState('program', 0);
+    }
+    if (!localStorage.getItem('specialty')) {
+        console.log('Setting to default value 0 dropdown "specialty"');
+        saveDropdownState('specialty', 0);
+    }
+    if (!localStorage.getItem('language')) {
+        console.log('Setting to default value 0 dropdown "language"');
+        saveDropdownState('language', 0);
+    }
+}
+
+function emptyString(str)  {
+    if (str == null)
+        return '';
+    else
+        return str;
+}
 // <<<--------------Zhass JS for search

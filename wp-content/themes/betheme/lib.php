@@ -52,7 +52,7 @@ function getConnection() {
 function testConnection()   {
     $conn = getConnection();
     if ($conn->connect_errno) {
-        return false; //echo "Не удалось подключиться к MySQL: (" . $conn->connect_errno . ") " . $conn->connect_error;
+        return false;
     }   else    {
         mysqli_close ( $conn );
         return true;
