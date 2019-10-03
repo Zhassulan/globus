@@ -68,6 +68,7 @@ jQuery("document").ready(function() {
     let currentURL = window.location.href;
     if (currentURL == URL_SEARCH || currentURL == URL_SEARCH_RESULTS)  {
         initLocalStorage();
+        clearAllDropdowns();
         fillAllDropdowns();
     }
     if (currentURL == URL_SEARCH_RESULTS)  {
@@ -84,6 +85,7 @@ function on_click_search() {
     let currentURL = window.location.href;
     saveAllDropdownState();
     if (currentURL == URL_SEARCH_RESULTS)  {
+        clearAllDropdowns();
         fillAllDropdowns();
         printSearchResults();
     }   else    {
@@ -281,5 +283,17 @@ function emptyString(str)  {
         return '';
     else
         return str;
+}
+
+function clearDropDown(dropDownId)    {
+    console.log('Clearing "' + dropDownId + '" dropdown..');
+    jQuery("#" + dropDownId).empty();
+}
+
+function clearAllDropdowns()    {
+    clearDropDown('country');
+    clearDropDown('program');
+    clearDropDown('specialty');
+    clearDropDown('language');
 }
 // <<<--------------Zhass JS for search
