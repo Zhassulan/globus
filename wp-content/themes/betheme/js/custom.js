@@ -2,6 +2,15 @@
 
 var URL_SEARCH;
 var URL_SEARCH_RESULTS;
+var cards = [];
+var pageSize = 10;
+var currentPage = 1;
+var prevPageIcon = '&laquo;';
+var nextPageIcon = '&raquo;';
+var morePageIcon = '...';
+var nextPageVal = 0;
+var prevPageVal = -1;
+var morePageVal = -2;
 
 if (window.location.origin.indexOf('localhost') != -1)    {
     URL_SEARCH = window.location.origin + '/learn/';
@@ -66,12 +75,16 @@ function fillAllDropdowns()   {
 // On load page
 jQuery("document").ready(function() {
     let currentURL = window.location.href;
-    if (currentURL == URL_SEARCH || currentURL == URL_SEARCH_RESULTS)  {
+    console.log('Current URL: ' + currentURL);
+    if (currentURL.indexOf(URL_SEARCH) != -1)   {
         initLocalStorage();
+    }
+    if (currentURL.indexOf(URL_SEARCH) != -1 || currentURL.indexOf(URL_SEARCH_RESULTS) != -1)  {
         clearAllDropdowns();
         fillAllDropdowns();
     }
-    if (currentURL == URL_SEARCH_RESULTS)  {
+    if (currentURL.indexOf(URL_SEARCH_RESULTS) != -1)  {
+        changeStyle();
         printSearchResults();
     }
 });
@@ -223,9 +236,12 @@ function search(countryId, programId, specialtyId, languageId)  {
         success: function (data) {
             if (data)   {
                 clearResults();
+                cards = data;
+                //console.log(cards);
                 for(let i = 0; i < data.length; i++) {
                     printCard(data[i]);
                 }
+                printPaginator();
             }   else {
                 printNoResults();
             }
@@ -260,6 +276,12 @@ function clearResults() {
 }
 
 function initLocalStorage() {
+    console.log("Init local storage..");
+    saveDropdownState('country', 0);
+    saveDropdownState('program', 0);
+    saveDropdownState('specialty', 0);
+    saveDropdownState('language', 0);
+    /*
     if (!localStorage.getItem('country')) {
         console.log('Setting to default value 0 dropdown "country"');
         saveDropdownState('country', 0);
@@ -276,6 +298,7 @@ function initLocalStorage() {
         console.log('Setting to default value 0 dropdown "language"');
         saveDropdownState('language', 0);
     }
+    */
 }
 
 function emptyString(str)  {
@@ -296,4 +319,50 @@ function clearAllDropdowns()    {
     clearDropDown('specialty');
     clearDropDown('language');
 }
+
+function changeStyle()  {
+    let color = "black";
+    changeColor("dropdown_title_country", color);
+    changeColor("dropdown_title_program", color);
+    changeColor("dropdown_title_specialty", color);
+    changeColor("dropdown_title_language", color);
+}
+
+function changeColor(titleId, color)    {
+    console.log('Changing style..');
+    jQuery("#" + titleId).css("color", color);
+}
+
+function printPaginator()    {
+    console.log("Printing paginator..")
+    let max = cards.length;
+    if (max > pageSize)    {
+        let html;
+        let isActive;
+        html += getLink(prevPageVal, prevPageIcon, false);
+        currentPage = 1;
+        for (let i = 1; i <= pageSize; i++)  {
+            currentPage == i ? isActive = true : isActive = false;
+            html += getLink(i, i, isActive);
+        }
+        html += getLink(morePageVal, morePageIcon, false) + getLink(max, max, false);
+        html += getLink(nextPageVal, nextPageIcon, false);
+        setDiv("pagination", html);
+    }
+}
+
+function getLink(value, text, isActive)    {
+    let link;
+    isActive ? link = '<a class="active">' + text + '</a>' : link = '<a href="#" onclick="pageClick(' + value + ')">' + text + '</a>';
+    return link;
+}
+
+function pageClick(page)    {
+    if (page != morePageIcon)  {
+        currentPage = page;
+        console.log('Clicked page ' + page);
+    }
+
+}
+
 // <<<--------------Zhass JS for search
