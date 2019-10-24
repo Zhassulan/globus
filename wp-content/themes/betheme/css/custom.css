@@ -19,7 +19,7 @@
 
     .dropdown_title {
         grid-area: title;
-        color: gray;
+        color: white;
     }
 
     .dropdown {

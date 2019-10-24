@@ -78,7 +78,7 @@ jQuery("document").ready(function () {
     if (currentURL.indexOf(URL_SEARCH_RESULTS) != -1) {
         changeStyle();
         printSearchResults();
-        printPaginatorNew();
+        printPaginator();
     }
 });
 
