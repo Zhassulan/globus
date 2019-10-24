@@ -3,32 +3,24 @@
 var URL_SEARCH;
 var URL_SEARCH_RESULTS;
 var cards = [];
-var pageSize = 10;
-var currentPage = 1;
-var prevPageIcon = '&laquo;';
-var nextPageIcon = '&raquo;';
-var morePageIcon = '...';
-var nextPageVal = 0;
-var prevPageVal = -1;
-var morePageVal = -2;
 
-if (window.location.origin.indexOf('localhost') != -1)    {
+if (window.location.origin.indexOf('localhost') != -1) {
     URL_SEARCH = window.location.origin + '/learn/';
     URL_SEARCH_RESULTS = window.location.origin + '/learn/?page_id=81/';
-}   else {
+} else {
     URL_SEARCH = window.location.origin + '/poisk/';
     URL_SEARCH_RESULTS = window.location.origin + '/results/';
 }
 console.log('URL_SEARCH = ' + URL_SEARCH);
 console.log('URL_SEARCH_RESULTS = ' + URL_SEARCH_RESULTS);
 
-function fillDropdown(dropdownId, arr)   {
-    for(let i = 0; i < arr.length; i++) {
+function fillDropdown(dropdownId, arr) {
+    for (let i = 0; i < arr.length; i++) {
         jQuery("#" + dropdownId).append(new Option(arr[i].name, arr[i].id));
     }
 }
 
-function getAll(query, dropdownName)  {
+function getAll(query, dropdownName) {
     var data = {
         'action': 'my_action',
         'query': query
@@ -45,27 +37,27 @@ function getAll(query, dropdownName)  {
     });
 }
 
-function getAllCountries()  {
+function getAllCountries() {
     console.log('Loading all countries..');
     getAll('get_all_countries', 'country');
 }
 
-function getAllPrograms()  {
+function getAllPrograms() {
     console.log('Loading all programs..');
     getAll('get_all_programs', 'program');
 }
 
-function getAllSpecialities()  {
+function getAllSpecialities() {
     console.log('Loading all specialities..');
     getAll('get_all_specialities', 'specialty');
 }
 
-function getAllLanguages()  {
+function getAllLanguages() {
     console.log('Loading all languages..');
     getAll('get_all_languages', 'language');
 }
 
-function fillAllDropdowns()   {
+function fillAllDropdowns() {
     getAllCountries();
     getAllPrograms();
     getAllSpecialities();
@@ -73,35 +65,32 @@ function fillAllDropdowns()   {
 }
 
 // On load page
-jQuery("document").ready(function() {
+jQuery("document").ready(function () {
     let currentURL = window.location.href;
     console.log('Current URL: ' + currentURL);
-    if (currentURL.indexOf(URL_SEARCH) != -1)   {
+    if (currentURL.indexOf(URL_SEARCH) != -1) {
         initLocalStorage();
     }
-    if (currentURL.indexOf(URL_SEARCH) != -1 || currentURL.indexOf(URL_SEARCH_RESULTS) != -1)  {
+    if (currentURL.indexOf(URL_SEARCH) != -1 || currentURL.indexOf(URL_SEARCH_RESULTS) != -1) {
         clearAllDropdowns();
         fillAllDropdowns();
     }
-    if (currentURL.indexOf(URL_SEARCH_RESULTS) != -1)  {
+    if (currentURL.indexOf(URL_SEARCH_RESULTS) != -1) {
         changeStyle();
         printSearchResults();
+        printPaginatorNew();
     }
-});
-
-jQuery("#program").on('change', function () {
-    console.log('changed');
 });
 
 function on_click_search() {
     console.log('Opening search results page..');
     let currentURL = window.location.href;
     saveAllDropdownState();
-    if (currentURL == URL_SEARCH_RESULTS)  {
+    if (currentURL == URL_SEARCH_RESULTS) {
         clearAllDropdowns();
         fillAllDropdowns();
         printSearchResults();
-    }   else    {
+    } else {
         window.location = URL_SEARCH_RESULTS;
     }
 }
@@ -134,7 +123,7 @@ function appendDiv(divId, val) {
     jQuery("#" + divId).append(val);
 }
 
-function printCard(card) {
+function getCard(card) {
     let html = `
         <div>
           <div class="card">
@@ -185,10 +174,10 @@ function printCard(card) {
             </div>
           </div>
         </div>`;
-    appendDiv("found_objects", html);
+    return html;
 }
 
-function saveDropdownState(dropdownName, value)    {
+function saveDropdownState(dropdownName, value) {
     localStorage.setItem(dropdownName, value);
     console.log('Saved item in local storage ' + dropdownName + ' = ' + value);
 }
@@ -210,14 +199,7 @@ function setDropdownState(dropdownName, value) {
     jQuery("#" + dropdownName).val(value);
 }
 
-function setAllDropdownState()  {
-    setDropdownState('country', getDropdownState('country'));
-    setDropdownState('program', getDropdownState('program'));
-    setDropdownState('specialty', getDropdownState('specialty'));
-    setDropdownState('language', getDropdownState('language'));
-}
-
-function search(countryId, programId, specialtyId, languageId)  {
+function search(countryId, programId, specialtyId, languageId) {
     printWait();
     console.log('Searching with parameters country = ' + countryId + ', program = ' + programId + ', specialty = ' + specialtyId + ', language = ' + languageId);
     var data = {
@@ -234,15 +216,11 @@ function search(countryId, programId, specialtyId, languageId)  {
         url: window.wp_data.ajax_url,
         data: data,
         success: function (data) {
-            if (data)   {
+            if (data) {
                 clearResults();
                 cards = data;
-                //console.log(cards);
-                for(let i = 0; i < data.length; i++) {
-                    printCard(data[i]);
-                }
                 printPaginator();
-            }   else {
+            } else {
                 printNoResults();
             }
         },
@@ -252,7 +230,11 @@ function search(countryId, programId, specialtyId, languageId)  {
     });
 }
 
-function printNoResults()   {
+function printCard(card) {
+    appendDiv("found_objects", getCard(card));
+}
+
+function printNoResults() {
     let html = `
         <div>
             <h4><b>Ничего не найдено</b></h4>
@@ -261,7 +243,7 @@ function printNoResults()   {
     setDiv("found_objects", html);
 }
 
-function printWait()   {
+function printWait() {
     let html = `
         <div>
             <h4><b>Идёт поиск..</b></h4>
@@ -301,26 +283,26 @@ function initLocalStorage() {
     */
 }
 
-function emptyString(str)  {
+function emptyString(str) {
     if (str == null)
         return '';
     else
         return str;
 }
 
-function clearDropDown(dropDownId)    {
+function clearDropDown(dropDownId) {
     console.log('Clearing "' + dropDownId + '" dropdown..');
     jQuery("#" + dropDownId).empty();
 }
 
-function clearAllDropdowns()    {
+function clearAllDropdowns() {
     clearDropDown('country');
     clearDropDown('program');
     clearDropDown('specialty');
     clearDropDown('language');
 }
 
-function changeStyle()  {
+function changeStyle() {
     let color = "black";
     changeColor("dropdown_title_country", color);
     changeColor("dropdown_title_program", color);
@@ -328,41 +310,26 @@ function changeStyle()  {
     changeColor("dropdown_title_language", color);
 }
 
-function changeColor(titleId, color)    {
+function changeColor(titleId, color) {
     console.log('Changing style..');
     jQuery("#" + titleId).css("color", color);
 }
 
-function printPaginator()    {
-    console.log("Printing paginator..")
-    let max = cards.length;
-    if (max > pageSize)    {
-        let html;
-        let isActive;
-        html += getLink(prevPageVal, prevPageIcon, false);
-        currentPage = 1;
-        for (let i = 1; i <= pageSize; i++)  {
-            currentPage == i ? isActive = true : isActive = false;
-            html += getLink(i, i, isActive);
+function printPaginator() {
+    console.log('Printing paginator..');
+    console.log('Total cards ' + cards.length);
+    jQuery('#pagination-container').pagination({
+        dataSource: cards,
+        callback: function (data, pagination) {
+            clearResults();
+            console.log('Printing cards ' + data.length);
+            jQuery.each(data, function (index, item) {
+                printCard(item);
+            });
+            //$('#data-container').html(html);
         }
-        html += getLink(morePageVal, morePageIcon, false) + getLink(max, max, false);
-        html += getLink(nextPageVal, nextPageIcon, false);
-        setDiv("pagination", html);
-    }
+    })
 }
 
-function getLink(value, text, isActive)    {
-    let link;
-    isActive ? link = '<a class="active">' + text + '</a>' : link = '<a href="#" onclick="pageClick(' + value + ')">' + text + '</a>';
-    return link;
-}
-
-function pageClick(page)    {
-    if (page != morePageIcon)  {
-        currentPage = page;
-        console.log('Clicked page ' + page);
-    }
-
-}
 
 // <<<--------------Zhass JS for search

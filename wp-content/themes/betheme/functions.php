@@ -208,9 +208,11 @@ add_action( 'wp_enqueue_scripts', 'load_scripts');
 
 function load_scripts(){	
   wp_enqueue_script( 'my-custom-script',get_template_directory_uri().'/js/custom.js', array('jquery'), '1.0.0', true);
+  wp_enqueue_script( 'my-custom-script1',get_template_directory_uri().'/js/pagination.js', array('jquery'), '1.0.0', true);
 }
 
 wp_enqueue_style( 'custom', get_template_directory_uri() . '/css/custom.css');
+//wp_enqueue_style( 'custom', get_template_directory_uri() . '/css/pagination.css');
 
 // register shortcode
 add_shortcode('phpinclude', 'PHP_Include');
