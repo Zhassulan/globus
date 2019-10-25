@@ -68,8 +68,16 @@ function fillAllDropdowns() {
 jQuery("document").ready(function () {
     let currentURL = window.location.href;
     console.log('Current URL: ' + currentURL);
+    console.log('Window width ' + jQuery(window).width())
     if (currentURL.indexOf(URL_SEARCH) != -1) {
         initLocalStorage();
+        if (jQuery(window).width() < 500) {
+            console.log('Changing color of title..');
+            jQuery("#dropdown_title_country").css("color", "white");
+            jQuery("#dropdown_title_program").css("color", "white");
+            jQuery("#dropdown_title_specialty").css("color", "white");
+            jQuery("#dropdown_title_language").css("color", "white");
+        }
     }
     if (currentURL.indexOf(URL_SEARCH) != -1 || currentURL.indexOf(URL_SEARCH_RESULTS) != -1) {
         clearAllDropdowns();
@@ -137,33 +145,33 @@ function getCard(card) {
                 </div>
                 <div class="text_container">
                     <div>
-                      <b>Год основания:</b>
+                      <b class="attr_name">Год основания:</b>
                     </div>
                     <div>
                       ${new Date(card.found).getFullYear()}
                     </div>
                     <div>
-                      <b>Тип учебного заведения:</b>
+                      <b class="attr_name">Тип:</b>
                     </div>
                     <div>
                       ${emptyString(card.type)}
                     </div>
                     <div>
-                      <b>Расположение:</b>
+                      <b class="attr_name">Расположение:</b>
                     </div>
                     <div>
                       ${emptyString(card.location)}
                     </div>
                     <div>
-                      <b>Язык обучения:</b>
+                      <b class="attr_name">Язык обучения:</b>
                     </div>
                     <div>
                       ${emptyString(card.languages)}
                     </div>
                     <div>
-                      <b>Программы:</b>
+                      <b class="attr_name">Программы:</b>
                     </div>
-                    <div>
+                    <div class="attr_name">
                       ${emptyString(card.programs)}
                     </div>
                 </div>
