@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: PHP File Includer
-Plugin URI: http://www.sitepoint.com/
-Description: Include PHP files using a shortcode
+Plugin Name: Search panel
+Plugin URI: https://globusedu.kz/
+Description: Поиск университетов
 Version: 1.0
-Author: Craig Buckler
-Author URI: http://optimalworks.net/
-License: Use this how you like!
+Author: Globus Education
+Author URI: https://globusedu.kz/
+License: Private
 */
 
 // include PHP file

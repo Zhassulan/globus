@@ -67,9 +67,9 @@ require_once get_theme_root() . '/betheme/lib.php';
     </div>
 
     <!--<div id="data-container"></div>-->
-    <div class="paginator_container">
+    <div class="cards-paginator-container">
         <div class="pp">
-                <div id="pagination-container"></div>
+                <div id="cards-pagination-container"></div>
         </div>
     </div>
 

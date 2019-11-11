@@ -212,10 +212,10 @@ function load_scripts(){
 }
 
 wp_enqueue_style( 'custom', get_template_directory_uri() . '/css/custom.css');
-//wp_enqueue_style( 'custom', get_template_directory_uri() . '/css/pagination.css');
 
 // register shortcode
 add_shortcode('phpinclude', 'PHP_Include');
+add_shortcode('search_management', 'search_management');
 
 
 // Подключаем локализацию в самом конце подключаемых к выводу скриптов, чтобы скрипт
@@ -259,4 +259,5 @@ function my_action() {
     }
     wp_die();
 }
+
 

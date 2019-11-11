@@ -40,6 +40,27 @@ class SearchResult {
     }
 
 }
+/*
+class Country {
+
+    public $id;
+    public $name_ru;
+    public $name_en;
+    public $name_kk;
+    public $created;
+    public $modified;
+
+    function __construct($id, $name_ru, $name_en, $name_kk, $created, $modified) {
+        $this->id = $id;
+        $this->name_ru = $name_ru;
+        $this->name_en = $name_en;
+        $this->name_kk = $name_kk;
+        $this->created = $created;
+        $this->modified = $modified;
+    }
+
+}
+*/
 
 function getConnection() {
     global $ds;

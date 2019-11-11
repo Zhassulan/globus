@@ -1,111 +1,182 @@
 // Zhass JS for search ---->>>
 
-var URL_SEARCH;
-var URL_SEARCH_RESULTS;
-var cards = [];
+var URL = {
+    SEARCH: '',
+    URL_SEARCH_RESULTS: '',
+    SEARCH_MANAGEMENT: '',
+};
+var COLOR = {
+    WHITE: 'white'
+};
+
+var ARR = {
+    cards: [],
+    countries: [],
+    languages: [],
+    programs: [],
+    specialities: []
+}
 
 if (window.location.origin.indexOf('localhost') != -1) {
-    URL_SEARCH = window.location.origin + '/learn/';
-    URL_SEARCH_RESULTS = window.location.origin + '/learn/?page_id=81/';
+    URL.SEARCH = window.location.origin + '/learn/?page_id=94';
+    URL.SEARCH_RESULTS = window.location.origin + '/learn/?page_id=81';
+    URL.SEARCH_MANAGEMENT = window.location.origin + '/learn/?page_id=86';
 } else {
-    URL_SEARCH = window.location.origin + '/poisk/';
-    URL_SEARCH_RESULTS = window.location.origin + '/results/';
+    URL.SEARCH = window.location.origin + '/poisk';
+    URL.SEARCH_RESULTS = window.location.origin + '/results';
+    URL.SEARCH_MANAGEMENT = window.location.origin + '/data';
 }
-console.log('URL_SEARCH = ' + URL_SEARCH);
-console.log('URL_SEARCH_RESULTS = ' + URL_SEARCH_RESULTS);
 
 function fillDropdown(dropdownId, arr) {
+    console.log('Заполняется dropdown ' + dropdownId + '..');
     for (let i = 0; i < arr.length; i++) {
         jQuery("#" + dropdownId).append(new Option(arr[i].name, arr[i].id));
     }
 }
 
-function getAll(query, dropdownName) {
-    var data = {
-        'action': 'my_action',
-        'query': query
-    };
-    jQuery.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: window.wp_data.ajax_url,
-        data: data,
-        success: function (data) {
-            fillDropdown(dropdownName, data);
-            setDropdownState(dropdownName, getDropdownState(dropdownName));
-        }
+function jsonToStr(data) {
+    return JSON.stringify(data, undefined, 2);
+}
+
+function getData(params) {
+    return new Promise(function (resolve, reject) {
+        jQuery.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: window.wp_data.ajax_url,
+            data: params,
+            error: function () {
+                reject(null);
+            },
+            success: function (data) {
+                resolve(data);
+            }
+        });
     });
 }
 
-function getAllCountries() {
-    console.log('Loading all countries..');
-    getAll('get_all_countries', 'country');
+function getCountries() {
+    console.log('Загрузка из базы всех стран..');
+    let params = { 'action': 'my_action', 'query': 'get_all_countries' };
+    getData(params).then(
+        response => {
+            ARR.countries = response;
+            //console.log('Загруженные страны:\n' + jsonToStr(response));
+            console.log('Загружено стран: ' + response.length);
+            fillDropdown('country', ARR.countries);
+            setDropdownState('country', getDropdownState('country'));
+        },
+        error => console.log('Ошибка при получении списка стран. '  + error)
+    );
 }
 
-function getAllPrograms() {
-    console.log('Loading all programs..');
-    getAll('get_all_programs', 'program');
+function getLanguages() {
+    console.log('Загрузка из базы всех языков..');
+    let params = { 'action': 'my_action', 'query': 'get_all_languages' };
+    getData(params).then(
+        response => {
+            ARR.languages = response;
+            //console.log('Загруженные языки:\n' + jsonToStr(response));
+            console.log('Загружено языков: ' + response.length);
+            fillDropdown('language', ARR.languages);
+            setDropdownState('language', getDropdownState('language'));
+        },
+        error => console.log('Ошибка при получении списка языков. '  + error)
+    );
 }
 
-function getAllSpecialities() {
-    console.log('Loading all specialities..');
-    getAll('get_all_specialities', 'specialty');
+function getPrograms() {
+    console.log('Загрузка из базы всех программ..');
+    let params = { 'action': 'my_action', 'query': 'get_all_programs' };
+    getData(params).then(
+        response => {
+            ARR.programs = response;
+            //console.log('Загруженные программы:\n' + jsonToStr(response));
+            console.log('Загружено программ: ' + response.length);
+            fillDropdown('program', ARR.programs);
+            setDropdownState('program', getDropdownState('program'));
+        },
+        error => console.log('Ошибка при получении списка программ. '  + error)
+    );
 }
 
-function getAllLanguages() {
-    console.log('Loading all languages..');
-    getAll('get_all_languages', 'language');
+function getSpecialities() {
+    console.log('Загрузка из базы всех специальностей..');
+    let params = { 'action': 'my_action', 'query': 'get_all_specialities' };
+    getData(params).then(
+        response => {
+            ARR.specialities = response;
+            //console.log('Загруженные специальности:\n' + jsonToStr(response));
+            console.log('Загружено специальностей: ' + response.length);
+            fillDropdown('specialty', ARR.specialities);
+            setDropdownState('specialty', getDropdownState('specialty'));
+        },
+        error => console.log('Ошибка при получении списка специальностей. ' + error)
+    );
 }
 
 function fillAllDropdowns() {
-    getAllCountries();
-    getAllPrograms();
-    getAllSpecialities();
-    getAllLanguages();
+    getCountries();
+    getPrograms();
+    getLanguages();
+    getSpecialities();
 }
 
 // On load page
 jQuery("document").ready(function () {
     let currentURL = window.location.href;
     console.log('Current URL: ' + currentURL);
-    console.log('Window width ' + jQuery(window).width())
-    if (currentURL.indexOf(URL_SEARCH) != -1) {
+    console.log('URL.SEARCH: ' + URL.SEARCH);
+    console.log('URL.SEARCH_RESULTS: ' + URL.SEARCH_RESULTS);
+    console.log('URL.SEARCH_MANAGEMENT: ' + URL.SEARCH_MANAGEMENT);
+    //console.log('Window width ' + jQuery(window).width())
+    if (currentURL.indexOf(URL.SEARCH_MANAGEMENT) != -1) {
+        console.log('Current page: URL.SEARCH_MANAGEMENT');
+        return;
+    }
+    if (currentURL.indexOf(URL.SEARCH) != -1) {
+        console.log('Current page: URL.SEARCH');
         initLocalStorage();
         if (jQuery(window).width() < 500) {
             console.log('Changing color of title..');
-            jQuery("#dropdown_title_country").css("color", "white");
-            jQuery("#dropdown_title_program").css("color", "white");
-            jQuery("#dropdown_title_specialty").css("color", "white");
-            jQuery("#dropdown_title_language").css("color", "white");
+            jQuery("#dropdown_title_country").css("color", COLOR.WHITE);
+            jQuery("#dropdown_title_program").css("color", COLOR.WHITE);
+            jQuery("#dropdown_title_specialty").css("color", COLOR.WHITE);
+            jQuery("#dropdown_title_language").css("color", COLOR.WHITE);
         }
-    }
-    if (currentURL.indexOf(URL_SEARCH) != -1 || currentURL.indexOf(URL_SEARCH_RESULTS) != -1) {
         clearAllDropdowns();
         fillAllDropdowns();
     }
-    if (currentURL.indexOf(URL_SEARCH_RESULTS) != -1) {
+    if (currentURL.indexOf(URL.SEARCH_RESULTS) != -1) {
+        console.log('Текущая страница: URL.SEARCH_RESULTS');
+        clearAllDropdowns();
+        fillAllDropdowns();
         changeStyle();
         printSearchResults();
-        printPaginator();
+        printResultsPaginator();
     }
 });
 
 function on_click_search() {
-    console.log('Opening search results page..');
+    console.log('Открывается страница поиска..');
     let currentURL = window.location.href;
     saveAllDropdownState();
-    if (currentURL == URL_SEARCH_RESULTS) {
-        clearAllDropdowns();
-        fillAllDropdowns();
+    if (currentURL == URL.SEARCH_RESULTS) {
+        printWait();
+        //clearAllDropdowns();
+        //fillAllDropdowns();
+        setDropdownState('country', getDropdownState('country'));
+        setDropdownState('program', getDropdownState('program'));
+        setDropdownState('specialty', getDropdownState('specialty'));
+        setDropdownState('language', getDropdownState('language'));
         printSearchResults();
     } else {
-        window.location = URL_SEARCH_RESULTS;
+        window.location = URL.SEARCH_RESULTS;
     }
 }
 
 function printSearchResults() {
-    console.log('Printing results..');
-    printSearchHeader();
+    console.log('Печать результатов..');
     search(localStorage.getItem("country"), localStorage.getItem("program"), localStorage.getItem("specialty"), localStorage.getItem("language"));
 }
 
@@ -113,7 +184,7 @@ function printSearchHeader() {
     setDiv("results_container", `
     <div>
         <div>
-            <h3>Результаты поиска:</h3>
+            <h4>Результаты поиска: ${ARR.cards.length}</h4>
         </div>
         <div>
             <div id="found_objects" class="found_objects">
@@ -208,9 +279,8 @@ function setDropdownState(dropdownName, value) {
 }
 
 function search(countryId, programId, specialtyId, languageId) {
-    printWait();
-    console.log('Searching with parameters country = ' + countryId + ', program = ' + programId + ', specialty = ' + specialtyId + ', language = ' + languageId);
-    var data = {
+    console.log('Поиск с параметрами country = ' + countryId + ', program = ' + programId + ', specialty = ' + specialtyId + ', language = ' + languageId);
+    let params = {
         'action': 'my_action',
         'query': 'search',
         'country': countryId,
@@ -218,24 +288,20 @@ function search(countryId, programId, specialtyId, languageId) {
         'specialty': specialtyId,
         'language': languageId
     };
-    jQuery.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: window.wp_data.ajax_url,
-        data: data,
-        success: function (data) {
-            if (data) {
+    getData(params).then(
+        response => {
+            if (response != null)   {
                 clearResults();
-                cards = data;
-                printPaginator();
-            } else {
+                ARR.cards = response;
+                console.log('Количество результатов: ' + ARR.cards.length);
+                printSearchHeader();
+                printResultsPaginator();
+            }   else {
                 printNoResults();
             }
         },
-        error: function () {
-            return "error";
-        }
-    });
+        error => console.log('Ошибка поиска. ' + error)
+    );
 }
 
 function printCard(card) {
@@ -248,7 +314,7 @@ function printNoResults() {
             <h4><b>Ничего не найдено</b></h4>
         </div>
     `;
-    setDiv("found_objects", html);
+    setDiv("results_container", html);
 }
 
 function printWait() {
@@ -257,7 +323,7 @@ function printWait() {
             <h4><b>Идёт поиск..</b></h4>
         </div>
     `;
-    setDiv("found_objects", html);
+    setDiv("results_container", html);
 }
 
 function clearResults() {
@@ -298,16 +364,15 @@ function emptyString(str) {
         return str;
 }
 
-function clearDropDown(dropDownId) {
-    console.log('Clearing "' + dropDownId + '" dropdown..');
-    jQuery("#" + dropDownId).empty();
+function clearDiv(el) {
+    jQuery("#" + el).empty();
 }
 
 function clearAllDropdowns() {
-    clearDropDown('country');
-    clearDropDown('program');
-    clearDropDown('specialty');
-    clearDropDown('language');
+    clearDiv('country');
+    clearDiv('program');
+    clearDiv('specialty');
+    clearDiv('language');
 }
 
 function changeStyle() {
@@ -323,21 +388,48 @@ function changeColor(titleId, color) {
     jQuery("#" + titleId).css("color", color);
 }
 
-function printPaginator() {
-    console.log('Printing paginator..');
-    console.log('Total cards ' + cards.length);
-    jQuery('#pagination-container').pagination({
-        dataSource: cards,
+function printResultsPaginator() {
+    console.log('Печать пагинатора результатов поиска..');
+    jQuery('#cards-pagination-container').pagination({
+        dataSource: ARR.cards,
         callback: function (data, pagination) {
             clearResults();
-            console.log('Printing cards ' + data.length);
             jQuery.each(data, function (index, item) {
                 printCard(item);
             });
-            //$('#data-container').html(html);
         }
     })
 }
 
+function getReferenceTable(arr) {
+    let html = `<table>
+            <caption>Страны</caption>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Действие</th>
+                <th>Действие</th>
+            </tr>`;
+    for (let i = 0; i < arr.length; i++) {
+        let row = `<tr>
+                <td>${arr[i].id}</td>
+                <td>${arr[i].name}</td>
+                <td>
+                    <button onclick="on_click_country_edit(${arr[i].id})">Изменить</button>
+                </td>
+                <td>
+                    <button onclick="on_click_country_del(${arr[i].id})">Удалить</button>
+                </td>
+            </tr>`;
+        html += row;
+    }
+    html += `</table>`;
+    return html;
+}
+
+
+function on_click_country_edit(id) {
+
+}
 
 // <<<--------------Zhass JS for search
