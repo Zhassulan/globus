@@ -7,11 +7,11 @@ $ds = $db;
 class SimpleModel {
 
     public $id;
-    public $name;
+    public $val;
 
-    function __construct($id, $name) {
+    function __construct($id, $val) {
         $this->id = $id;
-        $this->name = $name;
+        $this->val = $val;
     }
 }
 
