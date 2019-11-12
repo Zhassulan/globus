@@ -1,5 +1,6 @@
 // Zhass JS for search ---->>>
 
+var LOG_DB = false;
 /**
  * Перечисление URL
  * @type {{SEARCH: string, URL_SEARCH_RESULTS: string, SEARCH_MANAGEMENT: string}}
@@ -59,6 +60,12 @@ var MSG = {
     ERR_UPDATE_SPECIALTY: 'Ошибка обновления специальности.',
     ERR_UPDATE_LOCATION: 'Ошибка обновления местоположения.',
 
+    ERR_DEL_LANGUAGE: 'Ошибка удаления языка.',
+    ERR_DEL_COUNTRY: 'Ошибка удаления страны.',
+    ERR_DEL_PROGRAM: 'Ошибка удаления программы обучения.',
+    ERR_DEL_SPECIALTY: 'Ошибка удаления специальности.',
+    ERR_DEL_LOCATION: 'Ошибка удаления местоположения.',
+
     NO_DATA_COUNTRIES: 'Нет данных по странам.',
     NO_DATA_LANGUAGES: 'Нет данных по языкам.',
     NO_DATA_SPECIALITIES: 'Нет данных по специальностям.',
@@ -72,6 +79,7 @@ var MSG = {
     NO_DATA_LOCATION: 'Нет данных по местоположению.',
 
     ERR_SEARCH: 'Ошибка поиска.',
+    ERR_LOG: 'Ошибка записи журнала.'
 }
 
 if (window.location.origin.indexOf('localhost') != -1) {
@@ -138,7 +146,6 @@ function getCountries(typ) {
         response => {
             if (response != null)   {
                 ARR.countries = response;
-                //log('Загруженные страны:\n' + jsonToStr(response));
                 log('Загружено стран: ' + response.length);
                 switch (typ) {
                     case TYP_EL.DROPDOWN:
@@ -191,7 +198,7 @@ function getLanguages(typ) {
     );
 }
 
-function getPrograms() {
+function getPrograms(typ) {
     log('Загрузка программ обучения..');
     let params = {'action': 'my_action', 'query': 'get_all_programs'};
     getData(params).then(
@@ -200,8 +207,15 @@ function getPrograms() {
                 ARR.programs = response;
                 //log('Загруженные программы:\n' + jsonToStr(response));
                 log('Загружено программ обучения: ' + response.length);
-                fillDropdown('program', ARR.programs);
-                setDropdownState('program', getDropdownState('program'));
+                switch (typ)    {
+                    case TYP_EL.DROPDOWN:
+                        fillDropdown('program', ARR.programs);
+                        setDropdownState('program', getDropdownState('program'));
+                        break;
+                    case TYP_EL.TABLE:
+                        //printProgramsPaginator();
+                }
+
             }   else {
                 log(MSG.NO_DATA_PROGRAMS);
                 alert(MSG.NO_DATA_PROGRAMS);
@@ -214,7 +228,7 @@ function getPrograms() {
     );
 }
 
-function getSpecialities() {
+function getSpecialities(typ) {
     log('Загрузка специальностей..');
     let params = {'action': 'my_action', 'query': 'get_all_specialities'};
     getData(params).then(
@@ -223,8 +237,15 @@ function getSpecialities() {
                 ARR.specialities = response;
                 //log('Загруженные специальности:\n' + jsonToStr(response));
                 log('Загружено специальностей: ' + response.length);
-                fillDropdown('specialty', ARR.specialities);
-                setDropdownState('specialty', getDropdownState('specialty'));
+                switch (typ)    {
+                    case TYP_EL.DROPDOWN:
+                        fillDropdown('specialty', ARR.specialities);
+                        setDropdownState('specialty', getDropdownState('specialty'));
+                        break;
+                    case TYP_EL.TABLE:
+                        //printSpecialitiesPaginator();
+                        break;
+                }
             }   else {
                 log(MSG.NO_DATA_SPECIALITIES);
                 alert(MSG.NO_DATA_SPECIALITIES);
@@ -763,7 +784,6 @@ function delCheck(id, val) {
     return DLG_RES.CANCEL;
 }
 
-
 function newCountry() {
     let val = getField('input_country_new');
     if (insertCheck(val) == DLG_RES.OK) {
@@ -841,8 +861,8 @@ function delCountry(id, val) {
         getData(params).then(
             response => {
                 if (response.res == '500') {
-                    log('Ошибка удаления страны. ' + response.msg);
-                    alert('Ошибка удаления страны. ' + response.msg);
+                    log(MSG.ERR_DEL_COUNTRY + ' ' + response.msg);
+                    alert(MSG.ERR_DEL_COUNTRY + ' ' + response.msg);
                 }
                 if (response.res == '200') {
                     alert(response.msg);
@@ -850,8 +870,8 @@ function delCountry(id, val) {
                 }
             },
             error => {
-                log('Ошибка удаления страны. ' + error);
-                alert('Ошибка удаления страны. ' + error);
+                log(MSG.ERR_DEL_COUNTRY + ' ' + error);
+                alert(MSG.ERR_DEL_COUNTRY + ' ' + error);
             }
         );
     }
@@ -877,8 +897,8 @@ function newLanguage() {
         getData(params).then(
             response => {
                 if (response.res == '500') {
-                    log('Ошибка добавления нового языка. ' + response.msg);
-                    alert('Ошибка добавления нового языка. ' + response.msg);
+                    log(MSG.ERR_ADD_LANGUAGE + ' ' + response.msg);
+                    alert(MSG.ERR_ADD_LANGUAGE + ' ' + response.msg);
                 }
                 if (response.res == '200') {
                     alert(response.msg);
@@ -887,7 +907,8 @@ function newLanguage() {
                 }
             },
             error => {
-                alert('Ошибка добавления нового языка.! ' + error);
+                log(MSG.ERR_ADD_LANGUAGE + ' ' + error);
+                alert(MSG.ERR_ADD_LANGUAGE + ' ' + error);
             }
         );
     }
@@ -910,7 +931,8 @@ function updateLanguage() {
         getData(params).then(
             response => {
                 if (response.res == '500') {
-                    alert('Ошибка! ' + response.msg);
+                    log(MSG.ERR_UPDATE_LANGUAGE + ' ' + response.msg);
+                    alert(MSG.ERR_UPDATE_LANGUAGE + ' ' + response.msg);
                 }
                 if (response.res == '200') {
                     alert(response.msg);
@@ -918,7 +940,10 @@ function updateLanguage() {
                     getLanguages(TYP_EL.TABLE);
                 }
             },
-            error => alert('Ошибка! ' + error)
+            error => {
+                log(MSG.ERR_UPDATE_LANGUAGE + ' ' + error);
+                alert(MSG.ERR_UPDATE_LANGUAGE + ' ' + error);
+            }
         );
     }
 }
@@ -935,19 +960,27 @@ function delLanguage(id, val) {
         getData(params).then(
             response => {
                 if (response.res == '500') {
-                    alert('Ошибка! ' + response.msg);
+                    log(MSG.ERR_DEL_LANGUAGE + ' ' + response.msg);
+                    alert(MSG.ERR_DEL_LANGUAGE + ' ' + response.msg);
                 }
                 if (response.res == '200') {
                     alert(response.msg);
                     getLanguages(TYP_EL.TABLE);
                 }
             },
-            error => alert('Ошибка! ' + error)
+            error => {
+                log(MSG.ERR_DEL_LANGUAGE + ' ' + error);
+                alert(MSG.ERR_DEL_LANGUAGE + ' ' + error);
+            }
         );
     }
 }
 
 function log(msg)  {
+    if (!LOG_DB)    {
+        console.log(msg);
+        return;
+    }
     let params = {
         'action': 'my_action',
         'query': 'insertTxt',
@@ -958,13 +991,15 @@ function log(msg)  {
     getData(params).then(
         response => {
             if (response.res == '500') {
-                alert('Ошибка! ' + response.msg);
+                alert(MSG.ERR_LOG + ' ' + response.msg);
             }
             if (response.res == '200') {
                 console.log(msg);
             }
         },
-        error => alert('Ошибка! ' + error)
+        error => {
+            alert(MSG.ERR_LOG + ' ' + error);
+        }
     );
 }
 

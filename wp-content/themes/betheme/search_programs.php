@@ -36,7 +36,6 @@ require_once get_theme_root() . '/betheme/lib.php';
                 </div>
                 <div class="dropdown">
                     <select name="Специальность" id="specialty">
-
                     </select>
                 </div>
             </div>
