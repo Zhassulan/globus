@@ -33,6 +33,10 @@ var DLG_RES = {
     OK: 0,
     CANCEL: 1
 }
+var TYP_TABLE = {
+    COUNTRY: 0,
+    LANGUAGE: 1,
+}
 
 if (window.location.origin.indexOf('localhost') != -1) {
     URL.SEARCH = window.location.origin + '/learn/?page_id=94';
@@ -100,21 +104,21 @@ function getCountries(typ) {
             //console.log('Загруженные страны:\n' + jsonToStr(response));
             console.log('Загружено стран: ' + response.length);
             switch (typ) {
-                case TYP_EL.DROPDOWN: {
+                case TYP_EL.DROPDOWN:
                     fillDropdown('country', ARR.countries);
                     setDropdownState('country', getDropdownState('country'));
-                }
-                case TYP_EL.TABLE: {
+                    break;
+                case TYP_EL.TABLE:
                     printCountriesPaginator();
-                }
+                    break;
             }
-
         },
         error => console.log('Ошибка при получении списка стран. ' + error)
     );
 }
 
 function getLanguages(typ) {
+    console.log('typ = ' + typ);
     console.log('Загрузка из базы всех языков..');
     let params = {'action': 'my_action', 'query': 'get_all_languages'};
     getData(params).then(
@@ -123,13 +127,13 @@ function getLanguages(typ) {
             //console.log('Загруженные языки:\n' + jsonToStr(response));
             console.log('Загружено языков: ' + response.length);
             switch (typ) {
-                case TYP_EL.DROPDOWN: {
+                case TYP_EL.DROPDOWN:
                     fillDropdown('language', ARR.languages);
                     setDropdownState('language', getDropdownState('language'));
-                }
-                case TYP_EL.TABLE: {
+                    break;
+                case TYP_EL.TABLE:
                     printLanguagesPaginator();
-                }
+                    break;
             }
         },
         error => console.log('Ошибка при получении списка языков. ' + error)
@@ -147,7 +151,7 @@ function getPrograms() {
             fillDropdown('program', ARR.programs);
             setDropdownState('program', getDropdownState('program'));
         },
-        alert('Ошибка! ' + error)
+        error => alert('Ошибка! ' + error)
     );
 }
 
@@ -162,7 +166,7 @@ function getSpecialities() {
             fillDropdown('specialty', ARR.specialities);
             setDropdownState('specialty', getDropdownState('specialty'));
         },
-        alert('Ошибка! ' + error)
+        error => alert('Ошибка! ' + error)
     );
 }
 
@@ -332,15 +336,15 @@ function getDropdownState(dropdownName) {
 }
 
 function saveAllDropdownState() {
-    saveDropdownState('country', jQuery("#country").val());
-    saveDropdownState('program', jQuery("#program").val());
-    saveDropdownState('specialty', jQuery("#specialty").val());
-    saveDropdownState('language', jQuery("#language").val());
+    saveDropdownState('country', getField('country'));
+    saveDropdownState('program', getField('program'));
+    saveDropdownState('specialty', getField('specialty'));
+    saveDropdownState('language', getField('language'));
 }
 
 function setDropdownState(dropdownName, value) {
     console.log('Установка dropdown "' + dropdownName + '" значение "' + value + '"');
-    jQuery("#" + dropdownName).val(value);
+    setField(dropdownName, value);
 }
 
 function search(countryId, programId, specialtyId, languageId) {
@@ -574,12 +578,16 @@ function getColById(table, col, id) {
 }
 
 function setField(field, val) {
-    console.log('Установка поля ' + field + ' в значение ' + val + '..');
+    //console.log('Установка поля ' + field + ' в значение ' + val + '..');
     jQuery("#" + field).val(val);
 }
 
 function emptyField(field) {
     jQuery("#" + field).val('');
+}
+
+function getField(field) {
+    return jQuery("#" + field).val();
 }
 
 function on_click_update_country() {
@@ -641,8 +649,9 @@ function delCheck(id, val) {
     return DLG_RES.CANCEL;
 }
 
+
 function newCountry() {
-    let val = jQuery("#input_country_new").val();
+    let val = getField('input_country_new');
     if (insertCheck(val) == DLG_RES.OK) {
         console.log('Вставка страны "' + val + '"..');
         let params = {
@@ -659,7 +668,7 @@ function newCountry() {
                 }
                 if (response.res == '200') {
                     alert(response.msg);
-                    jQuery("#input_country_new").val('');
+                    emptyField('input_country_new');
                     getCountries(TYP_EL.TABLE);
                 }
             },
@@ -669,9 +678,9 @@ function newCountry() {
 }
 
 function updateCountry() {
-    let val = jQuery("#input_country_edit").val();
-    let id = jQuery("#input_country_edit_id").val();
-    let oldVal = jQuery("#input_country_edit_old_val").val();
+    let val = getField('input_country_edit');
+    let id = getField('input_country_edit_id');
+    let oldVal = getField('input_country_edit_old_val');
     if (updateCheck(id, val, oldVal) == DLG_RES.OK) {
         console.log('Обновляется страна ID ' + id + ' на значение "' + val + '"..');
         let params = {
