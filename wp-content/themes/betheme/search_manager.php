@@ -40,10 +40,10 @@ require_once get_theme_root() . '/betheme/lib.php';
 
     <hr>
 
-    <div id="language_table"></div>
-    <div class="language-paginator-container">
+    <div id="lang_table"></div>
+    <div class="lang-paginator-container">
         <div class="pp">
-            <div id="language-pagination-container"></div>
+            <div id="lang-pagination-container"></div>
         </div>
     </div>
     <div class="inputs">
@@ -69,6 +69,42 @@ require_once get_theme_root() . '/betheme/lib.php';
                 </div>
                 <div>
                     <button type="button" onclick="on_click_update_lang()">Обновить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="prg_table"></div>
+    <div class="prg-paginator-container">
+        <div class="pp">
+            <div id="prg-pagination-container"></div>
+        </div>
+    </div>
+    <div class="inputs">
+        <div>
+            <div class="add_edit_field">
+                <div>Новая программа обучения</div>
+                <div>
+                    <input type="text" id="input_prg_new" placeholder="Введите название" value="">
+                    <input type="hidden" id="input_prg_new_val" value="">
+                </div>
+                <div>
+                    <button type="button" onclick="on_click_new_prg()">Добавить</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="add_edit_field">
+                <div>Изменить программу обучения</div>
+                <div>
+                    <input type="text" id="input_prg_edit" value="">
+                    <input type="hidden" id="input_prg_edit_id" value="">
+                    <input type="hidden" id="input_prg_edit_old_val" value="">
+                </div>
+                <div>
+                    <button type="button" onclick="on_click_update_prg()">Обновить</button>
                 </div>
             </div>
         </div>

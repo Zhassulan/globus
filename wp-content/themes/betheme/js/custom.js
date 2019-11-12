@@ -100,7 +100,7 @@ if (window.location.origin.indexOf('localhost') != -1) {
 function fillDropdown(dropdownId, arr) {
     log('Заполняется dropdown "' + dropdownId + '"..');
     for (let i = 0; i < arr.length; i++) {
-        jQuery("#" + dropdownId).append(new Option(arr[i].name, arr[i].id));
+        jQuery("#" + dropdownId).append(new Option(arr[i].val, arr[i].id));
     }
 }
 
@@ -213,9 +213,8 @@ function getPrograms(typ) {
                         setDropdownState('program', getDropdownState('program'));
                         break;
                     case TYP_EL.TABLE:
-                        //printProgramsPaginator();
+                        printProgramsPaginator();
                 }
-
             }   else {
                 log(MSG.NO_DATA_PROGRAMS);
                 alert(MSG.NO_DATA_PROGRAMS);
@@ -276,6 +275,7 @@ jQuery("document").ready(function () {
         log('Текущая страница: URL.SEARCH_MANAGEMENT');
         getCountries(TYP_EL.TABLE);
         getLanguages(TYP_EL.TABLE);
+        getPrograms(TYP_EL.TABLE);
     }
     if (currentURL.indexOf(URL.SEARCH) != -1) {
         log('Текущая страница: URL.SEARCH');
@@ -561,8 +561,8 @@ function printCountriesPaginator() {
  */
 function getLangRefTable(arr) {
     log('Получение HTML фрагмента для таблицы языков..');
-    let html = `<table id="language_table_data">
-            <caption><h4>Языки</h4></caption>
+    let html = `<table id="lang_table_data">
+            <caption><h4>Языки (${ARR.languages.length})</h4></caption>
             <tr>
                 <th>ID</th>
                 <th>Название</th>
@@ -587,7 +587,7 @@ function getLangRefTable(arr) {
 function getCountryRefTable(arr) {
     log('Получение HTML фрагмента для таблицы стран..');
     let html = `<table id="country_table_data">
-            <caption><h4>Страны</h4></caption>
+            <caption><h4>Страны (${ARR.countries.length})</h4></caption>
             <tr>
                 <th>ID</th>
                 <th>Название</th>
@@ -614,10 +614,10 @@ function getCountryRefTable(arr) {
  */
 function printLanguagesPaginator() {
     log('Печать пагинатора языков..');
-    jQuery('#language-pagination-container').pagination({
+    jQuery('#lang-pagination-container').pagination({
         dataSource: ARR.languages,
         callback: function (data, pagination) {
-            setDiv('language_table', getLangRefTable(data));
+            setDiv('lang_table', getLangRefTable(data));
         }
     })
 }
@@ -886,7 +886,7 @@ function emptyEditLanguage() {
 function newLanguage() {
     let val = getField('input_lang_new');
     if (insertCheck(val) == DLG_RES.OK) {
-        log('Добавления нового языка "' + val + '"..');
+        log('Добавление нового языка "' + val + '"..');
         let params = {
             'action': 'my_action',
             'query': 'insertTxt',
@@ -1001,6 +1001,140 @@ function log(msg)  {
             alert(MSG.ERR_LOG + ' ' + error);
         }
     );
+}
+
+function emptyEditProgram() {
+    emptyField("input_prg_edit");
+    emptyField("input_prg_edit_id");
+    emptyField("input_prg_edit_old_val");
+}
+
+function newProgram() {
+    let val = getField('input_prg_new');
+    if (insertCheck(val) == DLG_RES.OK) {
+        log('Добавление новой программмы "' + val + '"..');
+        let params = {
+            'action': 'my_action',
+            'query': 'insertTxt',
+            'table': 'program',
+            'col': 'name_ru',
+            'val': val,
+        };
+        getData(params).then(
+            response => {
+                if (response.res == '500') {
+                    log(MSG.ERR_ADD_PROGRAM + ' ' + response.msg);
+                    alert(MSG.ERR_ADD_PROGRAM + ' ' + response.msg);
+                }
+                if (response.res == '200') {
+                    alert(response.msg);
+                    emptyField('input_prg_new');
+                    getPrograms(TYP_EL.TABLE);
+                }
+            },
+            error => {
+                log(MSG.ERR_ADD_PROGRAM + ' ' + error);
+                alert(MSG.ERR_ADD_PROGRAM + ' ' + error);
+            }
+        );
+    }
+}
+
+function updateProgram() {
+    let val = getField('input_prg_edit');
+    let id = getField('input_prg_edit_id');
+    let oldVal = getField('input_prg_edit_old_val');
+    if (updateCheck(id, val, oldVal) == DLG_RES.OK) {
+        log('Обновляется программа ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
+        let params = {
+            'action': 'my_action',
+            'query': 'update_txt_col_by_id',
+            'table': 'program',
+            'id': id,
+            'val': val,
+            'col': 'name_ru'
+        };
+        getData(params).then(
+            response => {
+                if (response.res == '500') {
+                    log(MSG.ERR_UPDATE_PROGRAM + ' ' + response.msg);
+                    alert(MSG.ERR_UPDATE_PROGRAM + ' ' + response.msg);
+                }
+                if (response.res == '200') {
+                    alert(response.msg);
+                    emptyEditLanguage();
+                    getLanguages(TYP_EL.TABLE);
+                }
+            },
+            error => {
+                log(MSG.ERR_UPDATE_PROGRAM + ' ' + error);
+                alert(MSG.ERR_UPDATE_PROGRAM + ' ' + error);
+            }
+        );
+    }
+}
+
+function delProgram(id, val) {
+    if (delCheck(id, val) == DLG_RES.OK) {
+        log('Удаляется программа обучения ID ' + id + ' "' + val + '"..');
+        let params = {
+            'action': 'my_action',
+            'query': 'del',
+            'table': 'program',
+            'id': id
+        };
+        getData(params).then(
+            response => {
+                if (response.res == '500') {
+                    log(MSG.ERR_DEL_PROGRAM + ' ' + response.msg);
+                    alert(MSG.ERR_DEL_PROGRAM + ' ' + response.msg);
+                }
+                if (response.res == '200') {
+                    alert(response.msg);
+                    getPrograms(TYP_EL.TABLE);
+                }
+            },
+            error => {
+                log(MSG.ERR_DEL_PROGRAM + ' ' + error);
+                alert(MSG.ERR_DEL_PROGRAM + ' ' + error);
+            }
+        );
+    }
+}
+
+function printProgramsPaginator() {
+    log('Печать пагинатора программ обучения..');
+    jQuery('#prg-pagination-container').pagination({
+        dataSource: ARR.programs,
+        callback: function (data, pagination) {
+            setDiv('prg_table', getProgramRefTable(data));
+        }
+    })
+}
+
+function getProgramRefTable(arr) {
+    log('Получение HTML фрагмента для таблицы программ..');
+    let html = `<table id="prg_table_data">
+            <caption><h4>Программы обучения (${ARR.programs.length})</h4></caption>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Действие</th>
+                <th>Действие</th>
+            </tr>`;
+    for (let i = 0; i < arr.length; i++) {
+        html += `<tr>
+                <td>${arr[i].id}</td>
+                <td>${arr[i].val}</td>
+                <td>
+                    <button onclick="on_click_program_edit(${arr[i].id})">Изменить</button>
+                </td>
+                <td>
+                    <button onclick="on_click_program_del(${arr[i].id}, '${arr[i].val}')">Удалить</button>
+                </td>
+            </tr>`;
+    }
+    return html + `</table>`;
 }
 
 // <<<--------------Zhass JS for search
