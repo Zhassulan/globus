@@ -15,6 +15,17 @@ class SimpleModel {
     }
 }
 
+class Result {
+
+    public $res;
+    public $msg;
+
+    function __construct($res, $msg) {
+        $this->res = $res;
+        $this->msg = $msg;
+    }
+}
+
 class SearchResult {
 
     public $id;
@@ -83,7 +94,7 @@ function testConnection()   {
 function getAll($tableName)    {
     $arr[] = new SimpleModel(0, 'Не выбрано');
     $conn = getConnection();
-    if ($res = $conn->query ( 'SELECT p.id, p.name_ru from '.$tableName.' p order by p.name_ru asc;'))   {
+    if ($res = $conn->query ( 'SELECT id, name_ru from '.$tableName.' order by name_ru asc;'))   {
         while($row = $res->fetch_row()) {
             $arr[] = new SimpleModel($row[0], $row[1]);
         }
@@ -119,6 +130,58 @@ function search($countryId, $programId, $specialtyd, $languageId)    {
     }
     mysqli_close($conn);
     return json_encode($arr, JSON_UNESCAPED_UNICODE);
+}
+
+function getColById($table, $id, $col)   {
+    $val = null;
+    $conn = getConnection();
+    if ($res = $conn->query ( 'SELECT '.$col.' from '.$table.' where id = '.$id))   {
+        while($row = $res->fetch_row()) {
+            $val = new SimpleModel($id, $row[0]);
+        }
+        $res->close();
+    }
+    mysqli_close($conn);
+    return json_encode($val, JSON_UNESCAPED_UNICODE);
+}
+
+function updateTxtColById($table, $id, $col, $val)   {
+    $conn = getConnection();
+    $sql = 'UPDATE '.$table.' SET '.$col.'=\''.$val.'\' where id = '.$id;
+    $val = null;
+    if ($conn->query($sql) === TRUE) {
+        $val = new Result('200', 'Запись успешно обновлена.');
+    } else {
+        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+    }
+    mysqli_close($conn);
+    return json_encode($val, JSON_UNESCAPED_UNICODE);
+}
+
+function insertTxt($table, $col, $val)   {
+    $conn = getConnection();
+    $sql = 'INSERT INTO '.$table.' ('.$col.') values (\''.$val.'\')';
+    $val = null;
+    if ($conn->query($sql) === TRUE) {
+        $val = new Result('200', 'Запись успешно создана.');
+    } else {
+        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+    }
+    mysqli_close($conn);
+    return json_encode($val, JSON_UNESCAPED_UNICODE);
+}
+
+function del($table, $id)   {
+    $conn = getConnection();
+    $sql = 'DELETE FROM '.$table.' WHERE id = '.$id;
+    $val = null;
+    if ($conn->query($sql) === TRUE) {
+        $val = new Result('200', 'Запись успешно удалена.');
+    } else {
+        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+    }
+    mysqli_close($conn);
+    return json_encode($val, JSON_UNESCAPED_UNICODE);
 }
 
 ?>

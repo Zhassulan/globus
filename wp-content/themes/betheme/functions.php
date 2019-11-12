@@ -255,6 +255,18 @@ function my_action() {
             case 'search':
                 echo search($_GET['country'], $_GET['program'], $_GET['specialty'], $_GET['language']);
                 break;
+            case 'get_col_by_id':
+                echo getColById($_GET['table'], $_GET['id'], $_GET['col']);
+                break;
+            case 'update_txt_col_by_id':
+                echo updateTxtColById($_GET['table'], $_GET['id'], $_GET['col'], $_GET['val']);
+                break;
+            case 'insertTxt':
+                echo insertTxt($_GET['table'], $_GET['col'], $_GET['val']);
+                break;
+            case 'del':
+                echo del($_GET['table'], $_GET['id']);
+                break;
         }
     }
     wp_die();
