@@ -4,7 +4,10 @@ global $ds;
 require_once get_theme_root().'/betheme/config/config.php';
 $ds = $db;
 
-class SimpleModel {
+/**
+ * Class RefModel модель данных справочника
+ */
+class Reference {
 
     public $id;
     public $val;
@@ -13,6 +16,59 @@ class SimpleModel {
         $this->id = $id;
         $this->val = $val;
     }
+}
+
+/**
+ * Class University модель данных университета
+ */
+class University {
+
+    public $id;
+    public $name_ru;
+    public $name_en;
+    public $name_kk;
+    public $found;
+    public $url;
+    public $url_pic;
+
+    public $country_id;
+    public $type_id;
+    public $location_id;
+
+    public $created;
+    public $modified;
+
+    /**
+     * University constructor.
+     * @param $id
+     * @param $name_ru
+     * @param $name_en
+     * @param $name_kk
+     * @param $found
+     * @param $url
+     * @param $url_pic
+     * @param $country_id
+     * @param $type_id
+     * @param $location_id
+     * @param $created
+     * @param $modified
+     */
+    public function __construct($id, $name_ru, $name_en, $name_kk, $found, $url, $url_pic, $country_id, $type_id, $location_id, $created, $modified)
+    {
+        $this->id = $id;
+        $this->name_ru = $name_ru;
+        $this->name_en = $name_en;
+        $this->name_kk = $name_kk;
+        $this->found = $found;
+        $this->url = $url;
+        $this->url_pic = $url_pic;
+        $this->country_id = $country_id;
+        $this->type_id = $type_id;
+        $this->location_id = $location_id;
+        $this->created = $created;
+        $this->modified = $modified;
+    }
+
 }
 
 class Result {
@@ -26,6 +82,9 @@ class Result {
     }
 }
 
+/**
+ * Class SearchResult модель данных результатов поиска
+ */
 class SearchResult {
 
     public $id;
@@ -51,27 +110,6 @@ class SearchResult {
     }
 
 }
-/*
-class Country {
-
-    public $id;
-    public $name_ru;
-    public $name_en;
-    public $name_kk;
-    public $created;
-    public $modified;
-
-    function __construct($id, $name_ru, $name_en, $name_kk, $created, $modified) {
-        $this->id = $id;
-        $this->name_ru = $name_ru;
-        $this->name_en = $name_en;
-        $this->name_kk = $name_kk;
-        $this->created = $created;
-        $this->modified = $modified;
-    }
-
-}
-*/
 
 function getConnection() {
     global $ds;
@@ -91,12 +129,12 @@ function testConnection()   {
     }
 }
 
-function getAll($tableName)    {
-    $arr[] = new SimpleModel(0, 'Не выбрано');
+function getRefAll($tableName)    {
+    $arr[] = new Reference(0, 'Не выбрано');
     $conn = getConnection();
     if ($res = $conn->query ( 'SELECT id, name_ru from '.$tableName.' order by name_ru asc;'))   {
         while($row = $res->fetch_row()) {
-            $arr[] = new SimpleModel($row[0], $row[1]);
+            $arr[] = new Reference($row[0], $row[1]);
         }
         $res->close();
     }
@@ -104,20 +142,50 @@ function getAll($tableName)    {
     return json_encode($arr, JSON_UNESCAPED_UNICODE);
 }
 
-function getAllCountries()    {
-    return getAll('country');
+function getUniverisities()    {
+    $arr[] = new Reference(0, 'Не выбрано');
+    $conn = getConnection();
+    if ($res = $conn->query ( 'SELECT * from university order by name_ru asc;'))   {
+        while($row = $res->fetch_row()) {
+            $arr[] = new University(
+                $row['id'],
+                $row['name_ru'],
+                $row['name_en'],
+                $row['name_kk'],
+                $row['found'],
+                $row['url'],
+                $row['url_pic'],
+                $row['country_id'],
+                $row['type_id'],
+                $row['location_id'],
+                $row['created'],
+                $row['modified']
+            );
+        }
+        $res->close();
+    }
+    mysqli_close($conn);
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
 }
 
-function getAllPrograms()    {
-    return getAll('program');
+function getCountries()    {
+    return getRefAll('country');
 }
 
-function getAllSpecialties()    {
-    return getAll('specialty');
+function getPrograms()    {
+    return getRefAll('program');
 }
 
-function getAllLanguages()    {
-    return getAll('language');
+function getSpecialties()    {
+    return getRefAll('specialty');
+}
+
+function getLocations()    {
+    return getRefAll('location');
+}
+
+function getLanguages()    {
+    return getRefAll('language');
 }
 
 function search($countryId, $programId, $specialtyd, $languageId)    {
@@ -137,7 +205,7 @@ function getColById($table, $id, $col)   {
     $conn = getConnection();
     if ($res = $conn->query ( 'SELECT '.$col.' from '.$table.' where id = '.$id))   {
         while($row = $res->fetch_row()) {
-            $val = new SimpleModel($id, $row[0]);
+            $val = new Reference($id, $row[0]);
         }
         $res->close();
     }

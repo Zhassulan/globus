@@ -150,5 +150,28 @@
     grid-template-areas: "pp";
 }
 
+.spec-paginator-container {
+    display: grid;
+    grid-template-columns: minmax(320px, auto);
+    grid-template-rows: auto;
+    grid-row-gap: 15px;
+    grid-template-areas: "pp";
+}
+
+.loc-paginator-container {
+    display: grid;
+    grid-template-columns: minmax(320px, auto);
+    grid-template-rows: auto;
+    grid-row-gap: 15px;
+    grid-template-areas: "pp";
+}
+
+.univ-paginator-container {
+    display: grid;
+    grid-template-columns: minmax(320px, auto);
+    grid-template-rows: auto;
+    grid-row-gap: 15px;
+    grid-template-areas: "pp";
+}
 
 /* << ----- Zhass custom CSS for search */

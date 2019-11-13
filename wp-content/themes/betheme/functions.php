@@ -241,16 +241,19 @@ function my_action() {
     if (isset($_GET['query']))   {
         switch ($_GET['query']) {
             case 'get_all_countries':
-                echo getAllCountries();
+                echo getCountries();
                 break;
             case 'get_all_programs':
-                echo getAllPrograms();
+                echo getPrograms();
                 break;
             case 'get_all_specialities':
-                echo getAllSpecialties();
+                echo getSpecialties();
                 break;
             case 'get_all_languages':
-                echo getAllLanguages();
+                echo getLanguages();
+                break;
+            case 'get_all_locations':
+                echo getLocations();
                 break;
             case 'search':
                 echo search($_GET['country'], $_GET['program'], $_GET['specialty'], $_GET['language']);
