@@ -1170,7 +1170,7 @@ class Search {
         data.getData(params).then(
             response => {
                 if (response != null) {
-                    clearResults();
+                    this.clearResults();
                     this.cards = response;
                     sys.log('Количество результатов поиска: ' + this.cards.length);
                     this.printSearchHeader();
@@ -1254,7 +1254,7 @@ class System {
     }
 
     initLocalStorage() {
-        this.sys.log("Инициализация local storage..");
+        this.log("Инициализация local storage..");
         ui.saveDropdownState('country', 0);
         ui.saveDropdownState('program', 0);
         ui.saveDropdownState('specialty', 0);
@@ -1321,15 +1321,15 @@ class UI {
     }
 
     saveAllDropdownState() {
-        this.saveDropdownState('country', this.ui.getField('country'));
-        this.saveDropdownState('program', this.ui.getField('program'));
-        this.saveDropdownState('specialty', this.ui.getField('specialty'));
-        this.saveDropdownState('language', this.ui.getField('language'));
+        this.saveDropdownState('country', this.getField('country'));
+        this.saveDropdownState('program', this.getField('program'));
+        this.saveDropdownState('specialty', this.getField('specialty'));
+        this.saveDropdownState('language', this.getField('language'));
     }
 
     setDropdownState(dropdownName, value) {
         sys.log('Установка dropdown "' + dropdownName + '" в значение "' + value + '"');
-        this.ui.setField(dropdownName, value);
+        this.setField(dropdownName, value);
     }
 
     clearDiv(el) {
@@ -1503,7 +1503,7 @@ function onLoad() {
             ui.fillAllDropdowns();
             ui.changeTitlesStyle();
             search.printSearchResults();
-            search.printResultsPaginator();
+            search.printResultsPaginator(search);
         }
     });
     
@@ -1581,7 +1581,7 @@ function on_click_search() {
     let currentURL = window.location.href;
     ui.saveAllDropdownState();
     if (currentURL == cons.URL.SEARCH_RESULTS) {
-        ui.printWait();
+        search.printWait();
         ui.setDropdownState('country', ui.getDropdownState('country'));
         ui.setDropdownState('program', ui.getDropdownState('program'));
         ui.setDropdownState('specialty', ui.getDropdownState('specialty'));
