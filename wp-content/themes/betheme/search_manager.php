@@ -32,7 +32,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_country_edit_old_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_update_country()">Обновить</button>
+                    <button type="button" onclick="on_click_country_update()">Обновить</button>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_lang_new_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_new_lang()">Добавить</button>
+                    <button type="button" onclick="on_click_lang_new()">Добавить</button>
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_lang_edit_old_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_update_lang()">Обновить</button>
+                    <button type="button" onclick="on_click_lang_update()">Обновить</button>
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_prg_new_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_new_prg()">Добавить</button>
+                    <button type="button" onclick="on_click_prg_new()">Добавить</button>
                 </div>
             </div>
         </div>
@@ -104,7 +104,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_prg_edit_old_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_update_prg()">Обновить</button>
+                    <button type="button" onclick="on_click_prg_update()">Обновить</button>
                 </div>
             </div>
         </div>
@@ -127,7 +127,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_spec_new_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_new_spec()">Добавить</button>
+                    <button type="button" onclick="on_click_spec_new()">Добавить</button>
                 </div>
             </div>
         </div>
@@ -140,7 +140,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_spec_edit_old_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_update_spec()">Обновить</button>
+                    <button type="button" onclick="on_click_spec_update()">Обновить</button>
                 </div>
             </div>
         </div>
@@ -163,7 +163,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_loc_new_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_new_loc()">Добавить</button>
+                    <button type="button" onclick="on_click_loc_new()">Добавить</button>
                 </div>
             </div>
         </div>
@@ -176,7 +176,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_loc_edit_old_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_update_loc()">Обновить</button>
+                    <button type="button" onclick="on_click_loc_update()">Обновить</button>
                 </div>
             </div>
         </div>
@@ -199,7 +199,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_univ_new_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_new_univ()">Добавить</button>
+                    <button type="button" onclick="on_click_univ_new()">Добавить</button>
                 </div>
             </div>
         </div>
@@ -212,7 +212,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <input type="hidden" id="input_univ_edit_old_val" value="">
                 </div>
                 <div>
-                    <button type="button" onclick="on_click_update_univ()">Обновить</button>
+                    <button type="button" onclick="on_click_univ_update()">Обновить</button>
                 </div>
             </div>
         </div>

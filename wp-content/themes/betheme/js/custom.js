@@ -19,12 +19,12 @@ class Const {
     TYP_EL = {
         TABLE: 0,
         DROPDOWN: 1
-    }
+    };
 
     DLG_RES = {
         OK: 0,
         CANCEL: 1
-    }
+    };
 
     MSG = {
         ERR_ADD_COUNTRY: 'Ошибка добавления страны.',
@@ -112,11 +112,6 @@ class Country {
         );
     }
 
-    /**
-     * Получить значение по ID
-     * @param table
-     * @param id
-     */
     setCountryEditVal(id) {
         sys.log('Загрузка значения по ID из таблицы "country"..');
         let params = {
@@ -325,11 +320,6 @@ class Language {
         );
     }
 
-    /**
-     * Получить HTML фрагмент таблицы
-     * @param arr
-     * @returns {string}
-     */
     getLangRefTable() {
         sys.log('Получение HTML фрагмента для таблицы языков..');
         let html = `<table id="lang_table_data">
@@ -345,10 +335,10 @@ class Language {
                 <td>${this.languages[i].id}</td>
                 <td>${this.languages[i].val}</td>
                 <td>
-                    <button onclick="on_click_language_edit(${this.languages[i].id})">Изменить</button>
+                    <button onclick="on_click_lang_edit(${this.languages[i].id})">Изменить</button>
                 </td>
                 <td>
-                    <button onclick="on_click_language_del(${this.languages[i].id}, '${this.languages[i].val}')">Удалить</button>
+                    <button onclick="on_click_lang_del(${this.languages[i].id}, '${this.languages[i].val}')">Удалить</button>
                 </td>
             </tr>`;
         }
@@ -490,6 +480,33 @@ class Program {
     
     programs = [];
 
+    setProgramEditVal(id) {
+        sys.log('Загрузка значения по ID из таблицы "program"..');
+        let params = {
+            'action': 'my_action',
+            'query': 'get_col_by_id',
+            'table': 'program',
+            'id': id,
+            'col': 'name_ru'
+        };
+        data.getData(params).then(
+            response => {
+                if (response != null)   {
+                    ui.setField('input_prg_edit', response.val);
+                    ui.setField('input_prg_edit_id', id);
+                    ui.setField('input_prg_edit_old_val', response.val);
+                }   else {
+                    sys.log(cons.MSG.NO_DATA_PROGRAM);
+                    alert(cons.MSG.NO_DATA_PROGRAM);
+                }
+            },
+            error => {
+                sys.log(cons.MSG.ERR_ADD_PROGRAM + ' ' + error);
+                alert(cons.MSG.ERR_ADD_PROGRAM + ' ' + error);
+            }
+        );
+    }
+
     getPrograms(typ) {
         sys.log('Загрузка программ обучения..');
         let params = {'action': 'my_action', 'query': 'get_all_programs'};
@@ -505,7 +522,7 @@ class Program {
                             ui.setDropdownState('program', ui.getDropdownState('program'));
                             break;
                         case cons.TYP_EL.TABLE:
-                            this.printProgramsPaginator();
+                            this.printProgramsPaginator(this);
                     }
                 }   else {
                     sys.log(cons.MSG.NO_DATA_PROGRAMS);
@@ -643,10 +660,10 @@ class Program {
                 <td>${this.programs[i].id}</td>
                 <td>${this.programs[i].val}</td>
                 <td>
-                    <button onclick="on_click_program_edit(${this.programs[i].id})">Изменить</button>
+                    <button onclick="on_click_prg_edit(${this.programs[i].id})">Изменить</button>
                 </td>
                 <td>
-                    <button onclick="on_click_program_del(${this.programs[i].id}, '${this.programs[i].val}')">Удалить</button>
+                    <button onclick="on_click_prg_del(${this.programs[i].id}, '${this.programs[i].val}')">Удалить</button>
                 </td>
             </tr>`;
         }
@@ -680,7 +697,7 @@ class Specialty {
                             ui.setDropdownState('specialty', ui.getDropdownState('specialty'));
                             break;
                         case cons.TYP_EL.TABLE:
-                            this.printSpecialitiesPaginator();
+                            this.printSpecialitiesPaginator(this);
                             break;
                     }
                 }   else {
@@ -982,7 +999,7 @@ class Location {
         }
     }
 
-     printLocationsPaginator(location) {
+     printLocationsPaginator(loc) {
         sys.log('Печать пагинатора местоположений..');
         jQuery('#loc-pagination-container').pagination({
             dataSource: this.locations,
@@ -1029,7 +1046,7 @@ class Location {
                         case cons.TYP_EL.DROPDOWN:
                             break;
                         case cons.TYP_EL.TABLE:
-                            printLocationsPaginator();
+                            this.printLocationsPaginator(this);
                             break;
                     }
                 }   else {
@@ -1056,7 +1073,7 @@ class Search {
      * @returns {string}
      */
     getCard(card) {
-        let html = `
+        return `
         <div>
           <div class="card">
             <div class="img_my">
@@ -1106,7 +1123,6 @@ class Search {
             </div>
           </div>
         </div>`;
-        return html;
     }
     
     printSearchResults() {
@@ -1376,7 +1392,6 @@ class UI {
         } else {
             return cons.DLG_RES.CANCEL;
         }
-        return cons.DLG_RES.CANCEL;
     }
 
     insertCheck(val) {
@@ -1389,7 +1404,6 @@ class UI {
         } else {
             return cons.DLG_RES.CANCEL;
         }
-        return cons.DLG_RES.CANCEL;
     }
 
     delCheck(id, val) {
@@ -1402,7 +1416,6 @@ class UI {
         } else {
             return cons.DLG_RES.CANCEL;
         }
-        return cons.DLG_RES.CANCEL;
     }
     
 }
@@ -1498,58 +1511,37 @@ function onLoad() {
 
 onLoad();
 
-
-
-
-
-
-
+// on clicks ------------------------>>>
 function on_click_spec_edit(id) {
-    setSpecEditVal(id);
+    specialty.setSpecEditVal(id);
 }
 
 function on_click_spec_del(id, val) {
-    delSpecialty(id, val);
+    specialty.delSpecialty(id, val);
 }
 
-function on_click_new_spec() {
-    newSpecialty();
+function on_click_spec_new() {
+    specialty.newSpecialty();
 }
 
-function on_click_update_spec() {
-    updateSpecialty();
-}
-
-function on_click_loc_edit(id) {
-    setLocEditVal(id);
+function on_click_spec_update() {
+    specialty.updateSpecialty();
 }
 
 function on_click_loc_del(id, val) {
-    delLocation(id, val);
+    loc.delLocation(id, val);
 }
 
-function on_click_new_loc() {
-    newLocation();
+function on_click_loc_new() {
+    loc.newLocation();
 }
 
-function on_click_update_loc() {
-    updateLocation();
+function on_click_loc_update() {
+    loc.updateLocation();
 }
 
 function on_click_loc_edit(id) {
-    setLocEditVal(id);
-}
-
-function on_click_loc_del(id, val) {
-    delLocation(id, val);
-}
-
-function on_click_new_loc() {
-    newLocation();
-}
-
-function on_click_update_loc() {
-    updateLocation();
+    loc.setLocEditVal(id);
 }
 
 function on_click_country_edit(id) {
@@ -1564,24 +1556,24 @@ function on_click_country_new() {
     country.newCountry();
 }
 
-function on_click_language_edit(id) {
-    setLangEditVal(id);
+function on_click_lang_edit(id) {
+    language.setLangEditVal(id);
 }
 
-function on_click_language_del(id, val) {
-    delLanguage(id, val);
+function on_click_lang_del(id, val) {
+    language.delLanguage(id, val);
 }
 
-function on_click_new_lang() {
-    newLanguage();
+function on_click_lang_new() {
+    language.newLanguage();
 }
 
-function on_click_update_country() {
-    updateCountry();
+function on_click_country_update() {
+    country.updateCountry();
 }
 
-function on_click_update_lang() {
-    updateLanguage();
+function on_click_lang_update() {
+    language.updateLanguage();
 }
 
 function on_click_search() {
@@ -1589,15 +1581,41 @@ function on_click_search() {
     let currentURL = window.location.href;
     ui.saveAllDropdownState();
     if (currentURL == cons.URL.SEARCH_RESULTS) {
-        printWait();
+        ui.printWait();
         ui.setDropdownState('country', ui.getDropdownState('country'));
         ui.setDropdownState('program', ui.getDropdownState('program'));
         ui.setDropdownState('specialty', ui.getDropdownState('specialty'));
         ui.setDropdownState('language', ui.getDropdownState('language'));
-        printSearchResults();
+        search.printSearchResults();
     } else {
         window.location = cons.URL.SEARCH_RESULTS;
     }
 }
+
+function on_click_prg_edit(id)    {
+    program.setProgramEditVal(id);
+}
+
+function on_click_prg_update() {
+    program.updateProgram();
+}
+
+function on_click_prg_new() {
+    program.newProgram();
+}
+
+function on_click_prg_del(id, val) {
+    program.delProgram(id, val);
+}
+
+function on_click_univ_new()    {
+
+}
+
+function on_click_univ_update() {
+
+}
+
+// on clicks <<<------------------------
 
 // <<<<-------------------------------Zhass------------------------------------
