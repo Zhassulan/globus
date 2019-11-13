@@ -18,59 +18,6 @@ class Reference {
     }
 }
 
-/**
- * Class University модель данных университета
- */
-class University {
-
-    public $id;
-    public $name_ru;
-    public $name_en;
-    public $name_kk;
-    public $found;
-    public $url;
-    public $url_pic;
-
-    public $country_id;
-    public $type_id;
-    public $location_id;
-
-    public $created;
-    public $modified;
-
-    /**
-     * University constructor.
-     * @param $id
-     * @param $name_ru
-     * @param $name_en
-     * @param $name_kk
-     * @param $found
-     * @param $url
-     * @param $url_pic
-     * @param $country_id
-     * @param $type_id
-     * @param $location_id
-     * @param $created
-     * @param $modified
-     */
-    public function __construct($id, $name_ru, $name_en, $name_kk, $found, $url, $url_pic, $country_id, $type_id, $location_id, $created, $modified)
-    {
-        $this->id = $id;
-        $this->name_ru = $name_ru;
-        $this->name_en = $name_en;
-        $this->name_kk = $name_kk;
-        $this->found = $found;
-        $this->url = $url;
-        $this->url_pic = $url_pic;
-        $this->country_id = $country_id;
-        $this->type_id = $type_id;
-        $this->location_id = $location_id;
-        $this->created = $created;
-        $this->modified = $modified;
-    }
-
-}
-
 class Result {
 
     public $res;
@@ -143,24 +90,23 @@ function getRefAll($tableName)    {
 }
 
 function getUniverisities()    {
+    $conn = getConnection();
+    if ($res = $conn->query ( 'select u.*, c.name_ru country from university u left join country c on c.id = u.country_id order by c.name_ru , u.name_en;'))   {
+        while($obj = $res->fetch_object()) {
+            $arr [] = $obj;
+        }
+        $res->close();
+    }
+    mysqli_close($conn);
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
+}
+
+function getTypes()    {
     $arr[] = new Reference(0, 'Не выбрано');
     $conn = getConnection();
-    if ($res = $conn->query ( 'SELECT * from university order by name_ru asc;'))   {
-        while($row = $res->fetch_row()) {
-            $arr[] = new University(
-                $row['id'],
-                $row['name_ru'],
-                $row['name_en'],
-                $row['name_kk'],
-                $row['found'],
-                $row['url'],
-                $row['url_pic'],
-                $row['country_id'],
-                $row['type_id'],
-                $row['location_id'],
-                $row['created'],
-                $row['modified']
-            );
+    if ($res = $conn->query ( 'select t.id, t.name_ru val from university_type t order by t.name_ru;'))   {
+        while($obj = $res->fetch_object()) {
+            $arr [] = $obj;
         }
         $res->close();
     }

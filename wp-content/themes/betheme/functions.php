@@ -240,20 +240,26 @@ function my_action() {
     require_once 'lib.php';
     if (isset($_GET['query']))   {
         switch ($_GET['query']) {
-            case 'get_all_countries':
+            case 'get_countries':
                 echo getCountries();
                 break;
-            case 'get_all_programs':
+            case 'get_programs':
                 echo getPrograms();
                 break;
-            case 'get_all_specialities':
+            case 'get_specialities':
                 echo getSpecialties();
                 break;
-            case 'get_all_languages':
+            case 'get_languages':
                 echo getLanguages();
                 break;
-            case 'get_all_locations':
+            case 'get_locations':
                 echo getLocations();
+                break;
+            case 'get_universities':
+                echo getUniverisities();
+                break;
+            case 'get_types':
+                echo getTypes();
                 break;
             case 'search':
                 echo search($_GET['country'], $_GET['program'], $_GET['specialty'], $_GET['language']);

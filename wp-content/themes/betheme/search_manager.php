@@ -192,29 +192,140 @@ require_once get_theme_root() . '/betheme/lib.php';
     </div>
     <div class="inputs">
         <div>
-            <div class="add_edit_field">
-                <div>Новый университет</div>
-                <div>
-                    <input type="text" id="input_univ_new" placeholder="Введите название" value="">
-                    <input type="hidden" id="input_univ_new_val" value="">
-                </div>
-                <div>
-                    <button type="button" onclick="on_click_univ_new()">Добавить</button>
-                </div>
+            <div>
+                <table>
+                    <caption><h4>Новый университет</h4></caption>
+                    <tr>
+                        <td>Название (англ.)</td>
+                        <td>
+                            <input type="text" id="inpUnivNewName">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Страна</td>
+                        <td>
+                            <select name="Тип" id="dropdownUnivNewCountry"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Основан</td>
+                        <td><input type="text" id="inpUnivNewFound"></td>
+                    </tr>
+                    <tr>
+                        <td>Тип</td>
+                        <td>
+                            <select name="Тип" id="dropdownUnivNewType"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Местоположение</td>
+                        <td>
+                            <select name="Тип" id="dropdownUnivNewLocation"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ссылка страницы</td>
+                        <td><input type="text" id="inpUnivNewUrl"></td>
+                    </tr>
+                    <tr>
+                        <td>Ссылка фото</td>
+                        <td><input type="text" id="inpUnivNewUrlPhoto"></td>
+                    </tr>
+
+                    <tr>
+                        <td>Программы обучения</td>
+                        <td>
+                            <select name="Тип" id="dropdownUnivNewPrg"></select>
+
+                            <table>
+                                <caption>Список</caption>
+                                <tr>
+
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Специальности</td>
+                        <td>
+                            <select name="Тип" id="dropdownUnivNewSpec"></select>
+
+                            <table>
+                                <caption>Список</caption>
+                                <tr>
+
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Языки обучения</td>
+                        <td>
+                            <select name="Тип" id="dropdownUnivNewLang"></select>
+
+                            <table>
+                                <caption>Список</caption>
+                                <tr>
+
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                </table>
             </div>
+
+            <div>
+                <button type="button" onclick="on_click_univ_add()">Добавить</button>
+            </div>
+
         </div>
+
         <div>
-            <div class="add_edit_field">
-                <div>Изменить университет</div>
-                <div>
-                    <input type="text" id="input_univ_edit" value="">
-                    <input type="hidden" id="input_univ_edit_id" value="">
-                    <input type="hidden" id="input_univ_edit_old_val" value="">
-                </div>
-                <div>
-                    <button type="button" onclick="on_click_univ_update()">Обновить</button>
-                </div>
+
+            <div>
+                <table>
+                    <caption><h4>Изменить университет</h4></caption>
+                    <tr>
+                        <td>Название (англ.)</td>
+                        <td><input type="text" id="inpUnivName"></td>
+                    </tr>
+                    <tr>
+                        <td>Страна</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Основан</td>
+                        <td><input type="text" id="inpUnivFound"></td>
+                    </tr>
+                    <tr>
+                        <td>Тип</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Местоположение</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Ссылка страницы</td>
+                        <td><input type="text" id="inpUnivUrl"></td>
+                    </tr>
+                    <tr>
+                        <td>Ссылка фото</td>
+                        <td><input type="text" id="inpUnivUrlPhoto"></td>
+                    </tr>
+
+
+                </table>
             </div>
+
+            <div>
+                <button type="button" onclick="on_click_univ_update()">Обновить</button>
+            </div>
+
         </div>
     </div>
 

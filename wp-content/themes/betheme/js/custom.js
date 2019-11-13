@@ -18,7 +18,9 @@ class Const {
      */
     TYP_EL = {
         TABLE: 0,
-        DROPDOWN: 1
+        DROPDOWN: 1,
+        DROPDOWN_NEW: 2,
+        DROPDOWN_EDIT: 3,
     };
 
     DLG_RES = {
@@ -38,6 +40,8 @@ class Const {
         ERR_LOAD_PROGRAMS: 'Ошибка загрузки программ обучения.',
         ERR_LOAD_SPECIALITIES: 'Ошибка загрузки специальностей.',
         ERR_LOAD_LOCATIONS: 'Ошибка загрузки местоположений.',
+        ERR_LOAD_UNIVERSITIES: 'Ошибка загрузки университетов.',
+        ERR_LOAD_TYPES: 'Ошибка загрузки типов университетов.',
 
         ERR_LOAD_LANGUAGE: 'Ошибка загрузки языка.',
         ERR_LOAD_COUNTRY: 'Ошибка загрузки страны.',
@@ -62,6 +66,8 @@ class Const {
         NO_DATA_SPECIALITIES: 'Нет данных по специальностям.',
         NO_DATA_PROGRAMS: 'Нет данных по программам обучения.',
         NO_DATA_LOCATIONS: 'Нет данных по местоположениям.',
+        NO_DATA_UNIVERSITIES: 'Нет данных по университетам.',
+        NO_DATA_TYPES: 'Нет данных по типам университетов.',
 
         NO_DATA_COUNTRY: 'Нет данных по стране.',
         NO_DATA_LANGUAGE: 'Нет данных по языку.',
@@ -88,7 +94,7 @@ class Country {
      */
     getCountries(typ) {
         sys.log('Загрузка стран..');
-        let params = {'action': 'my_action', 'query': 'get_all_countries'};
+        let params = {'action': 'my_action', 'query': 'get_countries'};
         data.getData(params).then(
             response => {
                 if (response != null)   {
@@ -101,6 +107,9 @@ class Country {
                             break;
                         case cons.TYP_EL.TABLE:
                             this.printCountriesPaginator(this);
+                            break;
+                        case cons.TYP_EL.DROPDOWN_NEW:
+                            ui.fillDropdown('dropdownUnivNewCountry', this.countries);
                             break;
                     }
                 }   else {
@@ -352,7 +361,7 @@ class Language {
 
     getLanguages(typ) {
         sys.log('Загрузка языков..');
-        let params = {'action': 'my_action', 'query': 'get_all_languages'};
+        let params = {'action': 'my_action', 'query': 'get_languages'};
         data.getData(params).then(
             response => {
                 if (response != null)   {
@@ -514,7 +523,7 @@ class Program {
 
     getPrograms(typ) {
         sys.log('Загрузка программ обучения..');
-        let params = {'action': 'my_action', 'query': 'get_all_programs'};
+        let params = {'action': 'my_action', 'query': 'get_programs'};
         data.getData(params).then(
             response => {
                 if (response != null)   {
@@ -690,7 +699,7 @@ class Specialty {
 
     getSpecialities(typ) {
         sys.log('Загрузка специальностей..');
-        let params = {'action': 'my_action', 'query': 'get_all_specialities'};
+        let params = {'action': 'my_action', 'query': 'get_specialities'};
         data.getData(params).then(
             response => {
                 if (response != null)   {
@@ -1044,7 +1053,7 @@ class Location {
 
     getLocations(typ) {
         sys.log('Загрузка местоположений..');
-        let params = { 'action': 'my_action', 'query': 'get_all_locations'};
+        let params = { 'action': 'my_action', 'query': 'get_locations'};
         data.getData(params).then(
             response => {
                 if (response != null)   {
@@ -1055,6 +1064,9 @@ class Location {
                             break;
                         case cons.TYP_EL.TABLE:
                             this.printLocationsPaginator(this);
+                            break;
+                        case cons.TYP_EL.DROPDOWN_NEW:
+                            ui.fillDropdown('dropdownUnivNewLocation', this.locations);
                             break;
                     }
                 }   else {
@@ -1452,7 +1464,109 @@ class Data {
             });
         });
     }
-    
+
+}
+
+class University  {
+
+    universities = [];
+    types = [];
+
+    getUniversities(typ) {
+        sys.log('Загрузка университетов..');
+        let params = {'action': 'my_action', 'query': 'get_universities'};
+        data.getData(params).then(
+            response => {
+                if (response != null)   {
+                    this.universities = response;
+                    sys.log('Загружено университетов: ' + this.universities.length);
+                    switch (typ) {
+                        case cons.TYP_EL.DROPDOWN:
+                            break;
+                        case cons.TYP_EL.TABLE:
+                            this.printUniversitiesPaginator(this);
+                            break;
+                    }
+                }   else {
+                    sys.log(cons.MSG.NO_DATA_UNIVERSITIES);
+                    alert(cons.MSG.NO_DATA_UNIVERSITIES);
+                }
+            },
+            error => {
+                sys.log(cons.MSG.ERR_LOAD_UNIVERSITIES+ ' ' + error);
+                alert(cons.MSG.ERR_LOAD_UNIVERSITIES + ' ' + error);
+            }
+        );
+    }
+
+    printUniversitiesPaginator(university) {
+        sys.log('Печать пагинатора стран..');
+        jQuery('#univ-pagination-container').pagination({
+            dataSource: this.universities,
+            pageSize: cons.PAGE_SIZE_REF,
+            callback: function (data, pagination) {
+                ui.setDiv('univ_table', university.getUniversityRefTable(data));
+            }
+        })
+    }
+
+    getUniversityRefTable(arr) {
+        let k = 1;
+        sys.log('Получение HTML фрагмента для таблицы университета..');
+        let html = `<table id="univ_table_data">
+            <caption><h4>Университеты (${ this.universities.length })</h4></caption>
+            <tr>
+                <th>ID</th>
+                <th>Страна</th>
+                <th>Название</th>
+                <th>Действие</th>
+                <th>Действие</th>
+            </tr>`;
+        for (let i = 0; i < arr.length; i++) {
+            html += `<tr>
+                <td>${ arr[i].id }</td>
+                <td>${ arr[i].country }</td>
+                <td>${ arr[i].name_en }</td>
+                <td>
+                    <button onclick="on_click_univ_edit(${ arr[i].id })">Изменить</button>
+                </td>
+                <td>
+                    <button onclick="on_click_univ_del(${ arr[i].id }, '${ arr[i].name_en }')">Удалить</button>
+                </td>
+            </tr>`;
+        }
+        return html + `</table>`;
+    }
+
+    geTypes(typ) {
+        sys.log('Загрузка типов университетов..');
+        let params = {'action': 'my_action', 'query': 'get_types'};
+        data.getData(params).then(
+            response => {
+                if (response != null)   {
+                    this.types = response;
+                    sys.log('Загружено типов: ' + response.length);
+                    switch (typ) {
+                        case cons.TYP_EL.DROPDOWN:
+                            break;
+                        case cons.TYP_EL.TABLE:
+                            break;
+                        case cons.TYP_EL.DROPDOWN_NEW:
+                            ui.fillDropdown('dropdownUnivNewType', this.types);
+                            break;
+                    }
+                }   else {
+                    sys.log(cons.MSG.NO_DATA_TYPES);
+                    alert(cons.MSG.NO_DATA_TYPES);
+                }
+            },
+            error => {
+                sys.log(cons.MSG.ERR_LOAD_TYPES + ' ' + error);
+                alert(cons.MSG.ERR_LOAD_TYPES + ' ' + error);
+            }
+        );
+    }
+
 }
 
 let cons = new Const();
@@ -1465,6 +1579,7 @@ let search = new Search();
 let sys = new System();
 let ui = new UI();
 let data = new Data();
+let univ = new University();
 
 function onLoad() {
     
@@ -1487,10 +1602,14 @@ function onLoad() {
         if (currentURL.indexOf(cons.URL.SEARCH_MANAGEMENT) != -1) {
             sys.log('Текущая страница: cons.URL.SEARCH_MANAGEMENT');
             country.getCountries(cons.TYP_EL.TABLE);
+            country.getCountries(cons.TYP_EL.DROPDOWN_NEW);
             language.getLanguages(cons.TYP_EL.TABLE);
             program.getPrograms(cons.TYP_EL.TABLE);
             specialty.getSpecialities(cons.TYP_EL.TABLE);
             loc.getLocations(cons.TYP_EL.TABLE);
+            loc.getLocations(cons.TYP_EL.DROPDOWN_NEW);
+            univ.getUniversities(cons.TYP_EL.TABLE);
+            univ.geTypes(cons.TYP_EL.DROPDOWN_NEW);
         }
         if (currentURL.indexOf(cons.URL.SEARCH) != -1) {
             sys.log('Текущая страница: cons.URL.SEARCH');
