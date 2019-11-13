@@ -72,6 +72,9 @@ class Const {
         ERR_SEARCH: 'Ошибка поиска.',
         ERR_LOG: 'Ошибка записи в журнал.'
     }
+
+    PAGE_SIZE_SEARCH = 8;
+    PAGE_SIZE_REF = 8;
     
 }
 
@@ -239,7 +242,7 @@ class Country {
         }
     }
 
-    getCountryRefTable() {
+    getCountryRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы стран..');
         let html = `<table id="country_table_data">
             <caption><h4>Страны (${this.countries.length})</h4></caption>
@@ -249,15 +252,15 @@ class Country {
                 <th>Действие</th>
                 <th>Действие</th>
             </tr>`;
-        for (let i = 0; i < this.countries.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             html += `<tr>
-                <td>${this.countries[i].id}</td>
-                <td>${this.countries[i].val}</td>
+                <td>${arr[i].id}</td>
+                <td>${arr[i].val}</td>
                 <td>
-                    <button onclick="on_click_country_edit(${this.countries[i].id})">Изменить</button>
+                    <button onclick="on_click_country_edit(${arr[i].id})">Изменить</button>
                 </td>
                 <td>
-                    <button onclick="on_click_country_del(${this.countries[i].id}, '${this.countries[i].val}')">Удалить</button>
+                    <button onclick="on_click_country_del(${arr[i].id}, '${arr[i].val}')">Удалить</button>
                 </td>
             </tr>`;
         }
@@ -268,8 +271,9 @@ class Country {
         sys.log('Печать пагинатора стран..');
         jQuery('#country-pagination-container').pagination({
             dataSource: this.countries,
+            pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('country_table', country.getCountryRefTable());
+                ui.setDiv('country_table', country.getCountryRefTable(data));
             }
         })
     }
@@ -287,8 +291,9 @@ class Language {
         sys.log('Печать пагинатора языков..');
         jQuery('#lang-pagination-container').pagination({
             dataSource: this.languages,
+            pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('lang_table', language.getLangRefTable());
+                ui.setDiv('lang_table', language.getLangRefTable(data));
             }
         })
     }
@@ -320,7 +325,7 @@ class Language {
         );
     }
 
-    getLangRefTable() {
+    getLangRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы языков..');
         let html = `<table id="lang_table_data">
             <caption><h4>Языки (${this.languages.length})</h4></caption>
@@ -330,15 +335,15 @@ class Language {
                 <th>Действие</th>
                 <th>Действие</th>
             </tr>`;
-        for (let i = 0; i < this.languages.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             html += `<tr>
-                <td>${this.languages[i].id}</td>
-                <td>${this.languages[i].val}</td>
+                <td>${arr[i].id}</td>
+                <td>${arr[i].val}</td>
                 <td>
-                    <button onclick="on_click_lang_edit(${this.languages[i].id})">Изменить</button>
+                    <button onclick="on_click_lang_edit(${arr[i].id})">Изменить</button>
                 </td>
                 <td>
-                    <button onclick="on_click_lang_del(${this.languages[i].id}, '${this.languages[i].val}')">Удалить</button>
+                    <button onclick="on_click_lang_del(${arr[i].id}, '${arr[i].val}')">Удалить</button>
                 </td>
             </tr>`;
         }
@@ -639,13 +644,14 @@ class Program {
         sys.log('Печать пагинатора программ обучения..');
         jQuery('#prg-pagination-container').pagination({
             dataSource: this.programs,
+            pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('prg_table', program.getProgramRefTable());
+                ui.setDiv('prg_table', program.getProgramRefTable(data));
             }
         })
     }
 
-    getProgramRefTable() {
+    getProgramRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы программ..');
         let html = `<table id="prg_table_data">
             <caption><h4>Программы обучения (${this.programs.length})</h4></caption>
@@ -655,15 +661,15 @@ class Program {
                 <th>Действие</th>
                 <th>Действие</th>
             </tr>`;
-        for (let i = 0; i < this.programs.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             html += `<tr>
-                <td>${this.programs[i].id}</td>
-                <td>${this.programs[i].val}</td>
+                <td>${arr[i].id}</td>
+                <td>${arr[i].val}</td>
                 <td>
-                    <button onclick="on_click_prg_edit(${this.programs[i].id})">Изменить</button>
+                    <button onclick="on_click_prg_edit(${arr[i].id})">Изменить</button>
                 </td>
                 <td>
-                    <button onclick="on_click_prg_del(${this.programs[i].id}, '${this.programs[i].val}')">Удалить</button>
+                    <button onclick="on_click_prg_del(${arr[i].id}, '${arr[i].val}')">Удалить</button>
                 </td>
             </tr>`;
         }
@@ -836,13 +842,14 @@ class Specialty {
         sys.log('Печать пагинатора специальностей..');
         jQuery('#spec-pagination-container').pagination({
             dataSource: this.specialities,
+            pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
                 ui.setDiv('spec_table', specialty.getSpecialtyRefTable(data));
             }
         })
     }
 
-    getSpecialtyRefTable() {
+    getSpecialtyRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы специальностей..');
         let html = `<table id="spec_table_data">
             <caption><h4>Специальности (${this.specialities.length})</h4></caption>
@@ -852,15 +859,15 @@ class Specialty {
                 <th>Действие</th>
                 <th>Действие</th>
             </tr>`;
-        for (let i = 0; i < this.specialities.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             html += `<tr>
-                <td>${this.specialities[i].id}</td>
-                <td>${this.specialities[i].val}</td>
+                <td>${arr[i].id}</td>
+                <td>${arr[i].val}</td>
                 <td>
-                    <button onclick="on_click_spec_edit(${this.specialities[i].id})">Изменить</button>
+                    <button onclick="on_click_spec_edit(${arr[i].id})">Изменить</button>
                 </td>
                 <td>
-                    <button onclick="on_click_spec_del(${this.specialities[i].id}, '${this.specialities[i].val}')">Удалить</button>
+                    <button onclick="on_click_spec_del(${arr[i].id}, '${arr[i].val}')">Удалить</button>
                 </td>
             </tr>`;
         }
@@ -1003,13 +1010,14 @@ class Location {
         sys.log('Печать пагинатора местоположений..');
         jQuery('#loc-pagination-container').pagination({
             dataSource: this.locations,
+            pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('loc_table', loc.getLocationRefTable());
+                ui.setDiv('loc_table', loc.getLocationRefTable(data));
             }
         })
     }
 
-    getLocationRefTable() {
+    getLocationRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы местоположений..');
         let html = `<table id="loc_table_data">
             <caption><h4>Местоположения (${this.locations.length})</h4></caption>
@@ -1019,15 +1027,15 @@ class Location {
                 <th>Действие</th>
                 <th>Действие</th>
             </tr>`;
-        for (let i = 0; i < this.locations.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             html += `<tr>
-                <td>${this.locations[i].id}</td>
-                <td>${this.locations[i].val}</td>
+                <td>${arr[i].id}</td>
+                <td>${arr[i].val}</td>
                 <td>
-                    <button onclick="on_click_loc_edit(${this.locations[i].id})">Изменить</button>
+                    <button onclick="on_click_loc_edit(${arr[i].id})">Изменить</button>
                 </td>
                 <td>
-                    <button onclick="on_click_loc_del(${this.locations[i].id}, '${this.locations[i].val}')">Удалить</button>
+                    <button onclick="on_click_loc_del(${arr[i].id}, '${arr[i].val}')">Удалить</button>
                 </td>
             </tr>`;
         }
@@ -1036,7 +1044,7 @@ class Location {
 
     getLocations(typ) {
         sys.log('Загрузка местоположений..');
-        let params = {'action': 'my_action', 'query': 'get_all_locations'};
+        let params = { 'action': 'my_action', 'query': 'get_all_locations'};
         data.getData(params).then(
             response => {
                 if (response != null)   {
@@ -1148,6 +1156,7 @@ class Search {
         sys.log('Печать пагинатора результатов поиска..');
         jQuery('#cards-pagination-container').pagination({
             dataSource: this.cards,
+            pageSize: cons.PAGE_SIZE_SEARCH,
             callback: function (data, pagination) {
                 search.clearResults();
                 jQuery.each(data, function (index, item) {
