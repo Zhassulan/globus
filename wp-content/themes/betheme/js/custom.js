@@ -1369,10 +1369,7 @@ class System {
 
     initLocalStorage() {
         this.log("Инициализация local storage..");
-        this.ui.saveDropdownState('country', 0);
-        this.ui.saveDropdownState('program', 0);
-        this.ui.saveDropdownState('specialty', 0);
-        this.ui.saveDropdownState('language', 0);
+
     }
 
     emptyString(str) {
@@ -1779,6 +1776,12 @@ class App {
             if (currentURL.indexOf(Const.URL.SEARCH) != -1) {
                 this.sys.log('Текущая страница: Const.URL.SEARCH');
                 this.sys.initLocalStorage();
+
+                this.ui.saveDropdownState('country', 0);
+                this.ui.saveDropdownState('program', 0);
+                this.ui.saveDropdownState('specialty', 0);
+                this.ui.saveDropdownState('language', 0);
+
                 if (jQuery(window).width() < 500) {
                     this.sys.log('Изменение цвета названий полей..');
                     let color = 'white';
