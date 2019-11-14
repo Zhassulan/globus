@@ -235,7 +235,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                         <td>Программы обучения</td>
                         <td>
                             <select name="Тип" id="dropdownUnivNewPrg"></select>
-                            <button onclick="on_click_univ_new_add_prg">Добавить</button>
+                            <button onclick="on_click_univ_new_add_prg()">Добавить</button>
                             Список:
                             <div id="list_univ_new_prgs">
                             </div>
@@ -245,7 +245,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                         <td>Специальности</td>
                         <td>
                             <select name="Тип" id="dropdownUnivNewSpec"></select>
-                            <button onclick="on_click_univ_new_add_spec">Добавить</button>
+                            <button onclick="on_click_univ_new_add_spec()">Добавить</button>
                             Список:
                             <div id="list_univ_new_specs">
                             </div>
@@ -255,7 +255,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                         <td>Языки обучения</td>
                         <td>
                             <select name="Тип" id="dropdownUnivNewLang"></select>
-                            <button onclick="on_click_univ_new_add_lang">Добавить</button>
+                            <button onclick="on_click_univ_new_add_lang()">Добавить</button>
                             Список:
                             <div id="list_univ_new_langs">
                             </div>

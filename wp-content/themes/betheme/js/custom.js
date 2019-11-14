@@ -2,12 +2,12 @@
 
 class Const {
 
-    LOG_DB = false;
+    static LOG_DB = false;
     /**
      * Перечисление URL
      * @type {{SEARCH: string, URL_SEARCH_RESULTS: string, SEARCH_MANAGEMENT: string}}
      */
-    URL = {
+    static URL = {
         SEARCH: '',
         URL_SEARCH_RESULTS: '',
         SEARCH_MANAGEMENT: '',
@@ -16,19 +16,19 @@ class Const {
      * Перечисление типов элементов
      * @type {{TABLE: number, DROPDOWN: number}}
      */
-    TYP_EL = {
+    static TYP_EL = {
         TABLE: 0,
         DROPDOWN: 1,
         DROPDOWN_NEW: 2,
         DROPDOWN_EDIT: 3,
     };
 
-    DLG_RES = {
+    static DLG_RES = {
         OK: 0,
         CANCEL: 1
     };
 
-    MSG = {
+    static MSG = {
         ERR_ADD_COUNTRY: 'Ошибка добавления страны.',
         ERR_ADD_LANGUAGE: 'Ошибка добавления языка.',
         ERR_ADD_PROGRAM: 'Ошибка добавления программы обучения.',
@@ -77,55 +77,71 @@ class Const {
 
         ERR_SEARCH: 'Ошибка поиска.',
         ERR_LOG: 'Ошибка записи в журнал.'
-    }
+    };
 
-    PAGE_SIZE_SEARCH = 8;
-    PAGE_SIZE_REF = 8;
+    static PAGE_SIZE_SEARCH = 8;
+    static PAGE_SIZE_REF = 8;
     
 }
 
 class Country {
 
-    countries = [];
+    private sys;
+    private ui;
+    private data;
+
+    /**
+     * Конструктор
+     * @param sys
+     * @param ui
+     * @param data
+     */
+    constructor(sys, ui, data) {
+        this.sys = sys;
+        this.ui = ui;
+        this.data = data;
+    }
+
+    private countries = [];
 
     /**
      *
      * @param typ перечисление элемента
      */
     all(typ) {
-        sys.log('Загрузка стран..');
+        this.sys.log('Загрузка стран..');
         let params = {'action': 'my_action', 'query': 'get_countries'};
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
                     this.countries = response;
-                    sys.log('Загружено стран: ' + response.length);
+                    this.sys.log('Загружено стран: ' + response.length);
                     switch (typ) {
-                        case cons.TYP_EL.DROPDOWN:
-                            ui.fillDropdown('country', this.countries);
-                            ui.setDropdownState('country', ui.getDropdownState('country'));
+                        case Const.TYP_EL.DROPDOWN:
+                            this.ui.fillDropdown('country', this.countries);
+                            this.ui.setDropdownState('country', this.ui.getDropdownState('country'));
                             break;
-                        case cons.TYP_EL.TABLE:
+                        case Const.TYP_EL.TABLE:
                             this.printPaginator(this);
                             break;
-                        case cons.TYP_EL.DROPDOWN_NEW:
-                            ui.fillDropdown('dropdownUnivNewCountry', this.countries);
+                        case Const.TYP_EL.DROPDOWN_NEW:
+                            this.ui.fillDropdown('dropdownUnivNewCountry', this.countries);
                             break;
                     }
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_COUNTRIES);
-                    alert(cons.MSG.NO_DATA_COUNTRIES);
+                    this.sys.log(Const.MSG.NO_DATA_COUNTRIES);
+                    alert(Const.MSG.NO_DATA_COUNTRIES);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_LOAD_COUNTRIES + ' ' + error);
-                alert(cons.MSG.ERR_LOAD_COUNTRIES + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_COUNTRIES + ' ' + error);
+                alert(Const.MSG.ERR_LOAD_COUNTRIES + ' ' + error);
             }
         );
     }
 
     setEditVal(id) {
-        sys.log('Загрузка значения по ID из таблицы "country"..');
+        this.sys.log('Загрузка значения по ID из таблицы "country"..');
         let params = {
             'action': 'my_action',
             'query': 'get_col_by_id',
@@ -133,35 +149,35 @@ class Country {
             'id': id,
             'col': 'name_ru'
         };
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
-                sys.log(response);
+                this.sys.log(response);
                 if (response)   {
-                    ui.setField('input_country_edit', response.val);
-                    ui.setField('input_country_edit_id', id);
-                    ui.setField('input_country_edit_old_val', response.val);
+                    this.ui.setField('input_country_edit', response.val);
+                    this.ui.setField('input_country_edit_id', id);
+                    this.ui.setField('input_country_edit_old_val', response.val);
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_COUNTRY);
-                    alert(cons.MSG.NO_DATA_COUNTRY);
+                    this.sys.log(Const.MSG.NO_DATA_COUNTRY);
+                    alert(Const.MSG.NO_DATA_COUNTRY);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_LOAD_COUNTRY + ' ' + error);
-                alert(cons.MSG.ERR_LOAD_COUNTRY + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_COUNTRY + ' ' + error);
+                alert(Const.MSG.ERR_LOAD_COUNTRY + ' ' + error);
             }
         );
     }
 
     emptyEdits() {
-        ui.emptyField("#input_country_edit");
-        ui.emptyField("#input_country_edit_id");
-        ui.emptyField("#input_country_edit_old_val");
+        this.ui.emptyField("#input_country_edit");
+        this.ui.emptyField("#input_country_edit_id");
+        this.ui.emptyField("#input_country_edit_old_val");
     }
 
     create() {
-        let val = ui.getField('input_country_new');
-        if (ui.insertCheck(val) == cons.DLG_RES.OK) {
-            sys.log('Добавление страны "' + val + '"..');
+        let val = this.ui.getField('input_country_new');
+        if (this.ui.insertCheck(val) == Const.DLG_RES.OK) {
+            this.sys.log('Добавление страны "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'insertTxt',
@@ -169,32 +185,32 @@ class Country {
                 'col': 'name_ru',
                 'val': val,
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_ADD_COUNTRY + ' ' + response.msg);
-                        alert(cons.MSG.ERR_ADD_COUNTRY + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_ADD_COUNTRY + ' ' + response.msg);
+                        alert(Const.MSG.ERR_ADD_COUNTRY + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        ui.emptyField('input_country_new');
-                        this.all(cons.TYP_EL.TABLE);
+                        this.ui.emptyField('input_country_new');
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_ADD_COUNTRY + ' ' + error);
-                    alert(cons.MSG.ERR_ADD_COUNTRY + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_ADD_COUNTRY + ' ' + error);
+                    alert(Const.MSG.ERR_ADD_COUNTRY + ' ' + error);
                 }
             );
         }
     }
 
     update() {
-        let val = ui.getField('input_country_edit');
-        let id = ui.getField('input_country_edit_id');
-        let oldVal = ui.getField('input_country_edit_old_val');
-        if (ui.updateCheck(id, val, oldVal) == cons.DLG_RES.OK) {
-            sys.log('Обновляется страна ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
+        let val = this.ui.getField('input_country_edit');
+        let id = this.ui.getField('input_country_edit_id');
+        let oldVal = this.ui.getField('input_country_edit_old_val');
+        if (this.ui.updateCheck(id, val, oldVal) == Const.DLG_RES.OK) {
+            this.sys.log('Обновляется страна ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'update_txt_col_by_id',
@@ -203,56 +219,56 @@ class Country {
                 'val': val,
                 'col': 'name_ru'
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_UPDATE_COUNTRY + ' ' + response.msg);
-                        alert(cons.MSG.ERR_UPDATE_COUNTRY + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_UPDATE_COUNTRY + ' ' + response.msg);
+                        alert(Const.MSG.ERR_UPDATE_COUNTRY + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
                         this.emptyEdits();
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_UPDATE_COUNTRY + ' ' + error);
-                    alert(cons.MSG.ERR_UPDATE_COUNTRY + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_UPDATE_COUNTRY + ' ' + error);
+                    alert(Const.MSG.ERR_UPDATE_COUNTRY + ' ' + error);
                 }
             );
         }
     }
 
     del(id, val) {
-        if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
-            sys.log('Удаляется страна ID ' + id + ' "' + val + '"..');
+        if (this.ui.delCheck(id, val) == Const.DLG_RES.OK) {
+            this.sys.log('Удаляется страна ID ' + id + ' "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'del',
                 'table': 'country',
                 'id': id
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_DEL_COUNTRY + ' ' + response.msg);
-                        alert(cons.MSG.ERR_DEL_COUNTRY + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_DEL_COUNTRY + ' ' + response.msg);
+                        alert(Const.MSG.ERR_DEL_COUNTRY + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_DEL_COUNTRY + ' ' + error);
-                    alert(cons.MSG.ERR_DEL_COUNTRY + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_DEL_COUNTRY + ' ' + error);
+                    alert(Const.MSG.ERR_DEL_COUNTRY + ' ' + error);
                 }
             );
         }
     }
 
     getRefTable(arr) {
-        sys.log('Получение HTML фрагмента для таблицы стран..');
+        this.sys.log('Получение HTML фрагмента для таблицы стран..');
         let html = `<table id="country_table_data">
             <caption><h4>Страны (${this.countries.length})</h4></caption>
             <tr>
@@ -277,12 +293,12 @@ class Country {
     }
 
     printPaginator(country) {
-        sys.log('Печать пагинатора стран..');
+        this.sys.log('Печать пагинатора стран..');
         jQuery('#country-pagination-container').pagination({
             dataSource: this.countries,
-            pageSize: cons.PAGE_SIZE_REF,
+            pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('country_table', country.getRefTable(data));
+                this.ui.setDiv('country_table', country.getRefTable(data));
             }
         })
     }
@@ -291,24 +307,39 @@ class Country {
 
 class Language {
 
-    languages = [];
+    private languages = [];
+    private sys;
+    private ui;
+    private data;
+
+    /**
+     *
+     * @param sys
+     * @param ui
+     * @param data
+     */
+    constructor(sys, ui, data) {
+        this.sys = sys;
+        this.ui = ui;
+        this.data = data;
+    }
 
     /**
      * Распечатать таблицу и пагинатор языков
      */
     printPaginator(language) {
-        sys.log('Печать пагинатора языков..');
+        this.sys.log('Печать пагинатора языков..');
         jQuery('#lang-pagination-container').pagination({
             dataSource: this.languages,
-            pageSize: cons.PAGE_SIZE_REF,
+            pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('lang_table', language.getRefTable(data));
+                this.ui.setDiv('lang_table', language.getRefTable(data));
             }
         })
     }
 
     setEditVal(id) {
-        sys.log('Загрузка значения по ID из таблицы "language"..');
+        this.sys.log('Загрузка значения по ID из таблицы "language"..');
         let params = {
             'action': 'my_action',
             'query': 'get_col_by_id',
@@ -316,26 +347,26 @@ class Language {
             'id': id,
             'col': 'name_ru'
         };
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
-                    ui.setField('input_lang_edit', response.val);
-                    ui.setField('input_lang_edit_id', id);
-                    ui.setField('input_lang_edit_old_val', response.val);
+                    this.ui.setField('input_lang_edit', response.val);
+                    this.ui.setField('input_lang_edit_id', id);
+                    this.ui.setField('input_lang_edit_old_val', response.val);
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_LANGUAGE);
-                    alert(cons.MSG.NO_DATA_LANGUAGE);
+                    this.sys.log(Const.MSG.NO_DATA_LANGUAGE);
+                    alert(Const.MSG.NO_DATA_LANGUAGE);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_ADD_LANGUAGE + ' ' + error);
-                alert(cons.MSG.ERR_ADD_LANGUAGE + ' ' + error);
+                this.sys.log(Const.MSG.ERR_ADD_LANGUAGE + ' ' + error);
+                alert(Const.MSG.ERR_ADD_LANGUAGE + ' ' + error);
             }
         );
     }
 
     getRefTable(arr) {
-        sys.log('Получение HTML фрагмента для таблицы языков..');
+        this.sys.log('Получение HTML фрагмента для таблицы языков..');
         let html = `<table id="lang_table_data">
             <caption><h4>Языки (${this.languages.length})</h4></caption>
             <tr>
@@ -360,45 +391,45 @@ class Language {
     }
 
     all(typ) {
-        sys.log('Загрузка языков..');
+        this.sys.log('Загрузка языков..');
         let params = {'action': 'my_action', 'query': 'get_languages'};
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
                     this.languages = response;
                     //sys.log('Загруженные языки:\n' + sys.jsonToStr(response));
-                    sys.log('Загружено языков: ' + response.length);
+                    this.sys.log('Загружено языков: ' + response.length);
                     switch (typ) {
-                        case cons.TYP_EL.DROPDOWN:
-                            ui.fillDropdown('language', this.languages);
-                            ui.setDropdownState('language', ui.getDropdownState('language'));
+                        case Const.TYP_EL.DROPDOWN:
+                            this.ui.fillDropdown('language', this.languages);
+                            this.ui.setDropdownState('language', ui.getDropdownState('language'));
                             break;
-                        case cons.TYP_EL.TABLE:
+                        case Const.TYP_EL.TABLE:
                             this.printPaginator(this);
                             break;
                     }
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_LANGUAGES);
-                    alert(cons.MSG.NO_DATA_LANGUAGES);
+                    this.sys.log(Const.MSG.NO_DATA_LANGUAGES);
+                    alert(Const.MSG.NO_DATA_LANGUAGES);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_LOAD_LANGUAGES + ' ' + error);
-                alert(cons.MSG.ERR_LOAD_LANGUAGES + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_LANGUAGES + ' ' + error);
+                alert(Const.MSG.ERR_LOAD_LANGUAGES + ' ' + error);
             }
         );
     }
 
     emptyEdits() {
-        ui.emptyField("input_lang_edit");
-        ui.emptyField("input_lang_edit_id");
-        ui.emptyField("input_lang_edit_old_val");
+        this.ui.emptyField("input_lang_edit");
+        this.ui.emptyField("input_lang_edit_id");
+        this.ui.emptyField("input_lang_edit_old_val");
     }
 
     create() {
-        let val = ui.getField('input_lang_new');
-        if (ui.insertCheck(val) == cons.DLG_RES.OK) {
-            sys.log('Добавление нового языка "' + val + '"..');
+        let val = this.ui.getField('input_lang_new');
+        if (this.ui.insertCheck(val) == Const.DLG_RES.OK) {
+            this.sys.log('Добавление нового языка "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'insertTxt',
@@ -406,32 +437,32 @@ class Language {
                 'col': 'name_ru',
                 'val': val,
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_ADD_LANGUAGE + ' ' + response.msg);
-                        alert(cons.MSG.ERR_ADD_LANGUAGE + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_ADD_LANGUAGE + ' ' + response.msg);
+                        alert(Const.MSG.ERR_ADD_LANGUAGE + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        ui.emptyField('input_lang_new');
-                        this.all(cons.TYP_EL.TABLE);
+                        this.ui.emptyField('input_lang_new');
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_ADD_LANGUAGE + ' ' + error);
-                    alert(cons.MSG.ERR_ADD_LANGUAGE + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_ADD_LANGUAGE + ' ' + error);
+                    alert(Const.MSG.ERR_ADD_LANGUAGE + ' ' + error);
                 }
             );
         }
     }
 
     update() {
-        let val = ui.getField('input_lang_edit');
-        let id = ui.getField('input_lang_edit_id');
-        let oldVal = ui.getField('input_lang_edit_old_val');
-        if (ui.updateCheck(id, val, oldVal) == cons.DLG_RES.OK) {
-            sys.log('Обновляется язык ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
+        let val = this.ui.getField('input_lang_edit');
+        let id = this.ui.getField('input_lang_edit_id');
+        let oldVal = this.ui.getField('input_lang_edit_old_val');
+        if (this.ui.updateCheck(id, val, oldVal) == Const.DLG_RES.OK) {
+            this.sys.log('Обновляется язык ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'update_txt_col_by_id',
@@ -440,49 +471,49 @@ class Language {
                 'val': val,
                 'col': 'name_ru'
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_UPDATE_LANGUAGE + ' ' + response.msg);
-                        alert(cons.MSG.ERR_UPDATE_LANGUAGE + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_UPDATE_LANGUAGE + ' ' + response.msg);
+                        alert(Const.MSG.ERR_UPDATE_LANGUAGE + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
                         this.emptyEdits();
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_UPDATE_LANGUAGE + ' ' + error);
-                    alert(cons.MSG.ERR_UPDATE_LANGUAGE + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_UPDATE_LANGUAGE + ' ' + error);
+                    alert(Const.MSG.ERR_UPDATE_LANGUAGE + ' ' + error);
                 }
             );
         }
     }
 
     del(id, val) {
-        if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
-            sys.log('Удаляется язык ID ' + id + ' "' + val + '"..');
+        if (this.ui.delCheck(id, val) == Const.DLG_RES.OK) {
+            this.sys.log('Удаляется язык ID ' + id + ' "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'del',
                 'table': 'language',
                 'id': id
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_DEL_LANGUAGE + ' ' + response.msg);
-                        alert(cons.MSG.ERR_DEL_LANGUAGE + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_DEL_LANGUAGE + ' ' + response.msg);
+                        alert(Const.MSG.ERR_DEL_LANGUAGE + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_DEL_LANGUAGE + ' ' + error);
-                    alert(cons.MSG.ERR_DEL_LANGUAGE + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_DEL_LANGUAGE + ' ' + error);
+                    alert(Const.MSG.ERR_DEL_LANGUAGE + ' ' + error);
                 }
             );
         }
@@ -492,10 +523,25 @@ class Language {
 
 class Program {
     
-    programs = [];
+    private programs = [];
+    private ui;
+    private sys;
+    private data;
+
+    /**
+     *
+     * @param ui
+     * @param sys
+     * @param data
+     */
+    constructor(sys, ui, data) {
+        this.ui = ui;
+        this.sys = sys;
+        this.data = data;
+    }
 
     setEditVal(id) {
-        sys.log('Загрузка значения по ID из таблицы "program"..');
+        this.sys.log('Загрузка значения по ID из таблицы "program"..');
         let params = {
             'action': 'my_action',
             'query': 'get_col_by_id',
@@ -503,63 +549,63 @@ class Program {
             'id': id,
             'col': 'name_ru'
         };
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
-                    ui.setField('input_prg_edit', response.val);
-                    ui.setField('input_prg_edit_id', id);
-                    ui.setField('input_prg_edit_old_val', response.val);
+                    this.ui.setField('input_prg_edit', response.val);
+                    this.ui.setField('input_prg_edit_id', id);
+                    this.ui.setField('input_prg_edit_old_val', response.val);
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_PROGRAM);
-                    alert(cons.MSG.NO_DATA_PROGRAM);
+                    this.sys.log(Const.MSG.NO_DATA_PROGRAM);
+                    alert(Const.MSG.NO_DATA_PROGRAM);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_ADD_PROGRAM + ' ' + error);
-                alert(cons.MSG.ERR_ADD_PROGRAM + ' ' + error);
+                this.sys.log(Const.MSG.ERR_ADD_PROGRAM + ' ' + error);
+                alert(Const.MSG.ERR_ADD_PROGRAM + ' ' + error);
             }
         );
     }
 
     all(typ) {
-        sys.log('Загрузка программ обучения..');
+        this.sys.log('Загрузка программ обучения..');
         let params = {'action': 'my_action', 'query': 'get_programs'};
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
                     this.programs = response;
                     //sys.log('Загруженные программы:\n' + sys.jsonToStr(response));
-                    sys.log('Загружено программ обучения: ' + response.length);
+                    this.sys.log('Загружено программ обучения: ' + response.length);
                     switch (typ)    {
-                        case cons.TYP_EL.DROPDOWN:
-                            ui.fillDropdown('program', this.programs);
-                            ui.setDropdownState('program', ui.getDropdownState('program'));
+                        case Const.TYP_EL.DROPDOWN:
+                            this.ui.fillDropdown('program', this.programs);
+                            this.ui.setDropdownState('program', this.ui.getDropdownState('program'));
                             break;
-                        case cons.TYP_EL.TABLE:
+                        case Const.TYP_EL.TABLE:
                             this.printPaginator(this);
                     }
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_PROGRAMS);
-                    alert(cons.MSG.NO_DATA_PROGRAMS);
+                    this.sys.log(Const.MSG.NO_DATA_PROGRAMS);
+                    alert(Const.MSG.NO_DATA_PROGRAMS);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_LOAD_PROGRAMS + ' ' + error);
-                alert(cons.MSG.ERR_LOAD_PROGRAMS + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_PROGRAMS + ' ' + error);
+                alert(Const.MSG.ERR_LOAD_PROGRAMS + ' ' + error);
             }
         );
     }
 
     emptyEdits() {
-        ui.emptyField("input_prg_edit");
-        ui.emptyField("input_prg_edit_id");
-        ui.emptyField("input_prg_edit_old_val");
+        this.ui.emptyField("input_prg_edit");
+        this.ui.emptyField("input_prg_edit_id");
+        this.ui.emptyField("input_prg_edit_old_val");
     }
 
     create() {
-        let val = ui.getField('input_prg_new');
-        if (ui.insertCheck(val) == cons.DLG_RES.OK) {
-            sys.log('Добавление новой программмы "' + val + '"..');
+        let val = this.ui.getField('input_prg_new');
+        if (this.ui.insertCheck(val) == Const.DLG_RES.OK) {
+            this.sys.log('Добавление новой программмы "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'insertTxt',
@@ -567,32 +613,32 @@ class Program {
                 'col': 'name_ru',
                 'val': val,
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_ADD_PROGRAM + ' ' + response.msg);
-                        alert(cons.MSG.ERR_ADD_PROGRAM + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_ADD_PROGRAM + ' ' + response.msg);
+                        alert(Const.MSG.ERR_ADD_PROGRAM + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        ui.emptyField('input_prg_new');
-                        this.all(cons.TYP_EL.TABLE);
+                        this.ui.emptyField('input_prg_new');
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_ADD_PROGRAM + ' ' + error);
-                    alert(cons.MSG.ERR_ADD_PROGRAM + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_ADD_PROGRAM + ' ' + error);
+                    alert(Const.MSG.ERR_ADD_PROGRAM + ' ' + error);
                 }
             );
         }
     }
 
     update() {
-        let val = ui.getField('input_prg_edit');
-        let id = ui.getField('input_prg_edit_id');
-        let oldVal = ui.getField('input_prg_edit_old_val');
-        if (ui.updateCheck(id, val, oldVal) == cons.DLG_RES.OK) {
-            sys.log('Обновляется программа ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
+        let val = this.ui.getField('input_prg_edit');
+        let id = this.ui.getField('input_prg_edit_id');
+        let oldVal = this.ui.getField('input_prg_edit_old_val');
+        if (this.ui.updateCheck(id, val, oldVal) == Const.DLG_RES.OK) {
+            this.sys.log('Обновляется программа ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'update_txt_col_by_id',
@@ -601,67 +647,69 @@ class Program {
                 'val': val,
                 'col': 'name_ru'
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_UPDATE_PROGRAM + ' ' + response.msg);
-                        alert(cons.MSG.ERR_UPDATE_PROGRAM + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_UPDATE_PROGRAM + ' ' + response.msg);
+                        alert(Const.MSG.ERR_UPDATE_PROGRAM + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
                         this.emptyEdits();
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_UPDATE_PROGRAM + ' ' + error);
-                    alert(cons.MSG.ERR_UPDATE_PROGRAM + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_UPDATE_PROGRAM + ' ' + error);
+                    alert(Const.MSG.ERR_UPDATE_PROGRAM + ' ' + error);
                 }
             );
         }
     }
 
     del(id, val) {
-        if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
-            sys.log('Удаляется программа обучения ID ' + id + ' "' + val + '"..');
+        if (this.ui.delCheck(id, val) == Const.DLG_RES.OK) {
+            this.sys.log('Удаляется программа обучения ID ' + id + ' "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'del',
                 'table': 'program',
                 'id': id
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_DEL_PROGRAM + ' ' + response.msg);
-                        alert(cons.MSG.ERR_DEL_PROGRAM + ' ' + response.msg);
+                        // noinspection Annotator
+                        this.sys.log(Const.MSG.ERR_DEL_PROGRAM + ' ' + response.msg);
+                        alert(Const.MSG.ERR_DEL_PROGRAM + ' ' + response.msg);
                     }
+                    // noinspection Annotator
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_DEL_PROGRAM + ' ' + error);
-                    alert(cons.MSG.ERR_DEL_PROGRAM + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_DEL_PROGRAM + ' ' + error);
+                    alert(Const.MSG.ERR_DEL_PROGRAM + ' ' + error);
                 }
             );
         }
     }
 
     printPaginator(program) {
-        sys.log('Печать пагинатора программ обучения..');
+        this.sys.log('Печать пагинатора программ обучения..');
         jQuery('#prg-pagination-container').pagination({
             dataSource: this.programs,
-            pageSize: cons.PAGE_SIZE_REF,
+            pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('prg_table', program.getRefTable(data));
+                this.ui.setDiv('prg_table', program.getRefTable(data));
             }
         })
     }
 
     getRefTable(arr) {
-        sys.log('Получение HTML фрагмента для таблицы программ..');
+        this.sys.log('Получение HTML фрагмента для таблицы программ..');
         let html = `<table id="prg_table_data">
             <caption><h4>Программы обучения (${this.programs.length})</h4></caption>
             <tr>
@@ -689,46 +737,61 @@ class Program {
 
 class Specialty {
 
-    specialities = [];
+    private specialities = [];
+    private ui;
+    private sys;
+    private data;
+
+    /**
+     *
+     * @param ui
+     * @param sys
+     * @param data
+     */
+    constructor(sys, ui, data) {
+        this.ui = ui;
+        this.sys = sys;
+        this.data = data;
+    }
 
     emptyEdits() {
-        ui.emptyField("input_spec_edit");
-        ui.emptyField("input_spec_edit_id");
-        ui.emptyField("input_spec_edit_old_val");
+        this.ui.emptyField("input_spec_edit");
+        this.ui.emptyField("input_spec_edit_id");
+        this.ui.emptyField("input_spec_edit_old_val");
     }
 
     all(typ) {
-        sys.log('Загрузка специальностей..');
+        this.sys.log('Загрузка специальностей..');
         let params = {'action': 'my_action', 'query': 'get_specialities'};
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
                     this.specialities = response;
                     //sys.log('Загруженные специальности:\n' + sys.jsonToStr(response));
-                    sys.log('Загружено специальностей: ' + response.length);
+                    this.sys.log('Загружено специальностей: ' + response.length);
                     switch (typ)    {
-                        case cons.TYP_EL.DROPDOWN:
-                            ui.fillDropdown('specialty', this.specialities);
-                            ui.setDropdownState('specialty', ui.getDropdownState('specialty'));
+                        case Const.TYP_EL.DROPDOWN:
+                            this.ui.fillDropdown('specialty', this.specialities);
+                            this.ui.setDropdownState('specialty', this.ui.getDropdownState('specialty'));
                             break;
-                        case cons.TYP_EL.TABLE:
+                        case Const.TYP_EL.TABLE:
                             this.printPaginator(this);
                             break;
                     }
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_SPECIALITIES);
-                    alert(cons.MSG.NO_DATA_SPECIALITIES);
+                    this.sys.log(Const.MSG.NO_DATA_SPECIALITIES);
+                    alert(Const.MSG.NO_DATA_SPECIALITIES);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_LOAD_SPECIALITIES + ' ' + error);
-                alert(cons.MSG.ERR_LOAD_SPECIALITIES + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_SPECIALITIES + ' ' + error);
+                alert(Const.MSG.ERR_LOAD_SPECIALITIES + ' ' + error);
             }
         );
     }
 
     setEditVal(id) {
-        sys.log('Загрузка значения по ID из таблицы "specialty"..');
+        this.sys.log('Загрузка значения по ID из таблицы "specialty"..');
         let params = {
             'action': 'my_action',
             'query': 'get_col_by_id',
@@ -736,28 +799,28 @@ class Specialty {
             'id': id,
             'col': 'name_ru'
         };
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
-                    ui.setField('input_spec_edit', response.val);
-                    ui.setField('input_spec_edit_id', id);
-                    ui.setField('input_spec_edit_old_val', response.val);
+                    this.ui.setField('input_spec_edit', response.val);
+                    this.ui.setField('input_spec_edit_id', id);
+                    this.ui.setField('input_spec_edit_old_val', response.val);
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_SPECIALTY);
-                    alert(cons.MSG.NO_DATA_SPECIALTY);
+                    this.sys.log(Const.MSG.NO_DATA_SPECIALTY);
+                    alert(Const.MSG.NO_DATA_SPECIALTY);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_ADD_SPECIALTY + ' ' + error);
-                alert(cons.MSG.ERR_ADD_SPECIALTY + ' ' + error);
+                this.sys.log(Const.MSG.ERR_ADD_SPECIALTY + ' ' + error);
+                alert(Const.MSG.ERR_ADD_SPECIALTY + ' ' + error);
             }
         );
     }
 
     create() {
-        let val = ui.getField('input_spec_new');
-        if (ui.insertCheck(val) == cons.DLG_RES.OK) {
-            sys.log('Добавление новой специальности "' + val + '"..');
+        let val = this.ui.getField('input_spec_new');
+        if (this.ui.insertCheck(val) == Const.DLG_RES.OK) {
+            this.sys.log('Добавление новой специальности "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'insertTxt',
@@ -765,32 +828,32 @@ class Specialty {
                 'col': 'name_ru',
                 'val': val,
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_ADD_SPECIALTY + ' ' + response.msg);
-                        alert(cons.MSG.ERR_ADD_SPECIALTY + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_ADD_SPECIALTY + ' ' + response.msg);
+                        alert(Const.MSG.ERR_ADD_SPECIALTY + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        ui.emptyField('input_spec_new');
-                        this.all(cons.TYP_EL.TABLE);
+                        this.ui.emptyField('input_spec_new');
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_ADD_SPECIALTY + ' ' + error);
-                    alert(cons.MSG.ERR_ADD_SPECIALTY + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_ADD_SPECIALTY + ' ' + error);
+                    alert(Const.MSG.ERR_ADD_SPECIALTY + ' ' + error);
                 }
             );
         }
     }
 
     update() {
-        let val = ui.getField('input_spec_edit');
-        let id = ui.getField('input_spec_edit_id');
-        let oldVal = ui.getField('input_spec_edit_old_val');
-        if (ui.updateCheck(id, val, oldVal) == cons.DLG_RES.OK) {
-            sys.log('Обновляется специальность ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
+        let val = this.ui.getField('input_spec_edit');
+        let id = this.ui.getField('input_spec_edit_id');
+        let oldVal = this.ui.getField('input_spec_edit_old_val');
+        if (this.ui.updateCheck(id, val, oldVal) == Const.DLG_RES.OK) {
+            this.sys.log('Обновляется специальность ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'update_txt_col_by_id',
@@ -799,67 +862,67 @@ class Specialty {
                 'val': val,
                 'col': 'name_ru'
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_UPDATE_SPECIALTY + ' ' + response.msg);
-                        alert(cons.MSG.ERR_UPDATE_SPECIALTY + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_UPDATE_SPECIALTY + ' ' + response.msg);
+                        alert(Const.MSG.ERR_UPDATE_SPECIALTY + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
                         this.emptyEdits();
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_UPDATE_SPECIALTY + ' ' + error);
-                    alert(cons.MSG.ERR_UPDATE_SPECIALTY + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_UPDATE_SPECIALTY + ' ' + error);
+                    alert(Const.MSG.ERR_UPDATE_SPECIALTY + ' ' + error);
                 }
             );
         }
     }
 
     del(id, val) {
-        if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
-            sys.log('Удаляется специальность ID ' + id + ' "' + val + '"..');
+        if (this.ui.delCheck(id, val) == Const.DLG_RES.OK) {
+            this.sys.log('Удаляется специальность ID ' + id + ' "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'del',
                 'table': 'specialty',
                 'id': id
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_DEL_SPECIALTY + ' ' + response.msg);
-                        alert(cons.MSG.ERR_DEL_SPECIALTY + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_DEL_SPECIALTY + ' ' + response.msg);
+                        alert(Const.MSG.ERR_DEL_SPECIALTY + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_DEL_SPECIALTY + ' ' + error);
-                    alert(cons.MSG.ERR_DEL_SPECIALTY + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_DEL_SPECIALTY + ' ' + error);
+                    alert(Const.MSG.ERR_DEL_SPECIALTY + ' ' + error);
                 }
             );
         }
     }
 
     printPaginator(specialty) {
-        sys.log('Печать пагинатора специальностей..');
+        this.sys.log('Печать пагинатора специальностей..');
         jQuery('#spec-pagination-container').pagination({
             dataSource: this.specialities,
-            pageSize: cons.PAGE_SIZE_REF,
+            pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('spec_table', specialty.getRefTable(data));
+                this.ui.setDiv('spec_table', specialty.getRefTable(data));
             }
         })
     }
 
     getRefTable(arr) {
-        sys.log('Получение HTML фрагмента для таблицы специальностей..');
+        this.sys.log('Получение HTML фрагмента для таблицы специальностей..');
         let html = `<table id="spec_table_data">
             <caption><h4>Специальности (${this.specialities.length})</h4></caption>
             <tr>
@@ -887,16 +950,31 @@ class Specialty {
 
 class Location {
 
-    locations = [];
-    
+    private locations = [];
+    private sys;
+    private ui;
+    private data;
+
+    /**
+     *
+     * @param sys
+     * @param ui
+     * @param data
+     */
+    constructor(sys, ui, data) {
+        this.sys = sys;
+        this.ui = ui;
+        this.data = data;
+    }
+
     emptyEdits() {
-        ui.emptyField("input_loc_edit");
-        ui.emptyField("input_loc_edit_id");
-        ui.emptyField("input_loc_edit_old_val");
+        this.ui.emptyField("input_loc_edit");
+        this.ui.emptyField("input_loc_edit_id");
+        this.ui.emptyField("input_loc_edit_old_val");
     }
 
     setEditVal(id) {
-        sys.log('Загрузка значения по ID из таблицы "location"..');
+        this.sys.log('Загрузка значения по ID из таблицы "location"..');
         let params = {
             'action': 'my_action',
             'query': 'get_col_by_id',
@@ -904,28 +982,28 @@ class Location {
             'id': id,
             'col': 'name_ru'
         };
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
-                    ui.setField('input_loc_edit', response.val);
-                    ui.setField('input_loc_edit_id', id);
-                    ui.setField('input_loc_edit_old_val', response.val);
+                    this.ui.setField('input_loc_edit', response.val);
+                    this.ui.setField('input_loc_edit_id', id);
+                    this. ui.setField('input_loc_edit_old_val', response.val);
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_LOCATION);
-                    alert(cons.MSG.NO_DATA_LOCATION);
+                    this.sys.log(Const.MSG.NO_DATA_LOCATION);
+                    alert(Const.MSG.NO_DATA_LOCATION);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_ADD_LOCATION + ' ' + error);
-                alert(cons.MSG.ERR_ADD_LOCATION + ' ' + error);
+                this.sys.log(Const.MSG.ERR_ADD_LOCATION + ' ' + error);
+                alert(Const.MSG.ERR_ADD_LOCATION + ' ' + error);
             }
         );
     }
 
     create() {
-        let val = ui.getField('input_loc_new');
-        if (ui.insertCheck(val) == cons.DLG_RES.OK) {
-            sys.log('Добавление нового местоположения "' + val + '"..');
+        let val = this.ui.getField('input_loc_new');
+        if (this.ui.insertCheck(val) == Const.DLG_RES.OK) {
+            this.sys.log('Добавление нового местоположения "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'insertTxt',
@@ -933,32 +1011,32 @@ class Location {
                 'col': 'name_ru',
                 'val': val,
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_ADD_LOCATION + ' ' + response.msg);
-                        alert(cons.MSG.ERR_ADD_LOCATION + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_ADD_LOCATION + ' ' + response.msg);
+                        alert(Const.MSG.ERR_ADD_LOCATION + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        ui.emptyField('input_loc_new');
-                        this.all(cons.TYP_EL.TABLE);
+                        this.ui.emptyField('input_loc_new');
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_ADD_LOCATION + ' ' + error);
-                    alert(cons.MSG.ERR_ADD_LOCATION + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_ADD_LOCATION + ' ' + error);
+                    alert(Const.MSG.ERR_ADD_LOCATION + ' ' + error);
                 }
             );
         }
     }
 
     update() {
-        let val = ui.getField('input_loc_edit');
-        let id = ui.getField('input_loc_edit_id');
-        let oldVal = ui.getField('input_loc_edit_old_val');
-        if (ui.updateCheck(id, val, oldVal) == cons.DLG_RES.OK) {
-            sys.log('Обновляется местоположение ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
+        let val = this.ui.getField('input_loc_edit');
+        let id = this.ui.getField('input_loc_edit_id');
+        let oldVal = this.ui.getField('input_loc_edit_old_val');
+        if (this.ui.updateCheck(id, val, oldVal) == Const.DLG_RES.OK) {
+            this.sys.log('Обновляется местоположение ID ' + id + ' "' + oldVal + '" на значение "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'update_txt_col_by_id',
@@ -967,67 +1045,67 @@ class Location {
                 'val': val,
                 'col': 'name_ru'
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_UPDATE_LOCATION + ' ' + response.msg);
-                        alert(cons.MSG.ERR_UPDATE_LOCATION + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_UPDATE_LOCATION + ' ' + response.msg);
+                        alert(Const.MSG.ERR_UPDATE_LOCATION + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
                         this.emptyEdits();
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_UPDATE_LOCATION + ' ' + error);
-                    alert(cons.MSG.ERR_UPDATE_LOCATION + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_UPDATE_LOCATION + ' ' + error);
+                    alert(Const.MSG.ERR_UPDATE_LOCATION + ' ' + error);
                 }
             );
         }
     }
 
     del(id, val) {
-        if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
-            sys.log('Удаляется местоположение ID ' + id + ' "' + val + '"..');
+        if (this.ui.delCheck(id, val) == Const.DLG_RES.OK) {
+            this.sys.log('Удаляется местоположение ID ' + id + ' "' + val + '"..');
             let params = {
                 'action': 'my_action',
                 'query': 'del',
                 'table': 'location',
                 'id': id
             };
-            data.getData(params).then(
+            this.data.getData(params).then(
                 response => {
                     if (response.res == '500') {
-                        sys.log(cons.MSG.ERR_DEL_LOCATION + ' ' + response.msg);
-                        alert(cons.MSG.ERR_DEL_LOCATION + ' ' + response.msg);
+                        this.sys.log(Const.MSG.ERR_DEL_LOCATION + ' ' + response.msg);
+                        alert(Const.MSG.ERR_DEL_LOCATION + ' ' + response.msg);
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.all(cons.TYP_EL.TABLE);
+                        this.all(Const.TYP_EL.TABLE);
                     }
                 },
                 error => {
-                    sys.log(cons.MSG.ERR_DEL_LOCATION + ' ' + error);
-                    alert(cons.MSG.ERR_DEL_LOCATION + ' ' + error);
+                    this.sys.log(Const.MSG.ERR_DEL_LOCATION + ' ' + error);
+                    alert(Const.MSG.ERR_DEL_LOCATION + ' ' + error);
                 }
             );
         }
     }
 
      printPaginator(loc) {
-        sys.log('Печать пагинатора местоположений..');
+         this.sys.log('Печать пагинатора местоположений..');
         jQuery('#loc-pagination-container').pagination({
             dataSource: this.locations,
-            pageSize: cons.PAGE_SIZE_REF,
+            pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('loc_table', loc.getRefTable(data));
+                this.ui.setDiv('loc_table', loc.getRefTable(data));
             }
         })
     }
 
     getRefTable(arr) {
-        sys.log('Получение HTML фрагмента для таблицы местоположений..');
+        this.sys.log('Получение HTML фрагмента для таблицы местоположений..');
         let html = `<table id="loc_table_data">
             <caption><h4>Местоположения (${this.locations.length})</h4></caption>
             <tr>
@@ -1052,31 +1130,31 @@ class Location {
     }
 
     all(typ) {
-        sys.log('Загрузка местоположений..');
+        this.sys.log('Загрузка местоположений..');
         let params = { 'action': 'my_action', 'query': 'get_locations'};
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
                     this.locations = response;
-                    sys.log('Загружено местоположений: ' + response.length);
+                    this.sys.log('Загружено местоположений: ' + response.length);
                     switch (typ) {
-                        case cons.TYP_EL.DROPDOWN:
+                        case Const.TYP_EL.DROPDOWN:
                             break;
-                        case cons.TYP_EL.TABLE:
+                        case Const.TYP_EL.TABLE:
                             this.printPaginator(this);
                             break;
-                        case cons.TYP_EL.DROPDOWN_NEW:
-                            ui.fillDropdown('dropdownUnivNewLocation', this.locations);
+                        case Const.TYP_EL.DROPDOWN_NEW:
+                            this.ui.fillDropdown('dropdownUnivNewLocation', this.locations);
                             break;
                     }
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_LOCATIONS);
-                    alert(cons.MSG.NO_DATA_LOCATIONS);
+                    this.sys.log(Const.MSG.NO_DATA_LOCATIONS);
+                    alert(Const.MSG.NO_DATA_LOCATIONS);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_LOAD_LOCATIONS + ' ' + error);
-                alert(cons.MSG.ERR_LOAD_LOCATIONS + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_LOCATIONS + ' ' + error);
+                alert(Const.MSG.ERR_LOAD_LOCATIONS + ' ' + error);
             }
         );
     }
@@ -1085,7 +1163,22 @@ class Location {
 
 class Search {
     
-    cards = [];
+    private cards = [];
+    private sys;
+    private ui;
+    private data;
+
+    /**
+     *
+     * @param sys
+     * @param ui
+     * @param data
+     */
+    constructor(sys, ui, data) {
+        this.sys = sys;
+        this.ui = ui;
+        this.data = data;
+    }
 
     /**
      * Получить HTML фрагмент карточки университета
@@ -1097,12 +1190,12 @@ class Search {
         <div>
           <div class="card">
             <div class="img_my">
-              <img src="${sys.emptyString(card.url_pic)}">
+              <img src="${this.sys.emptyString(card.url_pic)}">
             </div>
             <div class="desc">
               <div class="desc_txt">
                 <div class="desc_title">
-                  ${sys.emptyString(card.name)}
+                  ${this.sys.emptyString(card.name)}
                 </div>
                 <div class="text_container">
                     <div>
@@ -1115,60 +1208,60 @@ class Search {
                       <b class="attr_name">Тип:</b>
                     </div>
                     <div>
-                      ${sys.emptyString(card.type)}
+                      ${this.sys.emptyString(card.type)}
                     </div>
                     <div>
                       <b class="attr_name">Расположение:</b>
                     </div>
                     <div>
-                      ${sys.emptyString(card.location)}
+                      ${this.sys.emptyString(card.location)}
                     </div>
                     <div>
                       <b class="attr_name">Язык обучения:</b>
                     </div>
                     <div>
-                      ${sys.emptyString(card.languages)}
+                      ${this.sys.emptyString(card.languages)}
                     </div>
                     <div>
                       <b class="attr_name">Программы:</b>
                     </div>
                     <div class="attr_name">
-                      ${sys.emptyString(card.programs)}
+                      ${this.sys.emptyString(card.programs)}
                     </div>
                 </div>
               </div>
             </div>
             <div class="mor_info_btn">
-              <a href="${sys.emptyString(card.url)}">Подробно</a>
+              <a href="${this.sys.emptyString(card.url)}">Подробно</a>
             </div>
           </div>
         </div>`;
     }
     
     printResults() {
-        sys.log('Печать результатов поиска..');
+        this.sys.log('Печать результатов поиска..');
         this.search(localStorage.getItem("country"), localStorage.getItem("program"), localStorage.getItem("specialty"), localStorage.getItem("language"));
     }
 
     printHeader() {
-        ui.setDiv("results_container", `
-    <div>
+        this.ui.setDiv("results_container", `
         <div>
-            <h4>Результаты поиска: ${this.cards.length}</h4>
-        </div>
-        <div>
-            <div id="found_objects" class="found_objects">
+            <div>
+                <h4>Результаты поиска: ${this.cards.length}</h4>
+            </div>
+            <div>
+                <div id="found_objects" class="found_objects">
+                </div>
             </div>
         </div>
-    </div>
-    `);
+        `);
     }
 
     printPaginator(search) {
-        sys.log('Печать пагинатора результатов поиска..');
+        this.sys.log('Печать пагинатора результатов поиска..');
         jQuery('#cards-pagination-container').pagination({
             dataSource: this.cards,
-            pageSize: cons.PAGE_SIZE_SEARCH,
+            pageSize: Const.PAGE_SIZE_SEARCH,
             callback: function (data, pagination) {
                 search.clearResults();
                 jQuery.each(data, function (index, item) {
@@ -1179,7 +1272,7 @@ class Search {
     }
 
     search(countryId, programId, specialtyId, languageId) {
-        sys.log('Поиск с параметрами country = ' + countryId + ', program = ' + programId + ', specialty = ' + specialtyId + ', language = ' + languageId + '..');
+        this.sys.log('Поиск с параметрами country = ' + countryId + ', program = ' + programId + ', specialty = ' + specialtyId + ', language = ' + languageId + '..');
         let params = {
             'action': 'my_action',
             'query': 'search',
@@ -1188,12 +1281,12 @@ class Search {
             'specialty': specialtyId,
             'language': languageId
         };
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null) {
                     this.clearResults();
                     this.cards = response;
-                    sys.log('Количество результатов поиска: ' + this.cards.length);
+                    this.sys.log('Количество результатов поиска: ' + this.cards.length);
                     this.printHeader();
                     this.printPaginator(this);
                 } else {
@@ -1201,14 +1294,14 @@ class Search {
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_SEARCH + ' ' + error);
-                alert(cons.MSG.ERR_SEARCH + ' ' + error);
+                this.sys.log(Const.MSG.ERR_SEARCH + ' ' + error);
+                alert(Const.MSG.ERR_SEARCH + ' ' + error);
             }
         );
     }
 
     printCard(card) {
-        ui.appendDiv("found_objects", this.getCard(card));
+        this.ui.appendDiv("found_objects", this.getCard(card));
     }
 
     printNoResults() {
@@ -1217,7 +1310,7 @@ class Search {
             <h4><b>Ничего не найдено</b></h4>
         </div>
     `;
-        ui.setDiv("results_container", html);
+        this.ui.setDiv("results_container", html);
     }
 
     printWait() {
@@ -1226,12 +1319,12 @@ class Search {
             <h4><b>Идёт поиск..</b></h4>
         </div>
     `;
-        ui.setDiv("results_container", html);
+        this.ui.setDiv("results_container", html);
     }
 
     clearResults() {
         let html = ``;
-        ui.setDiv("found_objects", html);
+        this.ui.setDiv("found_objects", html);
     }
     
 }
@@ -1239,7 +1332,7 @@ class Search {
 class System {
 
     log(msg)  {
-        if (!cons.LOG_DB)    {
+        if (!Const.LOG_DB)    {
             console.log(msg);
             return;
         }
@@ -1250,17 +1343,17 @@ class System {
             'col': 'msg',
             'val': msg
         };
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response.res == '500') {
-                    alert(cons.MSG.ERR_LOG + ' ' + response.msg);
+                    alert(Const.MSG.ERR_LOG + ' ' + response.msg);
                 }
                 if (response.res == '200') {
                     console.log(msg);
                 }
             },
             error => {
-                alert(cons.MSG.ERR_LOG + ' ' + error);
+                alert(Const.MSG.ERR_LOG + ' ' + error);
             }
         );
     }
@@ -1276,10 +1369,10 @@ class System {
 
     initLocalStorage() {
         this.log("Инициализация local storage..");
-        ui.saveDropdownState('country', 0);
-        ui.saveDropdownState('program', 0);
-        ui.saveDropdownState('specialty', 0);
-        ui.saveDropdownState('language', 0);
+        this.ui.saveDropdownState('country', 0);
+        this.ui.saveDropdownState('program', 0);
+        this.ui.saveDropdownState('specialty', 0);
+        this.ui.saveDropdownState('language', 0);
     }
 
     emptyString(str) {
@@ -1293,23 +1386,37 @@ class System {
 
 class UI {
 
+    private sys;
+    private country;
+    private program;
+    private specialty;
+    private language;
+
+    constructor(sys, country, program, specialty, language) {
+        this.sys = sys;
+        this.country = country;
+        this.program = program;
+        this.specialty = specialty;
+        this.language = language;
+    }
+
     /**
      * Заполнить dropdown элемент
      * @param dropdownId ID элемента
      * @param arr массив
      */
     fillDropdown(dropdownId, arr) {
-        sys.log('Заполняется dropdown "' + dropdownId + '"..');
+        this.sys.log('Заполняется dropdown "' + dropdownId + '"..');
         for (let i = 0; i < arr.length; i++) {
             jQuery("#" + dropdownId).append(new Option(arr[i].val, arr[i].id));
         }
     }
 
     fillAllDropdowns() {
-        country.all(cons.TYP_EL.DROPDOWN);
-        program.all(cons.TYP_EL.DROPDOWN);
-        language.all(cons.TYP_EL.DROPDOWN);
-        specialty.all(cons.TYP_EL.DROPDOWN);
+        this.country.all(Const.TYP_EL.DROPDOWN);
+        this.program.all(Const.TYP_EL.DROPDOWN);
+        this.language.all(Const.TYP_EL.DROPDOWN);
+        this.specialty.all(Const.TYP_EL.DROPDOWN);
     }
 
     /**
@@ -1332,12 +1439,12 @@ class UI {
 
     saveDropdownState(dropdownName, value) {
         localStorage.setItem(dropdownName, value);
-        sys.log('Значение "' +  value + '" сохранено в local storage для dropdown "' + dropdownName + '".');
+        this.sys.log('Значение "' +  value + '" сохранено в local storage для dropdown "' + dropdownName + '".');
     }
 
     getDropdownState(dropdownName) {
         let val = localStorage.getItem(dropdownName);
-        sys.log('Получение значения "' + val + '" из local storage для dropdown "' + dropdownName + '"..');
+        this.sys.log('Получение значения "' + val + '" из local storage для dropdown "' + dropdownName + '"..');
         return val;
     }
 
@@ -1349,7 +1456,7 @@ class UI {
     }
 
     setDropdownState(dropdownName, value) {
-        sys.log('Установка dropdown "' + dropdownName + '" в значение "' + value + '"');
+        this.sys.log('Установка dropdown "' + dropdownName + '" в значение "' + value + '"');
         this.setField(dropdownName, value);
     }
 
@@ -1373,23 +1480,23 @@ class UI {
     }
 
     changeColor(titleId, color) {
-        sys.log('Меняется цвет для ' + titleId + '..');
+        this.sys.log('Меняется цвет для ' + titleId + '..');
         jQuery("#" + titleId).css("color", color);
     }
 
 
     setField(field, val) {
-        sys.log('Установка поля "' + field + '" в значение "' + val + '"..');
+        this.sys.log('Установка поля "' + field + '" в значение "' + val + '"..');
         jQuery("#" + field).val(val);
     }
 
     emptyField(field) {
-        sys.log('Очистка поля "' + field + '"..');
+        this.sys.log('Очистка поля "' + field + '"..');
         jQuery("#" + field).val('');
     }
 
     getField(field) {
-        sys.log('Получение значения поля "' + field + '"..');
+        this.sys.log('Получение значения поля "' + field + '"..');
         return jQuery("#" + field).val();
     }
 
@@ -1409,9 +1516,9 @@ class UI {
             return;
         }
         if (confirm('Обновить значение "' + oldVal + '" на новое "' + val + '"?')) {
-            return cons.DLG_RES.OK;
+            return Const.DLG_RES.OK;
         } else {
-            return cons.DLG_RES.CANCEL;
+            return Const.DLG_RES.CANCEL;
         }
     }
 
@@ -1421,9 +1528,9 @@ class UI {
             return;
         }
         if (confirm('Создать запись "' + val + '"?')) {
-            return cons.DLG_RES.OK;
+            return Const.DLG_RES.OK;
         } else {
-            return cons.DLG_RES.CANCEL;
+            return Const.DLG_RES.CANCEL;
         }
     }
 
@@ -1433,9 +1540,9 @@ class UI {
             return;
         }
         if (confirm('Удалить запись ID ' + id + ' "' + val + '" ?')) {
-            return cons.DLG_RES.OK;
+            return Const.DLG_RES.OK;
         } else {
-            return cons.DLG_RES.CANCEL;
+            return Const.DLG_RES.CANCEL;
         }
     }
     
@@ -1469,50 +1576,61 @@ class Data {
 
 class University  {
 
-    universities = [];
-    types = [];
+    private universities = [];
+    private types = [];
+    private programs = [];
+    private languages = [];
+    private specialities = [];
+    private sys;
+    private ui;
+    private data;
+
+    constructor(sys, ui, data) {
+        this.sys = sys;
+        this.ui = ui;
+        this.data = data;
+    }
 
     all(typ) {
-        sys.log('Загрузка университетов..');
+        this.sys.log('Загрузка университетов..');
         let params = {'action': 'my_action', 'query': 'get_universities'};
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
                     this.universities = response;
-                    sys.log('Загружено университетов: ' + this.universities.length);
+                    this.sys.log('Загружено университетов: ' + this.universities.length);
                     switch (typ) {
-                        case cons.TYP_EL.DROPDOWN:
+                        case Const.TYP_EL.DROPDOWN:
                             break;
-                        case cons.TYP_EL.TABLE:
+                        case Const.TYP_EL.TABLE:
                             this.printPaginator(this);
                             break;
                     }
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_UNIVERSITIES);
-                    alert(cons.MSG.NO_DATA_UNIVERSITIES);
+                    this.sys.log(Const.MSG.NO_DATA_UNIVERSITIES);
+                    alert(Const.MSG.NO_DATA_UNIVERSITIES);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_LOAD_UNIVERSITIES+ ' ' + error);
-                alert(cons.MSG.ERR_LOAD_UNIVERSITIES + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_UNIVERSITIES+ ' ' + error);
+                alert(Const.MSG.ERR_LOAD_UNIVERSITIES + ' ' + error);
             }
         );
     }
 
     printPaginator(university) {
-        sys.log('Печать пагинатора стран..');
+        this.sys.log('Печать пагинатора стран..');
         jQuery('#univ-pagination-container').pagination({
             dataSource: this.universities,
-            pageSize: cons.PAGE_SIZE_REF,
+            pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('univ_table', university.getRefTable(data));
+                this.ui.setDiv('univ_table', university.getRefTable(data));
             }
         })
     }
 
     getRefTable(arr) {
-        let k = 1;
-        sys.log('Получение HTML фрагмента для таблицы университета..');
+        this.sys.log('Получение HTML фрагмента для таблицы университета..');
         let html = `<table id="univ_table_data">
             <caption><h4>Университеты (${ this.universities.length })</h4></caption>
             <tr>
@@ -1539,201 +1657,248 @@ class University  {
     }
 
     geTypes(typ) {
-        sys.log('Загрузка типов университетов..');
+        this.sys.log('Загрузка типов университетов..');
         let params = {'action': 'my_action', 'query': 'get_types'};
-        data.getData(params).then(
+        this.data.getData(params).then(
             response => {
                 if (response != null)   {
                     this.types = response;
-                    sys.log('Загружено типов: ' + response.length);
+                    this.sys.log('Загружено типов: ' + response.length);
                     switch (typ) {
-                        case cons.TYP_EL.DROPDOWN:
+                        case Const.TYP_EL.DROPDOWN:
                             break;
-                        case cons.TYP_EL.TABLE:
+                        case Const.TYP_EL.TABLE:
                             break;
-                        case cons.TYP_EL.DROPDOWN_NEW:
-                            ui.fillDropdown('dropdownUnivNewType', this.types);
+                        case Const.TYP_EL.DROPDOWN_NEW:
+                            this.ui.fillDropdown('dropdownUnivNewType', this.types);
                             break;
                     }
                 }   else {
-                    sys.log(cons.MSG.NO_DATA_TYPES);
-                    alert(cons.MSG.NO_DATA_TYPES);
+                    this.sys.log(Const.MSG.NO_DATA_TYPES);
+                    alert(Const.MSG.NO_DATA_TYPES);
                 }
             },
             error => {
-                sys.log(cons.MSG.ERR_LOAD_TYPES + ' ' + error);
-                alert(cons.MSG.ERR_LOAD_TYPES + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_TYPES + ' ' + error);
+                alert(Const.MSG.ERR_LOAD_TYPES + ' ' + error);
             }
         );
     }
 
 }
 
-let cons = new Const();
-let country = new Country();
-let language = new Language();
-let program = new Program();
-let specialty = new Specialty();
-let loc = new Location();
-let search = new Search();
-let sys = new System();
-let ui = new UI();
-let data = new Data();
-let univ = new University();
+class App {
 
-function onLoad() {
-    
-    if (window.location.origin.indexOf('localhost') != -1) {
-        cons.URL.SEARCH = window.location.origin + '/learn/?page_id=94';
-        cons.URL.SEARCH_RESULTS = window.location.origin + '/learn/?page_id=81';
-        cons.URL.SEARCH_MANAGEMENT = window.location.origin + '/learn/?page_id=86';
-    } else {
-        cons.URL.SEARCH = window.location.origin + '/poisk';
-        cons.URL.SEARCH_RESULTS = window.location.origin + '/results';
-        cons.URL.SEARCH_MANAGEMENT = window.location.origin + '/panel';
+    _sys = new System();
+    _ui = new UI();
+    _data = new Data();
+    _univ = new University(this.sys, this.ui, this.data);
+    _country = new Country(this.sys, this.ui, this.data)
+    _language = new Language(this.sys, this.ui, this.data);
+    _program = new Program(this.sys, this.ui, this.data);
+    _specialty = new Specialty(this.sys, this.ui, this.data);
+    _loc = new Location(this.sys, this.ui, this.data);
+    _search = new Search(this.sys, this.ui, this.data);
+
+    get country() {
+        return this._country;
     }
 
-    jQuery("document").ready(function () {
-        let currentURL = window.location.href;
-        sys.log('Адрес загружаемой страницы: ' + currentURL);
-        sys.log('cons.URL.SEARCH: ' + cons.URL.SEARCH);
-        sys.log('cons.URL.SEARCH_RESULTS: ' + cons.URL.SEARCH_RESULTS);
-        sys.log('cons.URL.SEARCH_MANAGEMENT: ' + cons.URL.SEARCH_MANAGEMENT);
-        if (currentURL.indexOf(cons.URL.SEARCH_MANAGEMENT) != -1) {
-            sys.log('Текущая страница: cons.URL.SEARCH_MANAGEMENT');
-            country.all(cons.TYP_EL.TABLE);
-            country.all(cons.TYP_EL.DROPDOWN_NEW);
-            language.all(cons.TYP_EL.TABLE);
-            program.all(cons.TYP_EL.TABLE);
-            specialty.all(cons.TYP_EL.TABLE);
-            loc.all(cons.TYP_EL.TABLE);
-            loc.all(cons.TYP_EL.DROPDOWN_NEW);
-            univ.all(cons.TYP_EL.TABLE);
-            univ.geTypes(cons.TYP_EL.DROPDOWN_NEW);
+    get language() {
+        return this._language;
+    }
+
+    get program() {
+        return this._program;
+    }
+
+    get specialty() {
+        return this._specialty;
+    }
+
+    get loc() {
+        return this._loc;
+    }
+
+    get search() {
+        return this._search;
+    }
+
+    get sys() {
+        return this._sys;
+    }
+
+    get ui() {
+        return this._ui;
+    }
+
+    get data() {
+        return this._data;
+    }
+
+    get univ() {
+        return this._univ;
+    }
+
+    constructor() {
+        this.initUrls();
+        this.ready();
+    }
+
+    initUrls()  {
+        if (window.location.origin.indexOf('localhost') != -1) {
+            Const.URL.SEARCH = window.location.origin + '/learn/?page_id=94';
+            Const.URL.SEARCH_RESULTS = window.location.origin + '/learn/?page_id=81';
+            Const.URL.SEARCH_MANAGEMENT = window.location.origin + '/learn/?page_id=86';
+        } else {
+            Const.URL.SEARCH = window.location.origin + '/poisk';
+            Const.URL.SEARCH_RESULTS = window.location.origin + '/results';
+            Const.URL.SEARCH_MANAGEMENT = window.location.origin + '/panel';
         }
-        if (currentURL.indexOf(cons.URL.SEARCH) != -1) {
-            sys.log('Текущая страница: cons.URL.SEARCH');
-            sys.initLocalStorage();
-            if (jQuery(window).width() < 500) {
-                sys.log('Изменение цвета названий полей..');
-                let color = 'white';
-                jQuery("#dropdown_title_country").css("color", color);
-                jQuery("#dropdown_title_program").css("color", color);
-                jQuery("#dropdown_title_specialty").css("color", color);
-                jQuery("#dropdown_title_language").css("color", color);
+    }
+
+    ready() {
+        jQuery("document").ready(function () {
+            let currentURL = window.location.href;
+            this.sys.log('Адрес загружаемой страницы: ' + currentURL);
+            this.sys.log('_Const.URL.SEARCH: ' + Const.URL.SEARCH);
+            this.sys.log('_Const.URL.SEARCH_RESULTS: ' + Const.URL.SEARCH_RESULTS);
+            this.sys.log('_Const.URL.SEARCH_MANAGEMENT: ' + Const.URL.SEARCH_MANAGEMENT);
+            if (currentURL.indexOf(Const.URL.SEARCH_MANAGEMENT) != -1) {
+                this.sys.log('Текущая страница: Const.URL.SEARCH_MANAGEMENT');
+                this.country.all(Const.TYP_EL.TABLE);
+                this.country.all(Const.TYP_EL.DROPDOWN_NEW);
+                this.language.all(Const.TYP_EL.TABLE);
+                this.program.all(Const.TYP_EL.TABLE);
+                this.specialty.all(Const.TYP_EL.TABLE);
+                this.loc.all(Const.TYP_EL.TABLE);
+                this.loc.all(Const.TYP_EL.DROPDOWN_NEW);
+                this.univ.all(Const.TYP_EL.TABLE);
+                this.univ.geTypes(Const.TYP_EL.DROPDOWN_NEW);
             }
-            ui.clearAllDropdowns();
-            ui.fillAllDropdowns();
-        }
-        if (currentURL.indexOf(cons.URL.SEARCH_RESULTS) != -1) {
-            sys.log('Текущая страница: cons.URL.SEARCH_RESULTS');
-            ui.clearAllDropdowns();
-            ui.fillAllDropdowns();
-            ui.changeTitlesStyle();
-            search.printResults();
-            search.printPaginator(search);
-        }
-    });
-    
+            if (currentURL.indexOf(Const.URL.SEARCH) != -1) {
+                this.sys.log('Текущая страница: Const.URL.SEARCH');
+                this.sys.initLocalStorage();
+                if (jQuery(window).width() < 500) {
+                    this.sys.log('Изменение цвета названий полей..');
+                    let color = 'white';
+                    jQuery("#dropdown_title_country").css("color", color);
+                    jQuery("#dropdown_title_program").css("color", color);
+                    jQuery("#dropdown_title_specialty").css("color", color);
+                    jQuery("#dropdown_title_language").css("color", color);
+                }
+                this.ui.clearAllDropdowns();
+                this.ui.fillAllDropdowns();
+            }
+            if (currentURL.indexOf(Const.URL.SEARCH_RESULTS) != -1) {
+                this.sys.log('Текущая страница: Const.URL.SEARCH_RESULTS');
+                this.ui.clearAllDropdowns();
+                this.ui.fillAllDropdowns();
+                this.ui.changeTitlesStyle();
+                this.search.printResults();
+                this.search.printPaginator(search);
+            }
+        });
+    }
 }
 
-onLoad();
+let app = new App();
 
 // on clicks ------------------------>>>
 function on_click_spec_edit(id) {
-    specialty.setEditVal(id);
+    app.specialty.setEditVal(id);
 }
 
 function on_click_spec_del(id, val) {
-    specialty.del(id, val);
+    app.specialty.del(id, val);
 }
 
 function on_click_spec_new() {
-    specialty.create();
+    app.specialty.create();
 }
 
 function on_click_spec_update() {
-    specialty.update();
+    app.specialty.update();
 }
 
 function on_click_loc_del(id, val) {
-    loc.del(id, val);
+    app.loc.del(id, val);
 }
 
 function on_click_loc_new() {
-    loc.create();
+    app.loc.create();
 }
 
 function on_click_loc_update() {
-    loc.update();
+    app.loc.update();
 }
 
 function on_click_loc_edit(id) {
-    loc.setEditVal(id);
+    app.loc.setEditVal(id);
 }
 
 function on_click_country_edit(id) {
-    country.setEditVal(id);
+    app.country.setEditVal(id);
 }
 
 function on_click_country_del(id, val) {
-    country.del(id, val);
+    app.country.del(id, val);
 }
 
 function on_click_country_new() {
-    country.create();
+    app.country.create();
 }
 
 function on_click_lang_edit(id) {
-    language.setEditVal(id);
+    app.language.setEditVal(id);
 }
 
 function on_click_lang_del(id, val) {
-    language.del(id, val);
+    app.language.del(id, val);
 }
 
 function on_click_lang_new() {
-    language.create();
+    app.language.create();
 }
 
 function on_click_country_update() {
-    country.update();
+    app.country.update();
 }
 
 function on_click_lang_update() {
-    language.update();
+    app.language.update();
 }
 
 function on_click_search() {
-    sys.log('Открывается страница поиска..');
+    app.sys.log('Открывается страница поиска..');
     let currentURL = window.location.href;
-    ui.saveAllDropdownState();
-    if (currentURL == cons.URL.SEARCH_RESULTS) {
-        search.printWait();
-        ui.setDropdownState('country', ui.getDropdownState('country'));
-        ui.setDropdownState('program', ui.getDropdownState('program'));
-        ui.setDropdownState('specialty', ui.getDropdownState('specialty'));
-        ui.setDropdownState('language', ui.getDropdownState('language'));
-        search.printResults();
+    app.ui.saveAllDropdownState();
+    if (currentURL == Const.URL.SEARCH_RESULTS) {
+        app.search.printWait();
+        app.ui.setDropdownState('country', app.ui.getDropdownState('country'));
+        app.ui.setDropdownState('program', app.ui.getDropdownState('program'));
+        app.ui.setDropdownState('specialty', app.ui.getDropdownState('specialty'));
+        app.ui.setDropdownState('language', app.ui.getDropdownState('language'));
+        app.search.printResults();
     } else {
-        window.location = cons.URL.SEARCH_RESULTS;
+        window.location = Const.URL.SEARCH_RESULTS;
     }
 }
 
 function on_click_prg_edit(id)    {
-    program.setEditVal(id);
+    app.program.setEditVal(id);
 }
 
 function on_click_prg_update() {
-    program.update();
+    app.program.update();
 }
 
 function on_click_prg_new() {
-    program.create();
+    app.program.create();
 }
 
 function on_click_prg_del(id, val) {
-    program.del(id, val);
+    app.program.del(id, val);
 }
 
 function on_click_univ_new()    {
