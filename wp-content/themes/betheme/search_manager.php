@@ -231,55 +231,41 @@ require_once get_theme_root() . '/betheme/lib.php';
                         <td>Ссылка фото</td>
                         <td><input type="text" id="inpUnivNewUrlPhoto"></td>
                     </tr>
-
                     <tr>
                         <td>Программы обучения</td>
                         <td>
                             <select name="Тип" id="dropdownUnivNewPrg"></select>
-
-                            <table>
-                                <caption>Список</caption>
-                                <tr>
-
-                                </tr>
-                            </table>
-
+                            <button onclick="on_click_univ_new_add_prg">Добавить</button>
+                            Список:
+                            <div id="list_univ_new_prgs">
+                            </div>
                         </td>
                     </tr>
                     <tr>
                         <td>Специальности</td>
                         <td>
                             <select name="Тип" id="dropdownUnivNewSpec"></select>
-
-                            <table>
-                                <caption>Список</caption>
-                                <tr>
-
-                                </tr>
-                            </table>
-
+                            <button onclick="on_click_univ_new_add_spec">Добавить</button>
+                            Список:
+                            <div id="list_univ_new_specs">
+                            </div>
                         </td>
                     </tr>
                     <tr>
                         <td>Языки обучения</td>
                         <td>
                             <select name="Тип" id="dropdownUnivNewLang"></select>
-
-                            <table>
-                                <caption>Список</caption>
-                                <tr>
-
-                                </tr>
-                            </table>
-
+                            <button onclick="on_click_univ_new_add_lang">Добавить</button>
+                            Список:
+                            <div id="list_univ_new_langs">
+                            </div>
                         </td>
                     </tr>
-
                 </table>
             </div>
 
             <div>
-                <button type="button" onclick="on_click_univ_add()">Добавить</button>
+                <button type="button" onclick="on_click_univ_add()">Добавить университет</button>
             </div>
 
         </div>
@@ -323,7 +309,7 @@ require_once get_theme_root() . '/betheme/lib.php';
             </div>
 
             <div>
-                <button type="button" onclick="on_click_univ_update()">Обновить</button>
+                <button type="button" onclick="on_click_univ_update()">Обновить университет</button>
             </div>
 
         </div>

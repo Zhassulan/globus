@@ -92,7 +92,7 @@ class Country {
      *
      * @param typ перечисление элемента
      */
-    getCountries(typ) {
+    all(typ) {
         sys.log('Загрузка стран..');
         let params = {'action': 'my_action', 'query': 'get_countries'};
         data.getData(params).then(
@@ -106,7 +106,7 @@ class Country {
                             ui.setDropdownState('country', ui.getDropdownState('country'));
                             break;
                         case cons.TYP_EL.TABLE:
-                            this.printCountriesPaginator(this);
+                            this.printPaginator(this);
                             break;
                         case cons.TYP_EL.DROPDOWN_NEW:
                             ui.fillDropdown('dropdownUnivNewCountry', this.countries);
@@ -124,7 +124,7 @@ class Country {
         );
     }
 
-    setCountryEditVal(id) {
+    setEditVal(id) {
         sys.log('Загрузка значения по ID из таблицы "country"..');
         let params = {
             'action': 'my_action',
@@ -152,13 +152,13 @@ class Country {
         );
     }
 
-    emptyEditCountry() {
+    emptyEdits() {
         ui.emptyField("#input_country_edit");
         ui.emptyField("#input_country_edit_id");
         ui.emptyField("#input_country_edit_old_val");
     }
 
-    newCountry() {
+    create() {
         let val = ui.getField('input_country_new');
         if (ui.insertCheck(val) == cons.DLG_RES.OK) {
             sys.log('Добавление страны "' + val + '"..');
@@ -178,7 +178,7 @@ class Country {
                     if (response.res == '200') {
                         alert(response.msg);
                         ui.emptyField('input_country_new');
-                        this.getCountries(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -189,7 +189,7 @@ class Country {
         }
     }
 
-    updateCountry() {
+    update() {
         let val = ui.getField('input_country_edit');
         let id = ui.getField('input_country_edit_id');
         let oldVal = ui.getField('input_country_edit_old_val');
@@ -211,8 +211,8 @@ class Country {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.emptyEditCountry();
-                        this.getCountries(cons.TYP_EL.TABLE);
+                        this.emptyEdits();
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -223,7 +223,7 @@ class Country {
         }
     }
 
-    delCountry(id, val) {
+    del(id, val) {
         if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
             sys.log('Удаляется страна ID ' + id + ' "' + val + '"..');
             let params = {
@@ -240,7 +240,7 @@ class Country {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.getCountries(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -251,7 +251,7 @@ class Country {
         }
     }
 
-    getCountryRefTable(arr) {
+    getRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы стран..');
         let html = `<table id="country_table_data">
             <caption><h4>Страны (${this.countries.length})</h4></caption>
@@ -276,13 +276,13 @@ class Country {
         return html + `</table>`;
     }
 
-    printCountriesPaginator(country) {
+    printPaginator(country) {
         sys.log('Печать пагинатора стран..');
         jQuery('#country-pagination-container').pagination({
             dataSource: this.countries,
             pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('country_table', country.getCountryRefTable(data));
+                ui.setDiv('country_table', country.getRefTable(data));
             }
         })
     }
@@ -296,18 +296,18 @@ class Language {
     /**
      * Распечатать таблицу и пагинатор языков
      */
-    printLanguagesPaginator(language) {
+    printPaginator(language) {
         sys.log('Печать пагинатора языков..');
         jQuery('#lang-pagination-container').pagination({
             dataSource: this.languages,
             pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('lang_table', language.getLangRefTable(data));
+                ui.setDiv('lang_table', language.getRefTable(data));
             }
         })
     }
 
-    setLangEditVal(id) {
+    setEditVal(id) {
         sys.log('Загрузка значения по ID из таблицы "language"..');
         let params = {
             'action': 'my_action',
@@ -334,7 +334,7 @@ class Language {
         );
     }
 
-    getLangRefTable(arr) {
+    getRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы языков..');
         let html = `<table id="lang_table_data">
             <caption><h4>Языки (${this.languages.length})</h4></caption>
@@ -359,7 +359,7 @@ class Language {
         return html + `</table>`;
     }
 
-    getLanguages(typ) {
+    all(typ) {
         sys.log('Загрузка языков..');
         let params = {'action': 'my_action', 'query': 'get_languages'};
         data.getData(params).then(
@@ -374,7 +374,7 @@ class Language {
                             ui.setDropdownState('language', ui.getDropdownState('language'));
                             break;
                         case cons.TYP_EL.TABLE:
-                            this.printLanguagesPaginator(this);
+                            this.printPaginator(this);
                             break;
                     }
                 }   else {
@@ -389,13 +389,13 @@ class Language {
         );
     }
 
-    emptyEditLanguage() {
+    emptyEdits() {
         ui.emptyField("input_lang_edit");
         ui.emptyField("input_lang_edit_id");
         ui.emptyField("input_lang_edit_old_val");
     }
 
-    newLanguage() {
+    create() {
         let val = ui.getField('input_lang_new');
         if (ui.insertCheck(val) == cons.DLG_RES.OK) {
             sys.log('Добавление нового языка "' + val + '"..');
@@ -415,7 +415,7 @@ class Language {
                     if (response.res == '200') {
                         alert(response.msg);
                         ui.emptyField('input_lang_new');
-                        this.getLanguages(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -426,7 +426,7 @@ class Language {
         }
     }
 
-    updateLanguage() {
+    update() {
         let val = ui.getField('input_lang_edit');
         let id = ui.getField('input_lang_edit_id');
         let oldVal = ui.getField('input_lang_edit_old_val');
@@ -448,8 +448,8 @@ class Language {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.emptyEditLanguage();
-                        this.getLanguages(cons.TYP_EL.TABLE);
+                        this.emptyEdits();
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -460,7 +460,7 @@ class Language {
         }
     }
 
-    delLanguage(id, val) {
+    del(id, val) {
         if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
             sys.log('Удаляется язык ID ' + id + ' "' + val + '"..');
             let params = {
@@ -477,7 +477,7 @@ class Language {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.getLanguages(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -494,7 +494,7 @@ class Program {
     
     programs = [];
 
-    setProgramEditVal(id) {
+    setEditVal(id) {
         sys.log('Загрузка значения по ID из таблицы "program"..');
         let params = {
             'action': 'my_action',
@@ -521,7 +521,7 @@ class Program {
         );
     }
 
-    getPrograms(typ) {
+    all(typ) {
         sys.log('Загрузка программ обучения..');
         let params = {'action': 'my_action', 'query': 'get_programs'};
         data.getData(params).then(
@@ -536,7 +536,7 @@ class Program {
                             ui.setDropdownState('program', ui.getDropdownState('program'));
                             break;
                         case cons.TYP_EL.TABLE:
-                            this.printProgramsPaginator(this);
+                            this.printPaginator(this);
                     }
                 }   else {
                     sys.log(cons.MSG.NO_DATA_PROGRAMS);
@@ -550,13 +550,13 @@ class Program {
         );
     }
 
-    emptyEditProgram() {
+    emptyEdits() {
         ui.emptyField("input_prg_edit");
         ui.emptyField("input_prg_edit_id");
         ui.emptyField("input_prg_edit_old_val");
     }
 
-    newProgram() {
+    create() {
         let val = ui.getField('input_prg_new');
         if (ui.insertCheck(val) == cons.DLG_RES.OK) {
             sys.log('Добавление новой программмы "' + val + '"..');
@@ -576,7 +576,7 @@ class Program {
                     if (response.res == '200') {
                         alert(response.msg);
                         ui.emptyField('input_prg_new');
-                        this.getPrograms(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -587,7 +587,7 @@ class Program {
         }
     }
 
-    updateProgram() {
+    update() {
         let val = ui.getField('input_prg_edit');
         let id = ui.getField('input_prg_edit_id');
         let oldVal = ui.getField('input_prg_edit_old_val');
@@ -609,8 +609,8 @@ class Program {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.emptyEditProgram();
-                        this.getPrograms(cons.TYP_EL.TABLE);
+                        this.emptyEdits();
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -621,7 +621,7 @@ class Program {
         }
     }
 
-    delProgram(id, val) {
+    del(id, val) {
         if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
             sys.log('Удаляется программа обучения ID ' + id + ' "' + val + '"..');
             let params = {
@@ -638,7 +638,7 @@ class Program {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.getPrograms(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -649,18 +649,18 @@ class Program {
         }
     }
 
-    printProgramsPaginator(program) {
+    printPaginator(program) {
         sys.log('Печать пагинатора программ обучения..');
         jQuery('#prg-pagination-container').pagination({
             dataSource: this.programs,
             pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('prg_table', program.getProgramRefTable(data));
+                ui.setDiv('prg_table', program.getRefTable(data));
             }
         })
     }
 
-    getProgramRefTable(arr) {
+    getRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы программ..');
         let html = `<table id="prg_table_data">
             <caption><h4>Программы обучения (${this.programs.length})</h4></caption>
@@ -691,13 +691,13 @@ class Specialty {
 
     specialities = [];
 
-    emptyEditSpecialty() {
+    emptyEdits() {
         ui.emptyField("input_spec_edit");
         ui.emptyField("input_spec_edit_id");
         ui.emptyField("input_spec_edit_old_val");
     }
 
-    getSpecialities(typ) {
+    all(typ) {
         sys.log('Загрузка специальностей..');
         let params = {'action': 'my_action', 'query': 'get_specialities'};
         data.getData(params).then(
@@ -712,7 +712,7 @@ class Specialty {
                             ui.setDropdownState('specialty', ui.getDropdownState('specialty'));
                             break;
                         case cons.TYP_EL.TABLE:
-                            this.printSpecialitiesPaginator(this);
+                            this.printPaginator(this);
                             break;
                     }
                 }   else {
@@ -727,7 +727,7 @@ class Specialty {
         );
     }
 
-    setSpecEditVal(id) {
+    setEditVal(id) {
         sys.log('Загрузка значения по ID из таблицы "specialty"..');
         let params = {
             'action': 'my_action',
@@ -754,7 +754,7 @@ class Specialty {
         );
     }
 
-    newSpecialty() {
+    create() {
         let val = ui.getField('input_spec_new');
         if (ui.insertCheck(val) == cons.DLG_RES.OK) {
             sys.log('Добавление новой специальности "' + val + '"..');
@@ -774,7 +774,7 @@ class Specialty {
                     if (response.res == '200') {
                         alert(response.msg);
                         ui.emptyField('input_spec_new');
-                        this.getSpecialities(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -785,7 +785,7 @@ class Specialty {
         }
     }
 
-    updateSpecialty() {
+    update() {
         let val = ui.getField('input_spec_edit');
         let id = ui.getField('input_spec_edit_id');
         let oldVal = ui.getField('input_spec_edit_old_val');
@@ -807,8 +807,8 @@ class Specialty {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.emptyEditSpecialty();
-                        this.getSpecialities(cons.TYP_EL.TABLE);
+                        this.emptyEdits();
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -819,7 +819,7 @@ class Specialty {
         }
     }
 
-    delSpecialty(id, val) {
+    del(id, val) {
         if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
             sys.log('Удаляется специальность ID ' + id + ' "' + val + '"..');
             let params = {
@@ -836,7 +836,7 @@ class Specialty {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.getSpecialities(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -847,18 +847,18 @@ class Specialty {
         }
     }
 
-    printSpecialitiesPaginator(specialty) {
+    printPaginator(specialty) {
         sys.log('Печать пагинатора специальностей..');
         jQuery('#spec-pagination-container').pagination({
             dataSource: this.specialities,
             pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('spec_table', specialty.getSpecialtyRefTable(data));
+                ui.setDiv('spec_table', specialty.getRefTable(data));
             }
         })
     }
 
-    getSpecialtyRefTable(arr) {
+    getRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы специальностей..');
         let html = `<table id="spec_table_data">
             <caption><h4>Специальности (${this.specialities.length})</h4></caption>
@@ -889,13 +889,13 @@ class Location {
 
     locations = [];
     
-    emptyEditLocation() {
+    emptyEdits() {
         ui.emptyField("input_loc_edit");
         ui.emptyField("input_loc_edit_id");
         ui.emptyField("input_loc_edit_old_val");
     }
 
-    setLocEditVal(id) {
+    setEditVal(id) {
         sys.log('Загрузка значения по ID из таблицы "location"..');
         let params = {
             'action': 'my_action',
@@ -922,7 +922,7 @@ class Location {
         );
     }
 
-    newLocation() {
+    create() {
         let val = ui.getField('input_loc_new');
         if (ui.insertCheck(val) == cons.DLG_RES.OK) {
             sys.log('Добавление нового местоположения "' + val + '"..');
@@ -942,7 +942,7 @@ class Location {
                     if (response.res == '200') {
                         alert(response.msg);
                         ui.emptyField('input_loc_new');
-                        this.getLocations(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -953,7 +953,7 @@ class Location {
         }
     }
 
-    updateLocation() {
+    update() {
         let val = ui.getField('input_loc_edit');
         let id = ui.getField('input_loc_edit_id');
         let oldVal = ui.getField('input_loc_edit_old_val');
@@ -975,8 +975,8 @@ class Location {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.emptyEditLocation();
-                        this.getLocations(cons.TYP_EL.TABLE);
+                        this.emptyEdits();
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -987,7 +987,7 @@ class Location {
         }
     }
 
-    delLocation(id, val) {
+    del(id, val) {
         if (ui.delCheck(id, val) == cons.DLG_RES.OK) {
             sys.log('Удаляется местоположение ID ' + id + ' "' + val + '"..');
             let params = {
@@ -1004,7 +1004,7 @@ class Location {
                     }
                     if (response.res == '200') {
                         alert(response.msg);
-                        this.getLocations(cons.TYP_EL.TABLE);
+                        this.all(cons.TYP_EL.TABLE);
                     }
                 },
                 error => {
@@ -1015,18 +1015,18 @@ class Location {
         }
     }
 
-     printLocationsPaginator(loc) {
+     printPaginator(loc) {
         sys.log('Печать пагинатора местоположений..');
         jQuery('#loc-pagination-container').pagination({
             dataSource: this.locations,
             pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('loc_table', loc.getLocationRefTable(data));
+                ui.setDiv('loc_table', loc.getRefTable(data));
             }
         })
     }
 
-    getLocationRefTable(arr) {
+    getRefTable(arr) {
         sys.log('Получение HTML фрагмента для таблицы местоположений..');
         let html = `<table id="loc_table_data">
             <caption><h4>Местоположения (${this.locations.length})</h4></caption>
@@ -1051,7 +1051,7 @@ class Location {
         return html + `</table>`;
     }
 
-    getLocations(typ) {
+    all(typ) {
         sys.log('Загрузка местоположений..');
         let params = { 'action': 'my_action', 'query': 'get_locations'};
         data.getData(params).then(
@@ -1063,7 +1063,7 @@ class Location {
                         case cons.TYP_EL.DROPDOWN:
                             break;
                         case cons.TYP_EL.TABLE:
-                            this.printLocationsPaginator(this);
+                            this.printPaginator(this);
                             break;
                         case cons.TYP_EL.DROPDOWN_NEW:
                             ui.fillDropdown('dropdownUnivNewLocation', this.locations);
@@ -1145,12 +1145,12 @@ class Search {
         </div>`;
     }
     
-    printSearchResults() {
+    printResults() {
         sys.log('Печать результатов поиска..');
         this.search(localStorage.getItem("country"), localStorage.getItem("program"), localStorage.getItem("specialty"), localStorage.getItem("language"));
     }
 
-    printSearchHeader() {
+    printHeader() {
         ui.setDiv("results_container", `
     <div>
         <div>
@@ -1164,7 +1164,7 @@ class Search {
     `);
     }
 
-    printResultsPaginator(search) {
+    printPaginator(search) {
         sys.log('Печать пагинатора результатов поиска..');
         jQuery('#cards-pagination-container').pagination({
             dataSource: this.cards,
@@ -1194,8 +1194,8 @@ class Search {
                     this.clearResults();
                     this.cards = response;
                     sys.log('Количество результатов поиска: ' + this.cards.length);
-                    this.printSearchHeader();
-                    this.printResultsPaginator(this);
+                    this.printHeader();
+                    this.printPaginator(this);
                 } else {
                     this.printNoResults();
                 }
@@ -1306,10 +1306,10 @@ class UI {
     }
 
     fillAllDropdowns() {
-        country.getCountries(cons.TYP_EL.DROPDOWN);
-        program.getPrograms(cons.TYP_EL.DROPDOWN);
-        language.getLanguages(cons.TYP_EL.DROPDOWN);
-        specialty.getSpecialities(cons.TYP_EL.DROPDOWN);
+        country.all(cons.TYP_EL.DROPDOWN);
+        program.all(cons.TYP_EL.DROPDOWN);
+        language.all(cons.TYP_EL.DROPDOWN);
+        specialty.all(cons.TYP_EL.DROPDOWN);
     }
 
     /**
@@ -1472,7 +1472,7 @@ class University  {
     universities = [];
     types = [];
 
-    getUniversities(typ) {
+    all(typ) {
         sys.log('Загрузка университетов..');
         let params = {'action': 'my_action', 'query': 'get_universities'};
         data.getData(params).then(
@@ -1484,7 +1484,7 @@ class University  {
                         case cons.TYP_EL.DROPDOWN:
                             break;
                         case cons.TYP_EL.TABLE:
-                            this.printUniversitiesPaginator(this);
+                            this.printPaginator(this);
                             break;
                     }
                 }   else {
@@ -1499,18 +1499,18 @@ class University  {
         );
     }
 
-    printUniversitiesPaginator(university) {
+    printPaginator(university) {
         sys.log('Печать пагинатора стран..');
         jQuery('#univ-pagination-container').pagination({
             dataSource: this.universities,
             pageSize: cons.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                ui.setDiv('univ_table', university.getUniversityRefTable(data));
+                ui.setDiv('univ_table', university.getRefTable(data));
             }
         })
     }
 
-    getUniversityRefTable(arr) {
+    getRefTable(arr) {
         let k = 1;
         sys.log('Получение HTML фрагмента для таблицы университета..');
         let html = `<table id="univ_table_data">
@@ -1601,14 +1601,14 @@ function onLoad() {
         sys.log('cons.URL.SEARCH_MANAGEMENT: ' + cons.URL.SEARCH_MANAGEMENT);
         if (currentURL.indexOf(cons.URL.SEARCH_MANAGEMENT) != -1) {
             sys.log('Текущая страница: cons.URL.SEARCH_MANAGEMENT');
-            country.getCountries(cons.TYP_EL.TABLE);
-            country.getCountries(cons.TYP_EL.DROPDOWN_NEW);
-            language.getLanguages(cons.TYP_EL.TABLE);
-            program.getPrograms(cons.TYP_EL.TABLE);
-            specialty.getSpecialities(cons.TYP_EL.TABLE);
-            loc.getLocations(cons.TYP_EL.TABLE);
-            loc.getLocations(cons.TYP_EL.DROPDOWN_NEW);
-            univ.getUniversities(cons.TYP_EL.TABLE);
+            country.all(cons.TYP_EL.TABLE);
+            country.all(cons.TYP_EL.DROPDOWN_NEW);
+            language.all(cons.TYP_EL.TABLE);
+            program.all(cons.TYP_EL.TABLE);
+            specialty.all(cons.TYP_EL.TABLE);
+            loc.all(cons.TYP_EL.TABLE);
+            loc.all(cons.TYP_EL.DROPDOWN_NEW);
+            univ.all(cons.TYP_EL.TABLE);
             univ.geTypes(cons.TYP_EL.DROPDOWN_NEW);
         }
         if (currentURL.indexOf(cons.URL.SEARCH) != -1) {
@@ -1630,8 +1630,8 @@ function onLoad() {
             ui.clearAllDropdowns();
             ui.fillAllDropdowns();
             ui.changeTitlesStyle();
-            search.printSearchResults();
-            search.printResultsPaginator(search);
+            search.printResults();
+            search.printPaginator(search);
         }
     });
     
@@ -1641,67 +1641,67 @@ onLoad();
 
 // on clicks ------------------------>>>
 function on_click_spec_edit(id) {
-    specialty.setSpecEditVal(id);
+    specialty.setEditVal(id);
 }
 
 function on_click_spec_del(id, val) {
-    specialty.delSpecialty(id, val);
+    specialty.del(id, val);
 }
 
 function on_click_spec_new() {
-    specialty.newSpecialty();
+    specialty.create();
 }
 
 function on_click_spec_update() {
-    specialty.updateSpecialty();
+    specialty.update();
 }
 
 function on_click_loc_del(id, val) {
-    loc.delLocation(id, val);
+    loc.del(id, val);
 }
 
 function on_click_loc_new() {
-    loc.newLocation();
+    loc.create();
 }
 
 function on_click_loc_update() {
-    loc.updateLocation();
+    loc.update();
 }
 
 function on_click_loc_edit(id) {
-    loc.setLocEditVal(id);
+    loc.setEditVal(id);
 }
 
 function on_click_country_edit(id) {
-    country.setCountryEditVal(id);
+    country.setEditVal(id);
 }
 
 function on_click_country_del(id, val) {
-    country.delCountry(id, val);
+    country.del(id, val);
 }
 
 function on_click_country_new() {
-    country.newCountry();
+    country.create();
 }
 
 function on_click_lang_edit(id) {
-    language.setLangEditVal(id);
+    language.setEditVal(id);
 }
 
 function on_click_lang_del(id, val) {
-    language.delLanguage(id, val);
+    language.del(id, val);
 }
 
 function on_click_lang_new() {
-    language.newLanguage();
+    language.create();
 }
 
 function on_click_country_update() {
-    country.updateCountry();
+    country.update();
 }
 
 function on_click_lang_update() {
-    language.updateLanguage();
+    language.update();
 }
 
 function on_click_search() {
@@ -1714,26 +1714,26 @@ function on_click_search() {
         ui.setDropdownState('program', ui.getDropdownState('program'));
         ui.setDropdownState('specialty', ui.getDropdownState('specialty'));
         ui.setDropdownState('language', ui.getDropdownState('language'));
-        search.printSearchResults();
+        search.printResults();
     } else {
         window.location = cons.URL.SEARCH_RESULTS;
     }
 }
 
 function on_click_prg_edit(id)    {
-    program.setProgramEditVal(id);
+    program.setEditVal(id);
 }
 
 function on_click_prg_update() {
-    program.updateProgram();
+    program.update();
 }
 
 function on_click_prg_new() {
-    program.newProgram();
+    program.create();
 }
 
 function on_click_prg_del(id, val) {
-    program.delProgram(id, val);
+    program.del(id, val);
 }
 
 function on_click_univ_new()    {
@@ -1741,6 +1741,10 @@ function on_click_univ_new()    {
 }
 
 function on_click_univ_update() {
+
+}
+
+function on_click_univ_new_add_prg()    {
 
 }
 
