@@ -81,17 +81,18 @@ class Const {
 
     static PAGE_SIZE_SEARCH = 8;
     static PAGE_SIZE_REF = 8;
-    
+
 }
 
 class Country {
 
-    private sys;
-    private ui;
-    private data;
+    sys;
+    ui;
+    data;
+    countries = [];
 
     /**
-     * Конструктор
+     *
      * @param sys
      * @param ui
      * @param data
@@ -101,8 +102,6 @@ class Country {
         this.ui = ui;
         this.data = data;
     }
-
-    private countries = [];
 
     /**
      *
@@ -122,7 +121,7 @@ class Country {
                             this.ui.setDropdownState('country', this.ui.getDropdownState('country'));
                             break;
                         case Const.TYP_EL.TABLE:
-                            this.printPaginator(this);
+                            this.printPaginator(this, this.ui);
                             break;
                         case Const.TYP_EL.DROPDOWN_NEW:
                             this.ui.fillDropdown('dropdownUnivNewCountry', this.countries);
@@ -292,13 +291,13 @@ class Country {
         return html + `</table>`;
     }
 
-    printPaginator(country) {
+    printPaginator(country, ui) {
         this.sys.log('Печать пагинатора стран..');
         jQuery('#country-pagination-container').pagination({
             dataSource: this.countries,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                this.ui.setDiv('country_table', country.getRefTable(data));
+                ui.setDiv('country_table', country.getRefTable(data));
             }
         })
     }
@@ -307,10 +306,10 @@ class Country {
 
 class Language {
 
-    private languages = [];
-    private sys;
-    private ui;
-    private data;
+    sys;
+    ui;
+    data;
+    languages = [];
 
     /**
      *
@@ -327,13 +326,13 @@ class Language {
     /**
      * Распечатать таблицу и пагинатор языков
      */
-    printPaginator(language) {
+    printPaginator(language, ui) {
         this.sys.log('Печать пагинатора языков..');
         jQuery('#lang-pagination-container').pagination({
             dataSource: this.languages,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                this.ui.setDiv('lang_table', language.getRefTable(data));
+                ui.setDiv('lang_table', language.getRefTable(data));
             }
         })
     }
@@ -405,7 +404,7 @@ class Language {
                             this.ui.setDropdownState('language', ui.getDropdownState('language'));
                             break;
                         case Const.TYP_EL.TABLE:
-                            this.printPaginator(this);
+                            this.printPaginator(this, this.ui);
                             break;
                     }
                 }   else {
@@ -522,11 +521,11 @@ class Language {
 }
 
 class Program {
-    
-    private programs = [];
-    private ui;
-    private sys;
-    private data;
+
+    ui;
+    sys;
+    data;
+    programs = [];
 
     /**
      *
@@ -582,7 +581,7 @@ class Program {
                             this.ui.setDropdownState('program', this.ui.getDropdownState('program'));
                             break;
                         case Const.TYP_EL.TABLE:
-                            this.printPaginator(this);
+                            this.printPaginator(this, this.ui);
                     }
                 }   else {
                     this.sys.log(Const.MSG.NO_DATA_PROGRAMS);
@@ -697,13 +696,13 @@ class Program {
         }
     }
 
-    printPaginator(program) {
+    printPaginator(program, ui) {
         this.sys.log('Печать пагинатора программ обучения..');
         jQuery('#prg-pagination-container').pagination({
             dataSource: this.programs,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                this.ui.setDiv('prg_table', program.getRefTable(data));
+                ui.setDiv('prg_table', program.getRefTable(data));
             }
         })
     }
@@ -732,15 +731,15 @@ class Program {
         }
         return html + `</table>`;
     }
-    
+
 }
 
 class Specialty {
 
-    private specialities = [];
-    private ui;
-    private sys;
-    private data;
+    ui;
+    sys;
+    data;
+    specialities = [];
 
     /**
      *
@@ -775,7 +774,7 @@ class Specialty {
                             this.ui.setDropdownState('specialty', this.ui.getDropdownState('specialty'));
                             break;
                         case Const.TYP_EL.TABLE:
-                            this.printPaginator(this);
+                            this.printPaginator(this, this.ui);
                             break;
                     }
                 }   else {
@@ -910,13 +909,13 @@ class Specialty {
         }
     }
 
-    printPaginator(specialty) {
+    printPaginator(specialty, ui) {
         this.sys.log('Печать пагинатора специальностей..');
         jQuery('#spec-pagination-container').pagination({
             dataSource: this.specialities,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                this.ui.setDiv('spec_table', specialty.getRefTable(data));
+                ui.setDiv('spec_table', specialty.getRefTable(data));
             }
         })
     }
@@ -945,15 +944,15 @@ class Specialty {
         }
         return html + `</table>`;
     }
-    
+
 }
 
 class Location {
 
-    private locations = [];
-    private sys;
-    private ui;
-    private data;
+    sys;
+    ui;
+    data;
+    locations = [];
 
     /**
      *
@@ -1093,13 +1092,13 @@ class Location {
         }
     }
 
-     printPaginator(loc) {
+     printPaginator(loc, ui) {
          this.sys.log('Печать пагинатора местоположений..');
         jQuery('#loc-pagination-container').pagination({
             dataSource: this.locations,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                this.ui.setDiv('loc_table', loc.getRefTable(data));
+                ui.setDiv('loc_table', loc.getRefTable(data));
             }
         })
     }
@@ -1141,7 +1140,7 @@ class Location {
                         case Const.TYP_EL.DROPDOWN:
                             break;
                         case Const.TYP_EL.TABLE:
-                            this.printPaginator(this);
+                            this.printPaginator(this, this.ui);
                             break;
                         case Const.TYP_EL.DROPDOWN_NEW:
                             this.ui.fillDropdown('dropdownUnivNewLocation', this.locations);
@@ -1162,11 +1161,11 @@ class Location {
 }
 
 class Search {
-    
-    private cards = [];
-    private sys;
-    private ui;
-    private data;
+
+    sys;
+    ui;
+    data;
+    cards = [];
 
     /**
      *
@@ -1237,7 +1236,7 @@ class Search {
           </div>
         </div>`;
     }
-    
+
     printResults() {
         this.sys.log('Печать результатов поиска..');
         this.search(localStorage.getItem("country"), localStorage.getItem("program"), localStorage.getItem("specialty"), localStorage.getItem("language"));
@@ -1326,11 +1325,15 @@ class Search {
         let html = ``;
         this.ui.setDiv("found_objects", html);
     }
-    
+
 }
 
 class System {
 
+    /**
+     * Логирование
+     * @param msg
+     */
     log(msg)  {
         if (!Const.LOG_DB)    {
             console.log(msg);
@@ -1378,23 +1381,51 @@ class System {
         else
             return str;
     }
-    
+
 }
 
 class UI {
 
-    private sys;
-    private country;
-    private program;
-    private specialty;
-    private language;
+    sys;
+    country;
+    program;
+    specialty;
+    language;
 
-    constructor(sys, country, program, specialty, language) {
+    get country() {
+        return this.country;
+    }
+
+    set country(value) {
+        this.country = value;
+    }
+
+    get program() {
+        return this.program;
+    }
+
+    set program(value) {
+        this.program = value;
+    }
+
+    get specialty() {
+        return this.specialty;
+    }
+
+    set specialty(value) {
+        this.specialty = value;
+    }
+
+    get language() {
+        return this.language;
+    }
+
+    set language(value) {
+        this.language = value;
+    }
+
+    constructor(sys) {
         this.sys = sys;
-        this.country = country;
-        this.program = program;
-        this.specialty = specialty;
-        this.language = language;
     }
 
     /**
@@ -1542,7 +1573,7 @@ class UI {
             return Const.DLG_RES.CANCEL;
         }
     }
-    
+
 }
 
 class Data {
@@ -1573,14 +1604,15 @@ class Data {
 
 class University  {
 
-    private universities = [];
-    private types = [];
-    private programs = [];
-    private languages = [];
-    private specialities = [];
-    private sys;
-    private ui;
-    private data;
+    sys;
+    ui;
+    data;
+
+    universities = [];
+    types = [];
+    programs = [];
+    languages = [];
+    specialities = [];
 
     constructor(sys, ui, data) {
         this.sys = sys;
@@ -1600,7 +1632,7 @@ class University  {
                         case Const.TYP_EL.DROPDOWN:
                             break;
                         case Const.TYP_EL.TABLE:
-                            this.printPaginator(this);
+                            this.printPaginator(this, this.ui);
                             break;
                     }
                 }   else {
@@ -1615,13 +1647,13 @@ class University  {
         );
     }
 
-    printPaginator(university) {
+    printPaginator(university, ui) {
         this.sys.log('Печать пагинатора стран..');
         jQuery('#univ-pagination-container').pagination({
             dataSource: this.universities,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
-                this.ui.setDiv('univ_table', university.getRefTable(data));
+                ui.setDiv('univ_table', university.getRefTable(data));
             }
         })
     }
@@ -1684,224 +1716,177 @@ class University  {
 
 }
 
-class App {
+let sys = new System();
+let ui = new UI(sys);
+let data = new Data();
+let country = new Country(sys, ui, data);
+let language = new Language(sys, ui, data);
+let program = new Program(sys, ui, data);
+let specialty = new Specialty(sys, ui, data);
+let loc = new Location(sys, ui, data);
+let search = new Search(sys, ui, data);
+let univ = new University(sys, ui, data);
 
-    _sys = new System();
-    _ui = new UI();
-    _data = new Data();
-    _univ = new University(this.sys, this.ui, this.data);
-    _country = new Country(this.sys, this.ui, this.data)
-    _language = new Language(this.sys, this.ui, this.data);
-    _program = new Program(this.sys, this.ui, this.data);
-    _specialty = new Specialty(this.sys, this.ui, this.data);
-    _loc = new Location(this.sys, this.ui, this.data);
-    _search = new Search(this.sys, this.ui, this.data);
+function onLoad()    {
 
-    get country() {
-        return this._country;
+    ui.specialty = specialty;
+    ui.country = country;
+    ui.language = language;
+    ui.program = program;
+
+    if (window.location.origin.indexOf('localhost') != -1) {
+        Const.URL.SEARCH = window.location.origin + '/learn/?page_id=94';
+        Const.URL.SEARCH_RESULTS = window.location.origin + '/learn/?page_id=81';
+        Const.URL.SEARCH_MANAGEMENT = window.location.origin + '/learn/?page_id=86';
+    } else {
+        Const.URL.SEARCH = window.location.origin + '/poisk';
+        Const.URL.SEARCH_RESULTS = window.location.origin + '/results';
+        Const.URL.SEARCH_MANAGEMENT = window.location.origin + '/panel';
     }
 
-    get language() {
-        return this._language;
-    }
-
-    get program() {
-        return this._program;
-    }
-
-    get specialty() {
-        return this._specialty;
-    }
-
-    get loc() {
-        return this._loc;
-    }
-
-    get search() {
-        return this._search;
-    }
-
-    get sys() {
-        return this._sys;
-    }
-
-    get ui() {
-        return this._ui;
-    }
-
-    get data() {
-        return this._data;
-    }
-
-    get univ() {
-        return this._univ;
-    }
-
-    constructor() {
-        this.initUrls();
-        this.ready();
-    }
-
-    initUrls()  {
-        if (window.location.origin.indexOf('localhost') != -1) {
-            Const.URL.SEARCH = window.location.origin + '/learn/?page_id=94';
-            Const.URL.SEARCH_RESULTS = window.location.origin + '/learn/?page_id=81';
-            Const.URL.SEARCH_MANAGEMENT = window.location.origin + '/learn/?page_id=86';
-        } else {
-            Const.URL.SEARCH = window.location.origin + '/poisk';
-            Const.URL.SEARCH_RESULTS = window.location.origin + '/results';
-            Const.URL.SEARCH_MANAGEMENT = window.location.origin + '/panel';
+    jQuery("document").ready(function () {
+        let currentURL = window.location.href;
+        sys.log('Адрес загружаемой страницы: ' + currentURL);
+        sys.log('URL.SEARCH: ' + Const.URL.SEARCH);
+        sys.log('URL.SEARCH_RESULTS: ' + Const.URL.SEARCH_RESULTS);
+        sys.log('URL.SEARCH_MANAGEMENT: ' + Const.URL.SEARCH_MANAGEMENT);
+        if (currentURL.indexOf(Const.URL.SEARCH_MANAGEMENT) != -1) {
+            sys.log('Текущая страница: Const.URL.SEARCH_MANAGEMENT');
+            country.all(Const.TYP_EL.TABLE);
+            country.all(Const.TYP_EL.DROPDOWN_NEW);
+            language.all(Const.TYP_EL.TABLE);
+            program.all(Const.TYP_EL.TABLE);
+            specialty.all(Const.TYP_EL.TABLE);
+            loc.all(Const.TYP_EL.TABLE);
+            loc.all(Const.TYP_EL.DROPDOWN_NEW);
+            univ.all(Const.TYP_EL.TABLE);
+            univ.geTypes(Const.TYP_EL.DROPDOWN_NEW);
         }
-    }
+        if (currentURL.indexOf(Const.URL.SEARCH) != -1) {
+            sys.log('Текущая страница: URL.SEARCH');
+            sys.initLocalStorage();
 
-    ready() {
-        jQuery("document").ready(function () {
-            let currentURL = window.location.href;
-            this.sys.log('Адрес загружаемой страницы: ' + currentURL);
-            this.sys.log('_Const.URL.SEARCH: ' + Const.URL.SEARCH);
-            this.sys.log('_Const.URL.SEARCH_RESULTS: ' + Const.URL.SEARCH_RESULTS);
-            this.sys.log('_Const.URL.SEARCH_MANAGEMENT: ' + Const.URL.SEARCH_MANAGEMENT);
-            if (currentURL.indexOf(Const.URL.SEARCH_MANAGEMENT) != -1) {
-                this.sys.log('Текущая страница: Const.URL.SEARCH_MANAGEMENT');
-                this.country.all(Const.TYP_EL.TABLE);
-                this.country.all(Const.TYP_EL.DROPDOWN_NEW);
-                this.language.all(Const.TYP_EL.TABLE);
-                this.program.all(Const.TYP_EL.TABLE);
-                this.specialty.all(Const.TYP_EL.TABLE);
-                this.loc.all(Const.TYP_EL.TABLE);
-                this.loc.all(Const.TYP_EL.DROPDOWN_NEW);
-                this.univ.all(Const.TYP_EL.TABLE);
-                this.univ.geTypes(Const.TYP_EL.DROPDOWN_NEW);
-            }
-            if (currentURL.indexOf(Const.URL.SEARCH) != -1) {
-                this.sys.log('Текущая страница: Const.URL.SEARCH');
-                this.sys.initLocalStorage();
+            ui.saveDropdownState('country', 0);
+            ui.saveDropdownState('program', 0);
+            ui.saveDropdownState('specialty', 0);
+            ui.saveDropdownState('language', 0);
 
-                this.ui.saveDropdownState('country', 0);
-                this.ui.saveDropdownState('program', 0);
-                this.ui.saveDropdownState('specialty', 0);
-                this.ui.saveDropdownState('language', 0);
-
-                if (jQuery(window).width() < 500) {
-                    this.sys.log('Изменение цвета названий полей..');
-                    let color = 'white';
-                    jQuery("#dropdown_title_country").css("color", color);
-                    jQuery("#dropdown_title_program").css("color", color);
-                    jQuery("#dropdown_title_specialty").css("color", color);
-                    jQuery("#dropdown_title_language").css("color", color);
-                }
-                this.ui.clearAllDropdowns();
-                this.ui.fillAllDropdowns();
+            if (jQuery(window).width() < 500) {
+                sys.log('Изменение цвета названий полей..');
+                let color = 'white';
+                jQuery("#dropdown_title_country").css("color", color);
+                jQuery("#dropdown_title_program").css("color", color);
+                jQuery("#dropdown_title_specialty").css("color", color);
+                jQuery("#dropdown_title_language").css("color", color);
             }
-            if (currentURL.indexOf(Const.URL.SEARCH_RESULTS) != -1) {
-                this.sys.log('Текущая страница: Const.URL.SEARCH_RESULTS');
-                this.ui.clearAllDropdowns();
-                this.ui.fillAllDropdowns();
-                this.ui.changeTitlesStyle();
-                this.search.printResults();
-                this.search.printPaginator(search);
-            }
-        });
-    }
+            ui.clearAllDropdowns();
+            ui.fillAllDropdowns();
+        }
+        if (currentURL.indexOf(Const.URL.SEARCH_RESULTS) != -1) {
+            sys.log('Текущая страница: URL.SEARCH_RESULTS');
+            ui.clearAllDropdowns();
+            ui.fillAllDropdowns();
+            ui.changeTitlesStyle();
+            search.printResults();
+            search.printPaginator(search);
+        }
+    });
 }
 
-let app = new App();
-
-// on clicks ------------------------>>>
 function on_click_spec_edit(id) {
-    app.specialty.setEditVal(id);
+    specialty.setEditVal(id);
 }
 
 function on_click_spec_del(id, val) {
-    app.specialty.del(id, val);
+    specialty.del(id, val);
 }
 
 function on_click_spec_new() {
-    app.specialty.create();
+    specialty.create();
 }
 
 function on_click_spec_update() {
-    app.specialty.update();
+    specialty.update();
 }
 
 function on_click_loc_del(id, val) {
-    app.loc.del(id, val);
+    loc.del(id, val);
 }
 
 function on_click_loc_new() {
-    app.loc.create();
+    loc.create();
 }
 
 function on_click_loc_update() {
-    app.loc.update();
+    loc.update();
 }
 
 function on_click_loc_edit(id) {
-    app.loc.setEditVal(id);
+    loc.setEditVal(id);
 }
 
 function on_click_country_edit(id) {
-    app.country.setEditVal(id);
+    country.setEditVal(id);
 }
 
 function on_click_country_del(id, val) {
-    app.country.del(id, val);
+    country.del(id, val);
 }
 
 function on_click_country_new() {
-    app.country.create();
+    country.create();
 }
 
 function on_click_lang_edit(id) {
-    app.language.setEditVal(id);
+    language.setEditVal(id);
 }
 
 function on_click_lang_del(id, val) {
-    app.language.del(id, val);
+    language.del(id, val);
 }
 
 function on_click_lang_new() {
-    app.language.create();
+    language.create();
 }
 
 function on_click_country_update() {
-    app.country.update();
+    country.update();
 }
 
 function on_click_lang_update() {
-    app.language.update();
+    language.update();
 }
 
 function on_click_search() {
-    app.sys.log('Открывается страница поиска..');
+    sys.log('Открывается страница поиска..');
     let currentURL = window.location.href;
-    app.ui.saveAllDropdownState();
+    ui.saveAllDropdownState();
     if (currentURL == Const.URL.SEARCH_RESULTS) {
-        app.search.printWait();
-        app.ui.setDropdownState('country', app.ui.getDropdownState('country'));
-        app.ui.setDropdownState('program', app.ui.getDropdownState('program'));
-        app.ui.setDropdownState('specialty', app.ui.getDropdownState('specialty'));
-        app.ui.setDropdownState('language', app.ui.getDropdownState('language'));
-        app.search.printResults();
+        search.printWait();
+        ui.setDropdownState('country', ui.getDropdownState('country'));
+        ui.setDropdownState('program', ui.getDropdownState('program'));
+        ui.setDropdownState('specialty', ui.getDropdownState('specialty'));
+        ui.setDropdownState('language', ui.getDropdownState('language'));
+        search.printResults();
     } else {
         window.location = Const.URL.SEARCH_RESULTS;
     }
 }
 
 function on_click_prg_edit(id)    {
-    app.program.setEditVal(id);
+    program.setEditVal(id);
 }
 
 function on_click_prg_update() {
-    app.program.update();
+    program.update();
 }
 
 function on_click_prg_new() {
-    app.program.create();
+    program.create();
 }
 
 function on_click_prg_del(id, val) {
-    app.program.del(id, val);
+    program.del(id, val);
 }
 
 function on_click_univ_new()    {
@@ -1916,6 +1901,6 @@ function on_click_univ_new_add_prg()    {
 
 }
 
-// on clicks <<<------------------------
+onLoad();
 
 // <<<<-------------------------------Zhass------------------------------------
