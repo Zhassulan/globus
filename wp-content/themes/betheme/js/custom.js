@@ -1,33 +1,22 @@
 // -------------------------------Zhass------------------------------------>>>>>
-
 class Const {
 
     static LOG_DB = false;
-    /**
-     * Перечисление URL
-     * @type {{SEARCH: string, URL_SEARCH_RESULTS: string, SEARCH_MANAGEMENT: string}}
-     */
     static URL = {
         SEARCH: '',
         URL_SEARCH_RESULTS: '',
         SEARCH_MANAGEMENT: '',
     };
-    /**
-     * Перечисление типов элементов
-     * @type {{TABLE: number, DROPDOWN: number}}
-     */
     static TYP_EL = {
         TABLE: 0,
         DROPDOWN: 1,
         DROPDOWN_NEW: 2,
         DROPDOWN_EDIT: 3,
     };
-
     static DLG_RES = {
         OK: 0,
         CANCEL: 1
     };
-
     static MSG = {
         ERR_ADD_COUNTRY: 'Ошибка добавления страны.',
         ERR_ADD_LANGUAGE: 'Ошибка добавления языка.',
@@ -78,10 +67,8 @@ class Const {
         ERR_SEARCH: 'Ошибка поиска.',
         ERR_LOG: 'Ошибка записи в журнал.'
     };
-
     static PAGE_SIZE_SEARCH = 8;
     static PAGE_SIZE_REF = 8;
-
 }
 
 class Country {
@@ -91,24 +78,14 @@ class Country {
     data;
     countries = [];
 
-    /**
-     *
-     * @param sys
-     * @param ui
-     * @param data
-     */
     constructor(sys, ui, data) {
         this.sys = sys;
         this.ui = ui;
         this.data = data;
     }
 
-    /**
-     *
-     * @param typ перечисление элемента
-     */
     all(typ) {
-        this.sys.log('Загрузка стран..');
+        //this.sys.log('Загрузка стран..');
         let params = {'action': 'my_action', 'query': 'get_countries'};
         this.data.getData(params).then(
             response => {
@@ -140,7 +117,7 @@ class Country {
     }
 
     setEditVal(id) {
-        this.sys.log('Загрузка значения по ID из таблицы "country"..');
+        //this.sys.log('Загрузка значения по ID из таблицы "country"..');
         let params = {
             'action': 'my_action',
             'query': 'get_col_by_id',
@@ -1716,18 +1693,29 @@ class University  {
 
 }
 
-let sys = new System();
-let ui = new UI(sys);
-let data = new Data();
-let country = new Country(sys, ui, data);
-let language = new Language(sys, ui, data);
-let program = new Program(sys, ui, data);
-let specialty = new Specialty(sys, ui, data);
-let loc = new Location(sys, ui, data);
-let search = new Search(sys, ui, data);
-let univ = new University(sys, ui, data);
+let sys;
+let ui;
+let data;
+let country;
+let language;
+let program;
+let specialty;
+let loc;
+let search;
+let univ;
 
 function onLoad()    {
+
+    sys = new System();
+    ui = new UI(sys);
+    data = new Data();
+    country = new Country(sys, ui, data);
+    language = new Language(sys, ui, data);
+    program = new Program(sys, ui, data);
+    specialty = new Specialty(sys, ui, data);
+    loc = new Location(sys, ui, data);
+    search = new Search(sys, ui, data);
+    univ = new University(sys, ui, data);
 
     ui.specialty = specialty;
     ui.country = country;
