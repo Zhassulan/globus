@@ -198,4 +198,31 @@ function del($table, $id)   {
     return json_encode($val, JSON_UNESCAPED_UNICODE);
 }
 
+function addUniv($univ)  {
+    $conn = getConnection();
+    $val = null;
+    $univ = json_decode(stripslashes($univ));
+    //log1($univ->country);
+    $sql = 'CALL add_univ(\''.$univ->name.'\', '.$univ->country.', '.$univ->found.', '.$univ->type.', '.$univ->location.', \''.$univ->url.'\', \''.$univ->url_pic.'\')';
+    log1($sql);
+    $id = 0;
+    $err = null;
+    if ($res = $conn->query($sql)->fetch()) {
+        $id = $res['id'];
+    }   else    {
+        log1($conn->error);
+    }
+    if ($id != 0) {
+        $val = new Result('200', 'Запись успешно удалена. ID'.$id);
+    } else {
+        $val = new Result('500', 'Query: '.$sql. '. '.$err);
+    }
+    mysqli_close($conn);
+    return json_encode($val, JSON_UNESCAPED_UNICODE);
+}
+
+function log1($msg)  {
+    file_put_contents('D:\dev\Bitnami\wampstack-7.1.26-0\apps\learn\htdocs\php_errors.log', $msg.PHP_EOL, FILE_APPEND);
+}
+
 ?>

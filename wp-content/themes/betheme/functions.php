@@ -276,6 +276,9 @@ function my_action() {
             case 'del':
                 echo del($_GET['table'], $_GET['id']);
                 break;
+            case 'add_univ':
+                echo addUniv($_GET['univ']);
+                break;
         }
     }
     wp_die();

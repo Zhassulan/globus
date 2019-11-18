@@ -23,6 +23,7 @@ class Const {
         ERR_ADD_PROGRAM: 'Ошибка добавления программы обучения.',
         ERR_ADD_SPECIALTY: 'Ошибка добавления специальности.',
         ERR_ADD_LOCATION: 'Ошибка добавления местоположения.',
+        ERR_ADD_UNIVERSITY: 'Ошибка добавления университета.',
 
         ERR_LOAD_LANGUAGES: 'Ошибка загрузки языков.',
         ERR_LOAD_COUNTRIES: 'Ошибка загрузки стран.',
@@ -69,6 +70,7 @@ class Const {
     };
     static PAGE_SIZE_SEARCH = 8;
     static PAGE_SIZE_REF = 8;
+    static AJAX = window.wp_data.ajax_url;
 }
 
 class Country {
@@ -1277,6 +1279,8 @@ class Search {
 
 class System {
 
+    //_log = _.curry(log);
+
     /**
      * Логирование
      * @param msg
@@ -1468,6 +1472,11 @@ class UI {
         return jQuery("#" + field).val();
     }
 
+    getFieldText(field) {
+        this.sys.log('Получение текстового значения поля "' + field + '"..');
+        return jQuery("#" + field).text();
+    }
+
     /**
      * Проверки и диалог при обновлениие
      * @param id ID записи
@@ -1528,7 +1537,7 @@ class Data {
             jQuery.ajax({
                 type: 'GET',
                 dataType: 'json',
-                url: window.wp_data.ajax_url,
+                url: Const.AJAX,
                 data: params,
                 error: function () {
                     reject(null);
@@ -1549,10 +1558,9 @@ class University {
     data;
 
     universities = [];
-    types = [];
-    programs = [];
-    languages = [];
-    specialities = [];
+    programs = new Set();
+    languages = new Set();
+    specialities = new Set();
 
     constructor(sys, ui, data) {
         this.sys = sys;
@@ -1648,6 +1656,102 @@ class University {
         );
     }
 
+    addUniv()   {
+        let newUniv = {
+            name : ui.getField('inpUnivNewName'),
+            country: ui.getField('dropdownUnivNewCountry'),
+            found: ui.getField('inpUnivNewFound'),
+            type: ui.getField('dropdownUnivNewType'),
+            location: ui.getField('dropdownUnivNewLoc'),
+            url: ui.getField('inpUnivNewUrl'),
+            url_pic: ui.getField('inpUnivNewUrlPhoto'),
+            programs: this.programs,
+            specialities: this.specialities,
+            languages: this.languages
+        }
+        sys.log(newUniv);
+        //var encodedData = window.btoa(newUniv); // encode a string
+        let params = {
+            'action': 'my_action',
+            'query': 'add_univ',
+            'univ': JSON.stringify(newUniv)
+        };
+        data.getData(params).then(
+            response => {
+                sys.log(response.msg);
+                alert(response.msg)
+            },
+            error => {
+                alert(Const.MSG.ERR_ADD_UNIVERSITY + error);
+                sys.log(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + error);
+            });
+    }
+
+    async addPrg()    {
+        let id = ui.getField('dropdownUnivNewPrg');
+        if (id != 0) this.programs.add(id);
+        let htmlRows = '';
+        for (let item of this.programs) {
+            let params = {
+                'action': 'my_action',
+                'query': 'get_col_by_id',
+                'table': 'program',
+                'id': item,
+                'col': 'name_ru'
+            };
+            let result = await data.getData(params);
+            htmlRows += `<li>${result.val}</li>`;
+        }
+        let html = `
+            <ul>
+                ${htmlRows}
+            </ul>`;
+        ui.setDiv('list_univ_new_prgs', html);
+    }
+
+    async addSpec()    {
+        let id = ui.getField('dropdownUnivNewSpec');
+        if (id != 0) this.specialities.add(id);
+        let htmlRows = '';
+        for (let item of this.specialities) {
+            let params = {
+                'action': 'my_action',
+                'query': 'get_col_by_id',
+                'table': 'specialty',
+                'id': item,
+                'col': 'name_ru'
+            };
+            let result = await data.getData(params);
+            htmlRows += `<li>${result.val}</li>`;
+        }
+        let html = `
+            <ul>
+                ${htmlRows}
+            </ul>`;
+        ui.setDiv('list_univ_new_specs', html);
+    }
+
+    async addLang()    {
+        let id = ui.getField('dropdownUnivNewLang');
+        if (id != 0) this.languages.add(id);
+        let htmlRows = '';
+        for (let item of this.languages) {
+            let params = {
+                'action': 'my_action',
+                'query': 'get_col_by_id',
+                'table': 'language',
+                'id': item,
+                'col': 'name_ru'
+            };
+            let result = await data.getData(params);
+            htmlRows += `<li>${result.val}</li>`;
+        }
+        let html = `
+            <ul>
+                ${htmlRows}
+            </ul>`;
+        ui.setDiv('list_univ_new_langs', html);
+    }
 }
 
 let sys;
@@ -1846,6 +1950,21 @@ function on_click_univ_new_add_prg() {
 
 }
 
+function on_click_univ_add()    {
+    univ.addUniv();
+}
+
+function on_click_univ_new_add_prg()    {
+    univ.addPrg();
+}
+
+function on_click_univ_new_add_spec() {
+    univ.addSpec();
+}
+
+function on_click_univ_new_add_lang() {
+    univ.addLang();
+}
 onLoad();
 
 // <<<<-------------------------------Zhass------------------------------------
