@@ -1587,6 +1587,11 @@ class University {
         this.data = data;
     }
 
+    delPrgItem(id)  {
+        this.programs.delete(id);
+        this.setProgramsNewList();
+    }
+
     all() {
         //this.sys.log('Загрузка университетов..');
         let params = {'action': 'my_action', 'query': 'get_universities'};
@@ -1754,9 +1759,7 @@ class University {
             });
     }
 
-    async addPrg()    {
-        let id = ui.getField('dropdownUnivNewPrg');
-        if (id != 0) this.programs.add(id);
+    async setProgramsNewList()   {
         let htmlRows = '';
         for (let item of this.programs) {
             let params = {
@@ -1767,7 +1770,7 @@ class University {
                 'col': 'name_ru'
             };
             let result = await data.getData(params);
-            htmlRows += `<li>${result.val}</li>`;
+            htmlRows += `<li>${result.val} <button id="${result.id}" onclick="on_click_del_prg_item(${result.id})">X</button></li>`;
         }
         let html = `
             <ul>
@@ -1776,8 +1779,14 @@ class University {
         ui.setDiv('list_univ_new_prgs', html);
     }
 
+    addPrg()    {
+        let id = Number(ui.getField('dropdownUnivNewPrg'));
+        if (id != 0) this.programs.add(id);
+        this.setProgramsNewList();
+    }
+
     async addSpec()    {
-        let id = ui.getField('dropdownUnivNewSpec');
+        let id = Number(ui.getField('dropdownUnivNewSpec'));
         if (id != 0) this.specialities.add(id);
         let htmlRows = '';
         for (let item of this.specialities) {
@@ -1799,7 +1808,7 @@ class University {
     }
 
     async addLang()    {
-        let id = ui.getField('dropdownUnivNewLang');
+        let id = Number(ui.getField('dropdownUnivNewLang'));
         if (id != 0) this.languages.add(id);
         let htmlRows = '';
         for (let item of this.languages) {
@@ -1921,7 +1930,7 @@ class University {
                 for (let item of response) {
                     this.locationsEx.push(item.id);
                 }
-                console.log('locationsEx = ' + this.locationsEx);
+                //console.log('locationsEx = ' + this.locationsEx);
                 this.ui.fillDropdown('dropdownUnivLoc', response);
                 let params = {
                     'action': 'my_action',
@@ -1930,7 +1939,7 @@ class University {
                     'id': countryId,
                     'col': 'location_id'
                 };
-                console.log('location_id = ' + this.sys.jsonToStr(response));
+                //console.log('location_id = ' + this.sys.jsonToStr(response));
                 this.data.getData(params).then( response => {
                     this.ui.setDropdownState('dropdownUnivLoc', response.id);
                 });
@@ -1958,7 +1967,7 @@ class University {
             let htmlRows = '';
             this.programsEx.clear();
             for (let item of response) {
-                this.programsEx.add(item.id);
+                this.programsEx.add(Number(item.id));
                 htmlRows += `<li>${item.val}</li>`;
             }
             let html = `
@@ -1977,7 +1986,7 @@ class University {
             let htmlRows = '';
             this.specialitiesEx.clear();
             for (let item of response) {
-                this.specialitiesEx.add(item.id);
+                this.specialitiesEx.add(Number(item.id));
                 htmlRows += `<li>${item.val}</li>`;
             }
             let html = `
@@ -1996,7 +2005,7 @@ class University {
             let htmlRows = '';
             this.languagesEx.clear();
             for (let item of response) {
-                this.languagesEx.add(item.id);
+                this.languagesEx.add(Number(item.id));
                 htmlRows += `<li>${item.val}</li>`;
             }
             let html = `
@@ -2229,6 +2238,9 @@ function on_click_univ_edit(id) {
     univ.changeUniv(id);
 }
 
+function on_click_del_prg_item(id) {
+    univ.delPrgItem(id);
+}
 on_load();
 
 // <<<<-------------------------------Zhass------------------------------------
