@@ -255,4 +255,52 @@ function log1($msg)  {
     //file_put_contents('D:\dev\Bitnami\wampstack-7.1.26-0\apps\learn\htdocs\php_errors.log', $msg);
 }
 
+function getProgramsByUniversity($id)   {
+    $conn = getConnection();
+    if ($res = $conn->query ( 'select p.id, trim(p.name_ru) from university_programs up
+        inner join program p on p.id = up.program_id
+        where
+          up.university_id = '.$id.'
+        order by trim(p.name_ru) asc;'))   {
+        while($row = $res->fetch_row()) {
+            $arr[] = new Reference($row[0], $row[1]);
+        }
+        $res->close();
+    }
+    mysqli_close($conn);
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
+}
+
+function getSpecialitiesByUniversity($id)   {
+    $conn = getConnection();
+    if ($res = $conn->query ( 'select s.id, trim(s.name_ru) from university_specialities us
+          inner join specialty s on s.id = us.specialty_id
+        where
+          us.university_id = '.$id.'
+        order by trim(s.name_ru) asc;'))   {
+        while($row = $res->fetch_row()) {
+            $arr[] = new Reference($row[0], $row[1]);
+        }
+        $res->close();
+    }
+    mysqli_close($conn);
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
+}
+
+function getLanguagesByUniversity($id)  {
+    $conn = getConnection();
+    if ($res = $conn->query ( 'select l.id, trim(l.name_ru) from university_languages ul
+          inner join language l on l.id = ul.language_id
+        where
+          ul.university_id = '.$id.'
+        order by trim(l.name_ru) asc;'))   {
+        while($row = $res->fetch_row()) {
+            $arr[] = new Reference($row[0], $row[1]);
+        }
+        $res->close();
+    }
+    mysqli_close($conn);
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
+}
+
 ?>

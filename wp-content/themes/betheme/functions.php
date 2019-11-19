@@ -282,6 +282,15 @@ function my_action() {
             case 'get_locations_by_country':
                 echo getLocationsByCountry($_GET['id']);
                 break;
+            case 'get_programs_by_university':
+                echo getProgramsByUniversity($_GET['id']);
+                break;
+            case 'get_specialities_by_university':
+                echo getSpecialitiesByUniversity($_GET['id']);
+                break;
+            case 'get_languages_by_university':
+                echo getLanguagesByUniversity($_GET['id']);
+                break;
         }
     }
     wp_die();

@@ -78,7 +78,11 @@ class Country {
     sys;
     ui;
     data;
-    countries = [];
+    _countries = [];
+
+    get countries() {
+        return this._countries;
+    }
 
     constructor(sys, ui, data) {
         this.sys = sys;
@@ -92,12 +96,12 @@ class Country {
         this.data.getData(params).then(
             response => {
                 if (response != null) {
-                    this.countries = response;
+                    this._countries = response;
                     this.sys.log('Загружено стран: ' + response.length);
-                    this.ui.fillDropdown('country', this.countries);
+                    this.ui.fillDropdown('country', this._countries);
                     this.ui.setDropdownState('country', this.ui.getDropdownState('country'));
                     this.printPaginator(this, this.ui);
-                    this.ui.fillDropdown('dropdownUnivNewCountry', this.countries);
+                    this.ui.fillDropdown('dropdownUnivNewCountry', this._countries);
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_COUNTRIES);
                     alert(Const.MSG.NO_DATA_COUNTRIES);
@@ -240,7 +244,7 @@ class Country {
     getRefTable(arr) {
         //this.sys.log('Получение HTML фрагмента для таблицы стран..');
         let html = `<table id="country_table_data">
-            <caption><h4>Страны (${this.countries.length})</h4></caption>
+            <caption><h4>Страны (${this._countries.length})</h4></caption>
             <tr>
                 <th>ID</th>
                 <th>Название</th>
@@ -265,7 +269,7 @@ class Country {
     printPaginator(country, ui) {
         //this.sys.log('Печать пагинатора стран..');
         jQuery('#country-pagination-container').pagination({
-            dataSource: this.countries,
+            dataSource: this._countries,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
                 ui.setDiv('country_table', country.getRefTable(data));
@@ -280,7 +284,11 @@ class Language {
     sys;
     ui;
     data;
-    languages = [];
+    _languages = [];
+
+    get languages() {
+        return this._languages;
+    }
 
     /**
      *
@@ -300,7 +308,7 @@ class Language {
     printPaginator(language, ui) {
         //this.sys.log('Печать пагинатора языков..');
         jQuery('#lang-pagination-container').pagination({
-            dataSource: this.languages,
+            dataSource: this._languages,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
                 ui.setDiv('lang_table', language.getRefTable(data));
@@ -338,7 +346,7 @@ class Language {
     getRefTable(arr) {
         //this.sys.log('Получение HTML фрагмента для таблицы языков..');
         let html = `<table id="lang_table_data">
-            <caption><h4>Языки (${this.languages.length})</h4></caption>
+            <caption><h4>Языки (${this._languages.length})</h4></caption>
             <tr>
                 <th>ID</th>
                 <th>Название</th>
@@ -366,13 +374,13 @@ class Language {
         this.data.getData(params).then(
             response => {
                 if (response != null) {
-                    this.languages = response;
+                    this._languages = response;
                     //sys.log('Загруженные языки:\n' + sys.jsonToStr(response));
                     this.sys.log('Загружено языков: ' + response.length);
-                    this.ui.fillDropdown('language', this.languages);
+                    this.ui.fillDropdown('language', this._languages);
                     this.ui.setDropdownState('language', ui.getDropdownState('language'));
                     this.printPaginator(this, this.ui);
-                    this.ui.fillDropdown('dropdownUnivNewLang', this.languages);
+                    this.ui.fillDropdown('dropdownUnivNewLang', this._languages);
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_LANGUAGES);
                     alert(Const.MSG.NO_DATA_LANGUAGES);
@@ -491,7 +499,11 @@ class Program {
     ui;
     sys;
     data;
-    programs = [];
+    _programs = [];
+
+    get programs() {
+        return this._programs;
+    }
 
     /**
      *
@@ -538,13 +550,13 @@ class Program {
         this.data.getData(params).then(
             response => {
                 if (response != null) {
-                    this.programs = response;
+                    this._programs = response;
                     //sys.log('Загруженные программы:\n' + sys.jsonToStr(response));
                     this.sys.log('Загружено программ обучения: ' + response.length);
-                    this.ui.fillDropdown('program', this.programs);
+                    this.ui.fillDropdown('program', this._programs);
                     this.ui.setDropdownState('program', this.ui.getDropdownState('program'));
                     this.printPaginator(this, this.ui);
-                    this.ui.fillDropdown('dropdownUnivNewPrg', this.programs);
+                    this.ui.fillDropdown('dropdownUnivNewPrg', this._programs);
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_PROGRAMS);
                     alert(Const.MSG.NO_DATA_PROGRAMS);
@@ -661,7 +673,7 @@ class Program {
     printPaginator(program, ui) {
         //this.sys.log('Печать пагинатора программ обучения..');
         jQuery('#prg-pagination-container').pagination({
-            dataSource: this.programs,
+            dataSource: this._programs,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
                 ui.setDiv('prg_table', program.getRefTable(data));
@@ -672,7 +684,7 @@ class Program {
     getRefTable(arr) {
         //this.sys.log('Получение HTML фрагмента для таблицы программ..');
         let html = `<table id="prg_table_data">
-            <caption><h4>Программы обучения (${this.programs.length})</h4></caption>
+            <caption><h4>Программы обучения (${this._programs.length})</h4></caption>
             <tr>
                 <th>ID</th>
                 <th>Название</th>
@@ -701,7 +713,11 @@ class Specialty {
     ui;
     sys;
     data;
-    specialities = [];
+    _specialities = [];
+
+    get specialities() {
+        return this._specialities;
+    }
 
     /**
      *
@@ -727,13 +743,13 @@ class Specialty {
         this.data.getData(params).then(
             response => {
                 if (response != null) {
-                    this.specialities = response;
+                    this._specialities = response;
                     //sys.log('Загруженные специальности:\n' + sys.jsonToStr(response));
                     this.sys.log('Загружено специальностей: ' + response.length);
-                    this.ui.fillDropdown('specialty', this.specialities);
+                    this.ui.fillDropdown('specialty', this._specialities);
                     this.ui.setDropdownState('specialty', this.ui.getDropdownState('specialty'));
                     this.printPaginator(this, this.ui);
-                    this.ui.fillDropdown('dropdownUnivNewSpec', this.specialities);
+                    this.ui.fillDropdown('dropdownUnivNewSpec', this._specialities);
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_SPECIALITIES);
                     alert(Const.MSG.NO_DATA_SPECIALITIES);
@@ -869,7 +885,7 @@ class Specialty {
     printPaginator(specialty, ui) {
         //this.sys.log('Печать пагинатора специальностей..');
         jQuery('#spec-pagination-container').pagination({
-            dataSource: this.specialities,
+            dataSource: this._specialities,
             pageSize: Const.PAGE_SIZE_REF,
             callback: function (data, pagination) {
                 ui.setDiv('spec_table', specialty.getRefTable(data));
@@ -880,7 +896,7 @@ class Specialty {
     getRefTable(arr) {
         //this.sys.log('Получение HTML фрагмента для таблицы специальностей..');
         let html = `<table id="spec_table_data">
-            <caption><h4>Специальности (${this.specialities.length})</h4></caption>
+            <caption><h4>Специальности (${this._specialities.length})</h4></caption>
             <tr>
                 <th>ID</th>
                 <th>Название</th>
@@ -1555,12 +1571,15 @@ class University {
     sys;
     ui;
     data;
-
     universities = [];
     programs = new Set();
     languages = new Set();
     specialities = new Set();
+    programsEx = new Set();
+    languagesEx = new Set();
+    specialitiesEx = new Set();
     locations = [];
+    locationsEx = [];
 
     constructor(sys, ui, data) {
         this.sys = sys;
@@ -1669,6 +1688,48 @@ class University {
             specialities: Array.from(this.specialities),
             languages: Array.from(this.languages)
         }
+
+        if (newUniv.name.length == 0) {
+            alert('Введите название.');
+            return;
+        }
+        if (newUniv.country == 0) {
+            alert('Выберите страну.');
+            return;
+        }
+        if (newUniv.found.length == 0) {
+            alert('Введите год основания.');
+            return;
+        }
+        if (newUniv.type == 0) {
+            alert('Выберите тип.');
+            return;
+        }
+        if (newUniv.location == 0) {
+            alert('Выберите местоположение.');
+            return;
+        }
+        if (newUniv.url.length == 0) {
+            alert('Введите URL.');
+            return;
+        }
+        if (newUniv.url_pic.length == 0) {
+            alert('Введите URL фото.');
+            return;
+        }
+        if (newUniv.programs.length == 0) {
+            alert('Добавьте программы обучения.');
+            return;
+        }
+        if (newUniv.specialities.length == 0) {
+            alert('Добавьте специальности.');
+            return;
+        }
+        if (newUniv.languages.length == 0) {
+            alert('Добавьте языки.');
+            return;
+        }
+
         let params = {
             'action': 'my_action',
             'query': 'add_univ',
@@ -1683,6 +1744,8 @@ class University {
                 if (response.res == '200')  {
                     sys.log(response.msg);
                     alert(response.msg)
+                    this.resetFields();
+                    this.all();
                 }
             },
             error => {
@@ -1777,6 +1840,177 @@ class University {
             });
     }
 
+    resetFields()   {
+        this.ui.setField('inpUnivNewName', '');
+        this.ui.setField('inpUnivNewFound', '');
+        this.ui.setField('inpUnivNewUrl', '');
+        this.ui.setField('inpUnivNewUrlPhoto', '');
+
+        this.ui.setDropdownState('dropdownUnivNewCountry', 0);
+        this.ui.setDropdownState('dropdownUnivNewType', 0);
+        this.ui.setDropdownState('dropdownUnivNewLoc', 0);
+        this.ui.setDropdownState('dropdownUnivNewPrg', 0);
+        this.ui.setDropdownState('dropdownUnivNewSpec', 0);
+        this.ui.setDropdownState('dropdownUnivNewLang', 0);
+
+        this.ui.clearDiv('list_univ_new_prgs');
+        this.ui.clearDiv('list_univ_new_specs');
+        this.ui.clearDiv('list_univ_new_langs');
+    }
+
+    loadUniv(universityId)  {
+        let params = {
+            'action': 'my_action',
+            'query': 'get_col_by_id',
+            'table': 'university',
+            'id': universityId,
+            'col': 'name_en'
+        };
+        this.data.getData(params).then( response => {
+            this.ui.setField('inpUnivName', response.val);
+        });
+        params = {
+            'action': 'my_action',
+            'query': 'get_col_by_id',
+            'table': 'university',
+            'id': universityId,
+            'col': 'found'
+        };
+        this.data.getData(params).then( response => {
+            this.ui.setField('inpUnivFound', response.val);
+        });
+        params = {
+            'action': 'my_action',
+            'query': 'get_col_by_id',
+            'table': 'university',
+            'id': universityId,
+            'col': 'url'
+        };
+        this.data.getData(params).then( response => {
+            this.ui.setField('inpUnivUrl', response.val);
+        });
+        params = {
+            'action': 'my_action',
+            'query': 'get_col_by_id',
+            'table': 'university',
+            'id': universityId,
+            'col': 'url_pic'
+        };
+        this.data.getData(params).then( response => {
+            this.ui.setField('inpUnivUrlPhoto', response.val);
+        });
+        params = {
+            'action': 'my_action',
+            'query': 'get_col_by_id',
+            'table': 'university',
+            'id': universityId,
+            'col': 'country_id'
+        };
+        this.data.getData(params).then( response => {
+            //console.log(this.sys.jsonToStr(response));
+            let countryId = response.val;
+            //console.log('countryId = ' + countryId);
+            this.ui.fillDropdown('dropdownUnivCountry', country.countries);
+            this.ui.setDropdownState('dropdownUnivCountry', countryId);
+            let params = {
+                'action': 'my_action',
+                'query': 'get_locations_by_country',
+                'id': countryId,
+            };
+            this.data.getData(params).then( response => {
+                for (let item of response) {
+                    this.locationsEx.push(item.id);
+                }
+                console.log('locationsEx = ' + this.locationsEx);
+                this.ui.fillDropdown('dropdownUnivLoc', response);
+                let params = {
+                    'action': 'my_action',
+                    'query': 'get_col_by_id',
+                    'table': 'university',
+                    'id': countryId,
+                    'col': 'location_id'
+                };
+                console.log('location_id = ' + this.sys.jsonToStr(response));
+                this.data.getData(params).then( response => {
+                    this.ui.setDropdownState('dropdownUnivLoc', response.id);
+                });
+            });
+        });
+        params = {
+            'action': 'my_action',
+            'query': 'get_col_by_id',
+            'table': 'university',
+            'id': universityId,
+            'col': 'type_id'
+        };
+        this.data.getData(params).then( response => {
+            this.ui.fillDropdown('dropdownUnivType', this.types);
+            this.ui.setDropdownState('dropdownUnivType', response.val);
+        });
+
+        params = {
+            'action': 'my_action',
+            'query': 'get_programs_by_university',
+            'id': universityId
+        };
+        this.data.getData(params).then( response => {
+            this.ui.fillDropdown('dropdownUnivPrg', program.programs);
+            let htmlRows = '';
+            this.programsEx.clear();
+            for (let item of response) {
+                this.programsEx.add(item.id);
+                htmlRows += `<li>${item.val}</li>`;
+            }
+            let html = `
+            <ul>
+                ${htmlRows}
+            </ul>`;
+            ui.setDiv('list_univ_prgs', html);
+        });
+        params = {
+            'action': 'my_action',
+            'query': 'get_specialities_by_university',
+            'id': universityId
+        };
+        this.data.getData(params).then( response => {
+            this.ui.fillDropdown('dropdownUnivSpec', specialty.specialities);
+            let htmlRows = '';
+            this.specialitiesEx.clear();
+            for (let item of response) {
+                this.specialitiesEx.add(item.id);
+                htmlRows += `<li>${item.val}</li>`;
+            }
+            let html = `
+            <ul>
+                ${htmlRows}
+            </ul>`;
+            ui.setDiv('list_univ_specs', html);
+        });
+        params = {
+            'action': 'my_action',
+            'query': 'get_languages_by_university',
+            'id': universityId
+        };
+        this.data.getData(params).then( response => {
+            this.ui.fillDropdown('dropdownUnivLang', language.languages);
+            let htmlRows = '';
+            this.languagesEx.clear();
+            for (let item of response) {
+                this.languagesEx.add(item.id);
+                htmlRows += `<li>${item.val}</li>`;
+            }
+            let html = `
+            <ul>
+                ${htmlRows}
+            </ul>`;
+            ui.setDiv('list_univ_langs', html);
+        });
+    }
+
+    changeUniv(id)  {
+        this.loadUniv(id);
+    }
+
 }
 
 let sys;
@@ -1790,7 +2024,7 @@ let loc;
 let search;
 let univ;
 
-function onLoad() {
+function on_load() {
 
     sys = new System();
     ui = new UI(sys);
@@ -1987,10 +2221,14 @@ function on_click_univ_new_add_lang() {
     univ.addLang();
 }
 
-function newUnivCountryChange() {
+function on_change_univ_new_country() {
     univ.loadLocations();
 }
 
-onLoad();
+function on_click_univ_edit(id) {
+    univ.changeUniv(id);
+}
+
+on_load();
 
 // <<<<-------------------------------Zhass------------------------------------

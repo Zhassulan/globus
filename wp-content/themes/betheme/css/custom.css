@@ -133,6 +133,7 @@
     display: grid;
     grid-template-columns: auto auto;
     grid-template-rows: auto;
+    column-gap: 15px;
 }
 
 .add_edit_field {

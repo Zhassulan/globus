@@ -204,7 +204,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <tr>
                         <td>Страна</td>
                         <td>
-                            <select name="Тип" id="dropdownUnivNewCountry" onchange="newUnivCountryChange()"></select>
+                            <select id="dropdownUnivNewCountry" onchange="on_change_univ_new_country()"></select>
                         </td>
                     </tr>
                     <tr>
@@ -214,13 +214,13 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <tr>
                         <td>Тип</td>
                         <td>
-                            <select name="Тип" id="dropdownUnivNewType"></select>
+                            <select id="dropdownUnivNewType"></select>
                         </td>
                     </tr>
                     <tr>
                         <td>Местоположение</td>
                         <td>
-                            <select name="Тип" id="dropdownUnivNewLoc"></select>
+                            <select id="dropdownUnivNewLoc"></select>
                         </td>
                     </tr>
                     <tr>
@@ -236,7 +236,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                         <td>
                             <div class="inputs">
                                 <div>
-                                    <select name="Тип" id="dropdownUnivNewPrg"></select>
+                                    <select id="dropdownUnivNewPrg"></select>
                                 </div>
                                 <div>
                                     <button onclick="on_click_univ_new_add_prg()">Добавить</button>
@@ -252,7 +252,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                         <td>
                             <div class="inputs">
                                 <div>
-                                    <select name="Тип" id="dropdownUnivNewSpec"></select>
+                                    <select id="dropdownUnivNewSpec"></select>
                                 </div>
                                 <div>
                                     <button onclick="on_click_univ_new_add_spec()">Добавить</button>
@@ -268,7 +268,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                         <td>
                             <div class="inputs">
                                 <div>
-                                    <select name="Тип" id="dropdownUnivNewLang"></select>
+                                    <select id="dropdownUnivNewLang"></select>
                                 </div>
                                 <div>
                                     <button onclick="on_click_univ_new_add_lang()">Добавить</button>
@@ -299,7 +299,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     </tr>
                     <tr>
                         <td>Страна</td>
-                        <td></td>
+                        <td><select id="dropdownUnivCountry" onchange="on_change_univ_country()"></select></td>
                     </tr>
                     <tr>
                         <td>Основан</td>
@@ -307,11 +307,11 @@ require_once get_theme_root() . '/betheme/lib.php';
                     </tr>
                     <tr>
                         <td>Тип</td>
-                        <td></td>
+                        <td><select id="dropdownUnivType"></select></td>
                     </tr>
                     <tr>
                         <td>Местоположение</td>
-                        <td></td>
+                        <td><select id="dropdownUnivLoc"></select></td>
                     </tr>
                     <tr>
                         <td>Ссылка страницы</td>
@@ -321,8 +321,54 @@ require_once get_theme_root() . '/betheme/lib.php';
                         <td>Ссылка фото</td>
                         <td><input type="text" id="inpUnivUrlPhoto"></td>
                     </tr>
-
-
+                    <tr>
+                        <td>Программы обучения</td>
+                        <td>
+                            <div class="inputs">
+                                <div>
+                                    <select id="dropdownUnivPrg"></select>
+                                </div>
+                                <div>
+                                    <button onclick="on_click_univ_add_prg()">Добавить</button>
+                                </div>
+                            </div>
+                            Список:
+                            <div id="list_univ_prgs">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Специальности</td>
+                        <td>
+                            <div class="inputs">
+                                <div>
+                                    <select id="dropdownUnivSpec"></select>
+                                </div>
+                                <div>
+                                    <button onclick="on_click_univ_add_spec()">Добавить</button>
+                                </div>
+                            </div>
+                            Список:
+                            <div id="list_univ_specs">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Языки обучения</td>
+                        <td>
+                            <div class="inputs">
+                                <div>
+                                    <select id="dropdownUnivLang"></select>
+                                </div>
+                                <div>
+                                    <button onclick="on_click_univ_add_lang()">Добавить</button>
+                                </div>
+                            </div>
+                            Список:
+                            <div id="list_univ_langs">
+                            </div>
+                        </td>
+                    </tr>
                 </table>
             </div>
 
