@@ -204,7 +204,7 @@ require_once get_theme_root() . '/betheme/lib.php';
                     <tr>
                         <td>Страна</td>
                         <td>
-                            <select name="Тип" id="dropdownUnivNewCountry"></select>
+                            <select name="Тип" id="dropdownUnivNewCountry" onchange="newUnivCountryChange()"></select>
                         </td>
                     </tr>
                     <tr>

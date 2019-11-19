@@ -279,6 +279,9 @@ function my_action() {
             case 'add_univ':
                 echo addUniv($_GET['univ']);
                 break;
+            case 'get_locations_by_country':
+                echo getLocationsByCountry($_GET['id']);
+                break;
         }
     }
     wp_die();

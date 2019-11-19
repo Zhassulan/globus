@@ -1094,7 +1094,6 @@ class Location {
                     this.locations = response;
                     this.sys.log('Загружено местоположений: ' + response.length);
                     this.printPaginator(this, this.ui);
-                    this.ui.fillDropdown('dropdownUnivNewLoc', this.locations);
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_LOCATIONS);
                     alert(Const.MSG.NO_DATA_LOCATIONS);
@@ -1392,10 +1391,10 @@ class UI {
     }
 
     fillAllDropdowns() {
-        this.country.all(Const.TYP_EL.DROPDOWN);
-        this.program.all(Const.TYP_EL.DROPDOWN);
-        this.language.all(Const.TYP_EL.DROPDOWN);
-        this.specialty.all(Const.TYP_EL.DROPDOWN);
+        this.country.all();
+        this.program.all();
+        this.language.all();
+        this.specialty.all();
     }
 
     /**
@@ -1561,6 +1560,7 @@ class University {
     programs = new Set();
     languages = new Set();
     specialities = new Set();
+    locations = [];
 
     constructor(sys, ui, data) {
         this.sys = sys;
@@ -1669,9 +1669,6 @@ class University {
             specialities: Array.from(this.specialities),
             languages: Array.from(this.languages)
         }
-        sys.log(newUniv);
-        //sys.log(JSON.stringify(newUniv));
-        //var encodedData = window.btoa(newUniv); // encode a string
         let params = {
             'action': 'my_action',
             'query': 'add_univ',
@@ -1759,6 +1756,27 @@ class University {
             </ul>`;
         ui.setDiv('list_univ_new_langs', html);
     }
+
+    loadLocations() {
+        let id = ui.getField('dropdownUnivNewCountry');
+        //console.log('Chosen country ID ' + id);
+        if (id == 0) return;
+        let params = {
+            'action': 'my_action',
+            'query': 'get_locations_by_country',
+            'id': id
+        };
+        data.getData(params).then(
+            response => {
+                this.locations = response;
+                this.ui.fillDropdown('dropdownUnivNewLoc', this.locations);
+            },
+            error => {
+                alert(Const.MSG.ERR_LOAD_LOCATIONS + error);
+                sys.log(Const.MSG.ERR_LOAD_LOCATIONS + ' ' + error);
+            });
+    }
+
 }
 
 let sys;
@@ -1809,16 +1827,12 @@ function onLoad() {
         if (currentURL.indexOf(Const.URL.SEARCH_MANAGEMENT) != -1) {
             sys.log('Текущая страница: Const.URL.SEARCH_MANAGEMENT');
             country.all();
-            language.all(Const.TYP_EL.TABLE);
-            program.all(Const.TYP_EL.TABLE);
-            specialty.all(Const.TYP_EL.TABLE);
-            loc.all(Const.TYP_EL.TABLE);
-            loc.all(Const.TYP_EL.DROPDOWN_NEW);
-            univ.all(Const.TYP_EL.TABLE);
+            language.all();
+            program.all();
+            specialty.all();
+            loc.all();
+            univ.all();
             univ.geTypes(Const.TYP_EL.DROPDOWN_NEW);
-            program.all(Const.TYP_EL.DROPDOWN_NEW);
-            language.all(Const.TYP_EL.DROPDOWN_NEW);
-            specialty.all(Const.TYP_EL.DROPDOWN_NEW);
         }
         if (currentURL.indexOf(Const.URL.SEARCH) != -1) {
             sys.log('Текущая страница: URL.SEARCH');
@@ -1972,6 +1986,11 @@ function on_click_univ_new_add_spec() {
 function on_click_univ_new_add_lang() {
     univ.addLang();
 }
+
+function newUnivCountryChange() {
+    univ.loadLocations();
+}
+
 onLoad();
 
 // <<<<-------------------------------Zhass------------------------------------

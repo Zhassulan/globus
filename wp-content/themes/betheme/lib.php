@@ -89,6 +89,22 @@ function getRefAll($tableName)    {
     return json_encode($arr, JSON_UNESCAPED_UNICODE);
 }
 
+function getLocationsByCountry($id)    {
+    $arr[] = new Reference(0, 'Не выбрано');
+    $conn = getConnection();
+    if ($res = $conn->query ( 'select l.id, l.name_ru from location l 
+        left join university u on u.location_id = l.id 
+        where 
+          u.country_id =  '.$id.' group by l.id order by name_ru asc;'))   {
+        while($row = $res->fetch_row()) {
+            $arr[] = new Reference($row[0], $row[1]);
+        }
+        $res->close();
+    }
+    mysqli_close($conn);
+    return json_encode($arr, JSON_UNESCAPED_UNICODE);
+}
+
 function getUniverisities()    {
     $conn = getConnection();
     if ($res = $conn->query ( 'select u.*, c.name_ru country from university u left join country c on c.id = u.country_id order by c.name_ru , u.name_en;'))   {
