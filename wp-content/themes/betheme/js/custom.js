@@ -1665,11 +1665,12 @@ class University {
             location: ui.getField('dropdownUnivNewLoc'),
             url: ui.getField('inpUnivNewUrl'),
             url_pic: ui.getField('inpUnivNewUrlPhoto'),
-            programs: this.programs,
-            specialities: this.specialities,
-            languages: this.languages
+            programs: Array.from(this.programs),
+            specialities: Array.from(this.specialities),
+            languages: Array.from(this.languages)
         }
         sys.log(newUniv);
+        //sys.log(JSON.stringify(newUniv));
         //var encodedData = window.btoa(newUniv); // encode a string
         let params = {
             'action': 'my_action',
@@ -1678,8 +1679,14 @@ class University {
         };
         data.getData(params).then(
             response => {
-                sys.log(response.msg);
-                alert(response.msg)
+                if (response.res == '500')  {
+                    sys.log(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + response.msg);
+                    alert(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + response.msg)
+                }
+                if (response.res == '200')  {
+                    sys.log(response.msg);
+                    alert(response.msg)
+                }
             },
             error => {
                 alert(Const.MSG.ERR_ADD_UNIVERSITY + error);

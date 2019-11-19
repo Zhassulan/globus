@@ -202,27 +202,41 @@ function addUniv($univ)  {
     $conn = getConnection();
     $val = null;
     $univ = json_decode(stripslashes($univ));
-    //log1($univ->country);
-    $sql = 'CALL add_univ(\''.$univ->name.'\', '.$univ->country.', '.$univ->found.', '.$univ->type.', '.$univ->location.', \''.$univ->url.'\', \''.$univ->url_pic.'\')';
-    log1($sql);
+    $sql = 'CALL add_univ(\''.$univ->name.'\', '.$univ->country.', \''.$univ->found.'\', '.$univ->type.', '.$univ->location.', \''.$univ->url.'\', \''.$univ->url_pic.'\')';
     $id = 0;
-    $err = null;
-    if ($res = $conn->query($sql)->fetch()) {
-        $id = $res['id'];
+    if ($res = $conn->query($sql)) {
+        while ($row = $res->fetch_assoc()) {
+            $id = $row['id'];
+        }
+        while ($conn->next_result()) $conn->store_result();
+        $res->close();
     }   else    {
-        log1($conn->error);
+        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+        return json_encode($val, JSON_UNESCAPED_UNICODE);
     }
-    if ($id != 0) {
-        $val = new Result('200', 'Запись успешно удалена. ID'.$id);
+    $sql = '';
+    foreach ($univ->languages as $val) {
+        $sql .= 'insert into university_languages (university_id, language_id) values ('.$id.', '.$val.');';
+    }
+    foreach ($univ->programs as $val) {
+        $sql .= 'insert into university_programs (university_id, program_id) values ('.$id.', '.$val.');';
+    }
+    foreach ($univ->specialities as $val) {
+        $sql .= 'insert into university_specialities (university_id, specialty_id) values ('.$id.', '.$val.');';
+    }
+    if ($conn->multi_query($sql) === TRUE) {
+        $val = new Result('200', 'Университет и связки успешно добавлены.');
     } else {
-        $val = new Result('500', 'Query: '.$sql. '. '.$err);
+        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+        return json_encode($val, JSON_UNESCAPED_UNICODE);
     }
     mysqli_close($conn);
     return json_encode($val, JSON_UNESCAPED_UNICODE);
 }
 
 function log1($msg)  {
-    file_put_contents('D:\dev\Bitnami\wampstack-7.1.26-0\apps\learn\htdocs\php_errors.log', $msg.PHP_EOL, FILE_APPEND);
+    file_put_contents('D:\dev\Bitnami\wampstack-7.1.26-0\apps\learn\htdocs\php_errors_my.log', $msg.PHP_EOL, FILE_APPEND);
+    //file_put_contents('D:\dev\Bitnami\wampstack-7.1.26-0\apps\learn\htdocs\php_errors.log', $msg);
 }
 
 ?>
