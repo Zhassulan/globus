@@ -227,7 +227,7 @@ function addUniv($univ)  {
         while ($conn->next_result()) $conn->store_result();
         $res->close();
     }   else    {
-        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+        $val = new Result('500', $conn->error);
         return json_encode($val, JSON_UNESCAPED_UNICODE);
     }
     $sql = '';
@@ -243,7 +243,7 @@ function addUniv($univ)  {
     if ($conn->multi_query($sql) === TRUE) {
         $val = new Result('200', 'Университет и связки успешно добавлены.');
     } else {
-        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+        $val = new Result('500', $conn->error);
         return json_encode($val, JSON_UNESCAPED_UNICODE);
     }
     mysqli_close($conn);
@@ -308,31 +308,28 @@ function updateUniv($univ)  {
     $val = null;
     $univ = json_decode(stripslashes($univ));
     $sql = 'CALL update_univ('.$univ->id.', \''.$univ->name.'\', '.$univ->country.', \''.$univ->found.'\', '.$univ->type.', '.$univ->location.', \''.$univ->url.'\', \''.$univ->url_pic.'\')';
-    log1($sql);
-    if ($res = $conn->query($sql)) {
-        $res->close();
-    }   else    {
-        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+    if (!$conn->query($sql)) {
+        $val = new Result('500', $conn->error);
         return json_encode($val, JSON_UNESCAPED_UNICODE);
     }
-    $sql = 'delete from university_languages ul where ul.university_id = '.$univ->id.';';
+    $sql = 'delete from university_languages where university_id = '.$univ->id.';';
     foreach ($univ->languages as $val) {
         $sql .= 'insert into university_languages (university_id, language_id) values ('.$univ->id.', '.$val.');';
     }
-    $sql .= 'delete from university_programs ul where ul.university_id = '.$univ->id.';';
+    $sql .= 'delete from university_programs where university_id = '.$univ->id.';';
     foreach ($univ->programs as $val) {
         $sql .= 'insert into university_programs (university_id, program_id) values ('.$univ->id.', '.$val.');';
     }
-    $sql .= 'delete from university_specialities ul where ul.university_id = '.$univ->id.';';
+    $sql .= 'delete from university_specialities where university_id = '.$univ->id.';';
     foreach ($univ->specialities as $val) {
         $sql .= 'insert into university_specialities (university_id, specialty_id) values ('.$univ->id.', '.$val.');';
     }
-    if ($conn->multi_query($sql) === TRUE) {
+    log1($sql);
+    if ($conn->multi_query($sql)) {
         $val = new Result('200', 'Университет и связки успешно обновлены.');
     } else {
-        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+        $val = new Result('500', $conn->error);
     }
-    log1($sql);
     mysqli_close($conn);
     return json_encode($val, JSON_UNESCAPED_UNICODE);
 }
