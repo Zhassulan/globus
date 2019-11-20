@@ -303,4 +303,38 @@ function getLanguagesByUniversity($id)  {
     return json_encode($arr, JSON_UNESCAPED_UNICODE);
 }
 
+function updateUniv($univ)  {
+    $conn = getConnection();
+    $val = null;
+    $univ = json_decode(stripslashes($univ));
+    $sql = 'CALL update_univ('.$univ->id.', \''.$univ->name.'\', '.$univ->country.', \''.$univ->found.'\', '.$univ->type.', '.$univ->location.', \''.$univ->url.'\', \''.$univ->url_pic.'\')';
+    log1($sql);
+    if ($res = $conn->query($sql)) {
+        $res->close();
+    }   else    {
+        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+        return json_encode($val, JSON_UNESCAPED_UNICODE);
+    }
+    $sql = 'delete from university_languages ul where ul.university_id = '.$univ->id.';';
+    foreach ($univ->languages as $val) {
+        $sql .= 'insert into university_languages (university_id, language_id) values ('.$univ->id.', '.$val.');';
+    }
+    $sql .= 'delete from university_programs ul where ul.university_id = '.$univ->id.';';
+    foreach ($univ->programs as $val) {
+        $sql .= 'insert into university_programs (university_id, program_id) values ('.$univ->id.', '.$val.');';
+    }
+    $sql .= 'delete from university_specialities ul where ul.university_id = '.$univ->id.';';
+    foreach ($univ->specialities as $val) {
+        $sql .= 'insert into university_specialities (university_id, specialty_id) values ('.$univ->id.', '.$val.');';
+    }
+    if ($conn->multi_query($sql) === TRUE) {
+        $val = new Result('200', 'Университет и связки успешно обновлены.');
+    } else {
+        $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
+    }
+    log1($sql);
+    mysqli_close($conn);
+    return json_encode($val, JSON_UNESCAPED_UNICODE);
+}
+
 ?>

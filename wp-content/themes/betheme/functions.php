@@ -291,6 +291,9 @@ function my_action() {
             case 'get_languages_by_university':
                 echo getLanguagesByUniversity($_GET['id']);
                 break;
+            case 'update_univ':
+                echo updateUniv($_GET['univ']);
+                break;
         }
     }
     wp_die();
