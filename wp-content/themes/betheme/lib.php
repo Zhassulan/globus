@@ -324,7 +324,6 @@ function updateUniv($univ)  {
     foreach ($univ->specialities as $val) {
         $sql .= 'insert into university_specialities (university_id, specialty_id) values ('.$univ->id.', '.$val.');';
     }
-    log1($sql);
     if ($conn->multi_query($sql)) {
         $val = new Result('200', 'Университет и связки успешно обновлены.');
     } else {
@@ -347,5 +346,22 @@ function delUniv($id)  {
     return json_encode($val, JSON_UNESCAPED_UNICODE);
 }
 
+function checkPwd($pwd)    {
+    $val = null;
+    $conn = getConnection();
+    $sql = 'SELECT count(*) from user where login = \'globus\' and pwd = md5(\''.$pwd.'\');';
+    if ($res = $conn->query($sql))   {
+        while($row = $res->fetch_row()) {
+            if ($row[0] == 0)   {
+                $val = new Result('500', 'Ошибка пароля.');
+            }   else    {
+                $val = new Result('200', 'Пароль успешный.');
+            }
+        }
+        $res->close();
+    }
+    mysqli_close($conn);
+    return json_encode($val, JSON_UNESCAPED_UNICODE);
+}
 
 ?>

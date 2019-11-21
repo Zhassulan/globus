@@ -4,8 +4,8 @@ class Const {
     static LOG_DB = false;
     static URL = {
         SEARCH: '',
-        URL_SEARCH_RESULTS: '',
-        SEARCH_MANAGEMENT: '',
+        SEARCH_RESULTS: '',
+        SEARCH_MANAGEMENT: ''
     };
     static TYP_EL = {
         TABLE: 0,
@@ -1355,6 +1355,22 @@ class System {
             return str;
     }
 
+    async checkPwd(pwd) {
+        let res = false;
+        let params = {
+            'action': 'my_action',
+            'query': 'check_pwd',
+            'pwd': pwd
+        };
+        await data.getData(params).then(
+            response => {
+                if (response.res == '200')  {
+                    res = true;
+                }
+            });
+        return res;
+    }
+
 }
 
 class UI {
@@ -2232,6 +2248,12 @@ function on_load() {
         sys.log('URL.SEARCH_MANAGEMENT: ' + Const.URL.SEARCH_MANAGEMENT);
         if (currentURL.indexOf(Const.URL.SEARCH_MANAGEMENT) != -1) {
             sys.log('Текущая страница: Const.URL.SEARCH_MANAGEMENT');
+            let pwd = prompt('Введите пароль');
+            sys.checkPwd(pwd).then(response => {
+                if (!response)  {
+                    window.location = window.location.origin;
+                }
+            });
             country.all();
             language.all();
             program.all();

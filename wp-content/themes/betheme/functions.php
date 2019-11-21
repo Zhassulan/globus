@@ -297,6 +297,9 @@ function my_action() {
             case 'del_univ':
                 echo delUniv($_GET['id']);
                 break;
+            case 'check_pwd':
+                echo checkPwd($_GET['pwd']);
+                break;
         }
     }
     wp_die();
