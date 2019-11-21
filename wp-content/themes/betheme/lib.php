@@ -179,7 +179,7 @@ function updateTxtColById($table, $id, $col, $val)   {
     $conn = getConnection();
     $sql = 'UPDATE '.$table.' SET '.$col.'=\''.$val.'\' where id = '.$id;
     $val = null;
-    if ($conn->query($sql) === TRUE) {
+    if ($conn->query($sql)) {
         $val = new Result('200', 'Запись успешно обновлена.');
     } else {
         $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
@@ -192,7 +192,7 @@ function insertTxt($table, $col, $val)   {
     $conn = getConnection();
     $sql = 'INSERT INTO '.$table.' ('.$col.') values (\''.$val.'\')';
     $val = null;
-    if ($conn->query($sql) === TRUE) {
+    if ($conn->query($sql)) {
         $val = new Result('200', 'Запись успешно создана.');
     } else {
         $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
@@ -205,7 +205,7 @@ function del($table, $id)   {
     $conn = getConnection();
     $sql = 'DELETE FROM '.$table.' WHERE id = '.$id;
     $val = null;
-    if ($conn->query($sql) === TRUE) {
+    if ($conn->query($sql)) {
         $val = new Result('200', 'Запись успешно удалена.');
     } else {
         $val = new Result('500', 'Query: '.$sql. '. '.$conn->error);
@@ -333,5 +333,19 @@ function updateUniv($univ)  {
     mysqli_close($conn);
     return json_encode($val, JSON_UNESCAPED_UNICODE);
 }
+
+function delUniv($id)  {
+    $conn = getConnection();
+    $val = null;
+    $sql = 'delete from university where id = '.$id.';';
+    if ($conn->query($sql)) {
+        $val = new Result('200', 'Университет успешно удалён.');
+    } else {
+        $val = new Result('500', $conn->error);
+    }
+    mysqli_close($conn);
+    return json_encode($val, JSON_UNESCAPED_UNICODE);
+}
+
 
 ?>

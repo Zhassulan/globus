@@ -294,6 +294,9 @@ function my_action() {
             case 'update_univ':
                 echo updateUniv($_GET['univ']);
                 break;
+            case 'del_univ':
+                echo delUniv($_GET['id']);
+                break;
         }
     }
     wp_die();

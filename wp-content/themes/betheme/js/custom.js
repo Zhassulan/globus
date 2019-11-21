@@ -51,6 +51,7 @@ class Const {
         ERR_DEL_PROGRAM: 'Ошибка удаления программы обучения.',
         ERR_DEL_SPECIALTY: 'Ошибка удаления специальности.',
         ERR_DEL_LOCATION: 'Ошибка удаления местоположения.',
+        ERR_DEL_UNIVERSITY: 'Ошибка удаления университета.',
 
         NO_DATA_COUNTRIES: 'Нет данных по странам.',
         NO_DATA_LANGUAGES: 'Нет данных по языкам.',
@@ -1318,7 +1319,7 @@ class System {
             'col': 'msg',
             'val': msg
         };
-        this.data.getData(params).then(
+        data.getData(params).then(
             response => {
                 if (response.res == '500') {
                     alert(Const.MSG.ERR_LOG + ' ' + response.msg);
@@ -1669,7 +1670,7 @@ class University {
                     <button onclick="on_click_univ_edit(${ arr[i].id })">Изменить</button>
                 </td>
                 <td>
-                    <button onclick="on_click_univ_del(${ arr[i].id }, '${ arr[i].name_en }')">Удалить</button>
+                    <button onclick="on_click_univ_del(${ arr[i].id })">Удалить</button>
                 </td>
             </tr>`;
         }
@@ -1759,7 +1760,9 @@ class University {
             alert('Добавьте языки.');
             return;
         }
-
+        if (!confirm('Добавить университет?')) {
+            return;
+        }
         let params = {
             'action': 'my_action',
             'query': 'add_univ',
@@ -1768,11 +1771,11 @@ class University {
         data.getData(params).then(
             response => {
                 if (response.res == '500')  {
-                    sys.log(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + response.msg);
+                    this.sys.log(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + response.msg);
                     alert(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + response.msg)
                 }
                 if (response.res == '200')  {
-                    sys.log(response.msg);
+                    this.sys.log(response.msg + ' ' + JSON.stringify(newUniv));
                     alert(response.msg)
                     this.resetFields();
                     this.all();
@@ -1780,7 +1783,7 @@ class University {
             },
             error => {
                 alert(Const.MSG.ERR_ADD_UNIVERSITY + error);
-                sys.log(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + error);
+                this.sys.log(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + error);
             });
     }
 
@@ -1887,7 +1890,7 @@ class University {
             },
             error => {
                 alert(Const.MSG.ERR_LOAD_LOCATIONS + error);
-                sys.log(Const.MSG.ERR_LOAD_LOCATIONS + ' ' + error);
+                this.sys.log(Const.MSG.ERR_LOAD_LOCATIONS + ' ' + error);
             });
     }
 
@@ -2074,8 +2077,6 @@ class University {
             languages: Array.from(this.languagesEx)
         };
 
-        console.log(univ);
-
         if (univ.name.length == 0) {
             alert('Введите название.');
             return;
@@ -2116,7 +2117,9 @@ class University {
             alert('Добавьте языки.');
             return;
         }
-
+        if (!confirm('Обновить университет?')) {
+            return;
+        }
         let params = {
             'action': 'my_action',
             'query': 'update_univ',
@@ -2125,11 +2128,11 @@ class University {
         data.getData(params).then(
             response => {
                 if (response.res == '500')  {
-                    sys.log(Const.MSG.ERR_UPDATE_UNIVERSITY + ' ' + response.msg);
+                    this.sys.log(Const.MSG.ERR_UPDATE_UNIVERSITY + ' ' + response.msg);
                     alert(Const.MSG.ERR_UPDATE_UNIVERSITY + ' ' + response.msg)
                 }
                 if (response.res == '200')  {
-                    sys.log(response.msg);
+                    this.sys.log(response.msg + ' ' + JSON.stringify(univ));
                     alert(response.msg)
                     this.resetFieldsEx();
                     this.all();
@@ -2137,7 +2140,46 @@ class University {
             },
             error => {
                 alert(Const.MSG.ERR_UPDATE_UNIVERSITY + error);
-                sys.log(Const.MSG.ERR_UPDATE_UNIVERSITY + ' ' + error);
+                this.sys.log(Const.MSG.ERR_UPDATE_UNIVERSITY + ' ' + error);
+            });
+    }
+
+    goDel(id) {
+        this.id = id;
+        let params = {
+            'action': 'my_action',
+            'query': 'get_col_by_id',
+            'table': 'university',
+            'id': this.id,
+            'col': 'name_en'
+        };
+        data.getData(params).then( response => {
+            if (confirm('Удалить университет "' + response.val + '" ?')) {
+                this.del();
+            }
+        });
+    }
+
+    del()   {
+        let params = {
+            'action': 'my_action',
+            'query': 'del_univ',
+            'id': this.id
+        };
+        data.getData(params).then(
+            response => {
+                if (response.res == '500')  {
+                    this.sys.log(Const.MSG.ERR_DEL_UNIVERSITY + ' ' + response.msg);
+                    alert(Const.MSG.ERR_DEL_UNIVERSITY + ' ' + response.msg)
+                }
+                if (response.res == '200')  {
+                    alert(response.msg)
+                    this.all();
+                }
+            },
+            error => {
+                alert(Const.MSG.ERR_DEL_UNIVERSITY + error);
+                this.sys.log(Const.MSG.ERR_DEL_UNIVERSITY + ' ' + error);
             });
     }
 
@@ -2179,7 +2221,7 @@ function on_load() {
     } else {
         Const.URL.SEARCH = window.location.origin + '/poisk';
         Const.URL.SEARCH_RESULTS = window.location.origin + '/results';
-        Const.URL.SEARCH_MANAGEMENT = window.location.origin + '/panel';
+        Const.URL.SEARCH_MANAGEMENT = window.location.origin + '/smanag';
     }
 
     jQuery("document").ready(function () {
@@ -2397,6 +2439,10 @@ function on_click_univ_del_spec_ex(id) {
 function on_click_univ_del_lang_ex(id) {
     univ.delLangEx(id);
     univ.setLangListEx();
+}
+
+function on_click_univ_del(id) {
+    univ.goDel(id);
 }
 
 on_load();
