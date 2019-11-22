@@ -73,6 +73,10 @@ class Const {
     static PAGE_SIZE_SEARCH = 8;
     static PAGE_SIZE_REF = 8;
     static AJAX = window.wp_data.ajax_url;
+    static MODE = {
+        SEARCH: false,
+        MANAGEMENT: false
+    };
 }
 
 class Country {
@@ -269,6 +273,7 @@ class Country {
     }
 
     printPaginator(country, ui) {
+        if (Const.MODE.SEARCH)  return;
         //this.sys.log('Печать пагинатора стран..');
         jQuery('#country-pagination-container').pagination({
             dataSource: this._countries,
@@ -308,6 +313,7 @@ class Language {
      * Распечатать таблицу и пагинатор языков
      */
     printPaginator(language, ui) {
+        if (Const.MODE.SEARCH)  return;
         //this.sys.log('Печать пагинатора языков..');
         jQuery('#lang-pagination-container').pagination({
             dataSource: this._languages,
@@ -673,6 +679,7 @@ class Program {
     }
 
     printPaginator(program, ui) {
+        if (Const.MODE.SEARCH)  return;
         //this.sys.log('Печать пагинатора программ обучения..');
         jQuery('#prg-pagination-container').pagination({
             dataSource: this._programs,
@@ -885,6 +892,7 @@ class Specialty {
     }
 
     printPaginator(specialty, ui) {
+        if (Const.MODE.SEARCH)  return;
         //this.sys.log('Печать пагинатора специальностей..');
         jQuery('#spec-pagination-container').pagination({
             dataSource: this._specialities,
@@ -2217,12 +2225,12 @@ function on_load() {
     sys = new System();
     ui = new UI(sys);
     data = new Data();
+    search = new Search(sys, ui, data);
     country = new Country(sys, ui, data);
     language = new Language(sys, ui, data);
     program = new Program(sys, ui, data);
     specialty = new Specialty(sys, ui, data);
     loc = new Location(sys, ui, data);
-    search = new Search(sys, ui, data);
     univ = new University(sys, ui, data);
 
     ui.specialty = specialty;
@@ -2241,19 +2249,24 @@ function on_load() {
     }
 
     jQuery("document").ready(function () {
+
         let currentURL = window.location.href;
         sys.log('Адрес загружаемой страницы: ' + currentURL);
         sys.log('URL.SEARCH: ' + Const.URL.SEARCH);
         sys.log('URL.SEARCH_RESULTS: ' + Const.URL.SEARCH_RESULTS);
         sys.log('URL.SEARCH_MANAGEMENT: ' + Const.URL.SEARCH_MANAGEMENT);
+
         if (currentURL.indexOf(Const.URL.SEARCH_MANAGEMENT) != -1) {
+            Const.MODE.MANAGEMENT = true;
             sys.log('Текущая страница: Const.URL.SEARCH_MANAGEMENT');
+            /*
             let pwd = prompt('Введите пароль');
             sys.checkPwd(pwd).then(response => {
                 if (!response)  {
                     window.location = window.location.origin;
                 }
             });
+            */
             country.all();
             language.all();
             program.all();
@@ -2261,6 +2274,8 @@ function on_load() {
             loc.all();
             univ.all();
             univ.geTypes(Const.TYP_EL.DROPDOWN_NEW);
+        }   else {
+            Const.MODE.SEARCH = true;
         }
         if (currentURL.indexOf(Const.URL.SEARCH) != -1) {
             sys.log('Текущая страница: URL.SEARCH');
@@ -2289,6 +2304,7 @@ function on_load() {
             search.printPaginator(search);
         }
     });
+
 }
 
 function on_click_spec_edit(id) {
