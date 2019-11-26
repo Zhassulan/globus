@@ -192,7 +192,7 @@ if( is_admin() ){
 	require_once LIBS_DIR .'/admin/class-mfn-changelog.php';
 }
 
-//загрузка custom JS, CSS и PHP плагина - Zhass
+// Zhass-------------------------------------------->>>>
 
 function js_variables() {
     $variables = array (
@@ -206,9 +206,10 @@ add_action('wp_head','js_variables');
 
 add_action( 'wp_enqueue_scripts', 'load_scripts');
 
-function load_scripts(){	
-  wp_enqueue_script( 'my-custom-script',get_template_directory_uri().'/js/custom.js', array('jquery'), '1.0.0', true);
-  wp_enqueue_script( 'my-custom-script1',get_template_directory_uri().'/js/pagination.js', array('jquery'), '1.0.0', true);
+function load_scripts(){
+    wp_enqueue_script('jquery');
+    wp_enqueue_script( 'my-custom-script',get_template_directory_uri().'/js/custom.js', null, '1.0.0', true);
+    wp_enqueue_script( 'my-custom-script1',get_template_directory_uri().'/js/pagination.js',null, '1.0.0', true);
 }
 
 wp_enqueue_style( 'custom', get_template_directory_uri() . '/css/custom.css');
@@ -236,6 +237,7 @@ function myajax_data(){
 
 add_action('wp_ajax_my_action', 'my_action');
 add_action('wp_ajax_nopriv_my_action', 'my_action');
+
 function my_action() {
     require_once 'lib.php';
     if (isset($_GET['query']))   {

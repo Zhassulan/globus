@@ -1,23 +1,23 @@
 // -------------------------------Zhass------------------------------------>>>>>
-class Const {
 
-    static LOG_DB = false;
-    static URL = {
+let Const = {
+    LOG_DB: false,
+    URL: {
         SEARCH: '',
         SEARCH_RESULTS: '',
         SEARCH_MANAGEMENT: ''
-    };
-    static TYP_EL = {
+    },
+    TYP_EL: {
         TABLE: 0,
         DROPDOWN: 1,
         DROPDOWN_NEW: 2,
         DROPDOWN_EDIT: 3,
-    };
-    static DLG_RES = {
+    },
+    DLG_RES: {
         OK: 0,
         CANCEL: 1
-    };
-    static MSG = {
+    },
+    MSG: {
         ERR_ADD_COUNTRY: 'Ошибка добавления страны.',
         ERR_ADD_LANGUAGE: 'Ошибка добавления языка.',
         ERR_ADD_PROGRAM: 'Ошибка добавления программы обучения.',
@@ -69,15 +69,15 @@ class Const {
 
         ERR_SEARCH: 'Ошибка поиска.',
         ERR_LOG: 'Ошибка записи в журнал.'
-    };
-    static PAGE_SIZE_SEARCH = 8;
-    static PAGE_SIZE_REF = 8;
-    static AJAX = window.wp_data.ajax_url;
-    static MODE = {
+    },
+    PAGE_SIZE_SEARCH: 8,
+    PAGE_SIZE_REF: 8,
+    AJAX: window.wp_data.ajax_url,
+    MODE: {
         SEARCH: false,
         MANAGEMENT: false
-    };
-}
+    },
+};
 
 class Country {
 
@@ -1231,7 +1231,6 @@ class Search {
     }
 
     printPaginator(search) {
-        //this.sys.log('Печать пагинатора результатов поиска..');
         jQuery('#cards-pagination-container').pagination({
             dataSource: this.cards,
             pageSize: Const.PAGE_SIZE_SEARCH,
