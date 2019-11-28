@@ -184,6 +184,42 @@ require_once get_theme_root() . '/betheme/lib.php';
 
     <hr>
 
+    <div id="typ_table"></div>
+    <div class="typ-paginator-container">
+        <div class="pp">
+            <div id="typ-pagination-container"></div>
+        </div>
+    </div>
+    <div class="inputs">
+        <div>
+            <div class="add_edit_field">
+                <div>Новый тип</div>
+                <div>
+                    <input type="text" id="input_typ_new" placeholder="Введите название" value="">
+                    <input type="hidden" id="input_typ_new_val" value="">
+                </div>
+                <div>
+                    <button type="button" onclick="on_click_typ_new()">Добавить</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="add_edit_field">
+                <div>Изменить тип</div>
+                <div>
+                    <input type="text" id="input_typ_edit" value="">
+                    <input type="hidden" id="input_typ_edit_id" value="">
+                    <input type="hidden" id="input_typ_edit_old_val" value="">
+                </div>
+                <div>
+                    <button type="button" onclick="on_click_typ_update()">Обновить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
     <div id="univ_table"></div>
     <div class="univ-paginator-container">
         <div class="pp">
