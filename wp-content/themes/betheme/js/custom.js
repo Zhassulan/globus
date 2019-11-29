@@ -89,19 +89,15 @@ let Const = {
 
 class Country {
 
-    sys;
-    ui;
-    data;
-    _countries = [];
-
-    get countries() {
-        return this._countries;
-    }
-
     constructor(sys, ui, data) {
         this.sys = sys;
         this.ui = ui;
         this.data = data;
+        this._countries = [];
+    }
+
+    get countries() {
+        return this._countries;
     }
 
     all() {
@@ -299,15 +295,6 @@ class Country {
 
 class Language {
 
-    sys;
-    ui;
-    data;
-    _languages = [];
-
-    get languages() {
-        return this._languages;
-    }
-
     /**
      *
      * @param sys
@@ -318,6 +305,11 @@ class Language {
         this.sys = sys;
         this.ui = ui;
         this.data = data;
+        this._languages = [];
+    }
+
+    get languages() {
+        return this._languages;
     }
 
     /**
@@ -518,15 +510,6 @@ class Language {
 
 class Program {
 
-    ui;
-    sys;
-    data;
-    _programs = [];
-
-    get programs() {
-        return this._programs;
-    }
-
     /**
      *
      * @param ui
@@ -537,6 +520,11 @@ class Program {
         this.ui = ui;
         this.sys = sys;
         this.data = data;
+        this._programs = [];
+    }
+
+    get programs() {
+        return this._programs;
     }
 
     setEditVal(id) {
@@ -737,15 +725,6 @@ class Program {
 
 class Specialty {
 
-    ui;
-    sys;
-    data;
-    _specialities = [];
-
-    get specialities() {
-        return this._specialities;
-    }
-
     /**
      *
      * @param ui
@@ -756,6 +735,11 @@ class Specialty {
         this.ui = ui;
         this.sys = sys;
         this.data = data;
+        this._specialities = [];
+    }
+
+    get specialities() {
+        return this._specialities;
     }
 
     emptyEdits() {
@@ -954,11 +938,6 @@ class Specialty {
 
 class Location {
 
-    sys;
-    ui;
-    data;
-    locations = [];
-
     /**
      *
      * @param sys
@@ -969,6 +948,7 @@ class Location {
         this.sys = sys;
         this.ui = ui;
         this.data = data;
+        this.locations = [];
     }
 
     emptyEdits() {
@@ -1158,11 +1138,6 @@ class Location {
 
 class Type {
 
-    sys;
-    ui;
-    data;
-    types = [];
-
     /**
      *
      * @param sys
@@ -1173,6 +1148,7 @@ class Type {
         this.sys = sys;
         this.ui = ui;
         this.data = data;
+        this.types = [];
     }
 
     emptyEdits() {
@@ -1359,26 +1335,25 @@ class Type {
 
 class Ref {
 
-    sys;
-    ui;
-    data;
-    _items = [];
-    _inp_new;
-    _inp_edit;
-    _inp_edit_id;
-    _inp_edit_old_val;
-    _dbTable;
-    _paginationDiv;
-    _tableDiv;
-    _tableId;
-    _onClickEdit;
-    _onClickDel;
-    _query;
+
 
     constructor(sys, ui, data) {
         this.sys = sys;
         this.ui = ui;
         this.data = data;
+        this._items = [];
+        this._inp_new;
+        this._inp_edit;
+        this._inp_edit_id;
+        this._inp_edit_old_val;
+        this._dbTable;
+        this._paginationDiv;
+        this._tableDiv;
+        this._tableId;
+        this._onClickEdit;
+        this._onClickDel;
+        this._query;
+
     }
 
     get items() {
@@ -1620,11 +1595,6 @@ class Ref {
 
 class Search {
 
-    sys;
-    ui;
-    data;
-    cards = [];
-
     /**
      *
      * @param sys
@@ -1635,6 +1605,7 @@ class Search {
         this.sys = sys;
         this.ui = ui;
         this.data = data;
+        this.cards = [];
     }
 
     /**
@@ -1866,46 +1837,44 @@ class System {
 
 class UI {
 
-    sys;
-    country;
-    program;
-    specialty;
-    language;
+    constructor(sys) {
+        this._sys = sys;
+        this._country = null;
+        this._program = null;
+        this._specialty = null;
+        this._language = null;
+    }
 
     get country() {
-        return this.country;
+        return this._country;
     }
 
     set country(value) {
-        this.country = value;
+        this._country = value;
     }
 
     get program() {
-        return this.program;
+        return this._program;
     }
 
     set program(value) {
-        this.program = value;
+        this._program = value;
     }
 
     get specialty() {
-        return this.specialty;
+        return this._specialty;
     }
 
     set specialty(value) {
-        this.specialty = value;
+        this._specialty = value;
     }
 
     get language() {
-        return this.language;
+        return this._language;
     }
 
     set language(value) {
-        this.language = value;
-    }
-
-    constructor(sys) {
-        this.sys = sys;
+        this._language = value;
     }
 
     /**
@@ -1947,12 +1916,12 @@ class UI {
 
     saveDropdownState(dropdownName, value) {
         localStorage.setItem(dropdownName, value);
-        this.sys.log('Значение "' + value + '" сохранено в local storage для dropdown "' + dropdownName + '".');
+        this._sys.log('Значение "' + value + '" сохранено в local storage для dropdown "' + dropdownName + '".');
     }
 
     getDropdownState(dropdownName) {
         let val = localStorage.getItem(dropdownName);
-        this.sys.log('Получение значения "' + val + '" из local storage для dropdown "' + dropdownName + '"..');
+        this._sys.log('Получение значения "' + val + '" из local storage для dropdown "' + dropdownName + '"..');
         return val;
     }
 
@@ -1964,7 +1933,7 @@ class UI {
     }
 
     setDropdownState(dropdownName, value) {
-        this.sys.log('Установка dropdown "' + dropdownName + '" в значение "' + value + '"');
+        this._sys.log('Установка dropdown "' + dropdownName + '" в значение "' + value + '"');
         this.setField(dropdownName, value);
     }
 
@@ -1981,28 +1950,28 @@ class UI {
     }
 
     changeColor(titleId, color) {
-        this.sys.log('Меняется цвет для ' + titleId + '..');
+        this._sys.log('Меняется цвет для ' + titleId + '..');
         jQuery("#" + titleId).css("color", color);
     }
 
 
     setField(field, val) {
-        this.sys.log('Установка поля "' + field + '" в значение "' + val + '"..');
+        this._sys.log('Установка поля "' + field + '" в значение "' + val + '"..');
         jQuery("#" + field).val(val);
     }
 
     emptyField(field) {
-        this.sys.log('Очистка поля "' + field + '"..');
+        this._sys.log('Очистка поля "' + field + '"..');
         jQuery("#" + field).val('');
     }
 
     getField(field) {
-        this.sys.log('Получение значения поля "' + field + '"..');
+        this._sys.log('Получение значения поля "' + field + '"..');
         return jQuery("#" + field).val();
     }
 
     getFieldText(field) {
-        this.sys.log('Получение текстового значения поля "' + field + '"..');
+        this._sys.log('Получение текстового значения поля "' + field + '"..');
         return jQuery("#" + field).text();
     }
 
@@ -2082,24 +2051,20 @@ class Data {
 
 class University {
 
-    sys;
-    ui;
-    data;
-    universities = [];
-    programs = new Set();
-    languages = new Set();
-    specialities = new Set();
-    programsEx = new Set();
-    languagesEx = new Set();
-    specialitiesEx = new Set();
-    locations = [];
-    locationsEx = [];
-    id;
-
     constructor(sys, ui, data) {
         this.sys = sys;
         this.ui = ui;
         this.data = data;
+        this.universities = [];
+        this.programs = new Set();
+        this.languages = new Set();
+        this.specialities = new Set();
+        this.programsEx = new Set();
+        this.languagesEx = new Set();
+        this.specialitiesEx = new Set();
+        this.locations = [];
+        this.locationsEx = [];
+        this.id;
     }
 
     delPrgNew(id)  {
