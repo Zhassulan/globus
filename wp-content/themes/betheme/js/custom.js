@@ -113,8 +113,8 @@ class Country {
                         this.ui.setDropdownState('country', this.ui.getDropdownState('country'));
                     }   else {
                         this.ui.fillDropdown('dropdownUnivNewCountry', this._countries);
+                        this.printPaginator(this, this.ui);
                     }
-                    this.printPaginator(this, this.ui);
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_COUNTRIES);
                     alert(Const.MSG.NO_DATA_COUNTRIES);
@@ -393,8 +393,8 @@ class Language {
                         this.ui.setDropdownState('language', ui.getDropdownState('language'));
                     }   else {
                         this.ui.fillDropdown('dropdownUnivNewLang', this._languages);
+                        this.printPaginator(this, this.ui);
                     }
-                    this.printPaginator(this, this.ui);
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_LANGUAGES);
                     alert(Const.MSG.NO_DATA_LANGUAGES);
@@ -568,9 +568,8 @@ class Program {
                         this.ui.setDropdownState('program', this.ui.getDropdownState('program'));
                     }   else {
                         this.ui.fillDropdown('dropdownUnivNewPrg', this._programs);
+                        this.printPaginator(this, this.ui);
                     }
-                    this.printPaginator(this, this.ui);
-
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_PROGRAMS);
                     alert(Const.MSG.NO_DATA_PROGRAMS);
@@ -762,9 +761,8 @@ class Specialty {
                         this.ui.setDropdownState('specialty', this.ui.getDropdownState('specialty'));
                     }   else {
                         this.ui.fillDropdown('dropdownUnivNewSpec', this._specialities);
+                        this.printPaginator(this, this.ui);
                     }
-                    this.printPaginator(this, this.ui);
-
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_SPECIALITIES);
                     alert(Const.MSG.NO_DATA_SPECIALITIES);
@@ -1122,6 +1120,8 @@ class Location {
                     this.locations = response;
                     this.sys.log('Загружено местоположений: ' + response.length);
                     this.printPaginator(this, this.ui);
+                    this.ui.fillDropdown('dropdownUnivNewLoc', this.locations);
+                    //this.ui.fillDropdown('dropdownUnivLoc', this.locations);
                 } else {
                     this.sys.log(Const.MSG.NO_DATA_LOCATIONS);
                     alert(Const.MSG.NO_DATA_LOCATIONS);
