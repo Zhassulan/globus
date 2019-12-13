@@ -2,6 +2,7 @@
 
 let Const = {
     LOG_DB: false,
+    ASKPWD: false,
     URL: {
         SEARCH: '',
         SEARCH_RESULTS: '',
@@ -108,10 +109,10 @@ class Country {
                 if (response != null) {
                     this._countries = response;
                     this.sys.log('Загружено стран: ' + response.length);
-                    if (Const.MODE.SEARCH)  {
+                    if (Const.MODE.SEARCH) {
                         this.ui.fillDropdown('country', this._countries);
                         this.ui.setDropdownState('country', this.ui.getDropdownState('country'));
-                    }   else {
+                    } else {
                         this.ui.fillDropdown('dropdownUnivNewCountry', this._countries);
                         this.printPaginator(this, this.ui);
                     }
@@ -280,7 +281,7 @@ class Country {
     }
 
     printPaginator(country, ui) {
-        if (Const.MODE.SEARCH)  return;
+        if (Const.MODE.SEARCH) return;
         //this.sys.log('Печать пагинатора стран..');
         jQuery('#country-pagination-container').pagination({
             dataSource: this._countries,
@@ -316,7 +317,7 @@ class Language {
      * Распечатать таблицу и пагинатор языков
      */
     printPaginator(language, ui) {
-        if (Const.MODE.SEARCH)  return;
+        if (Const.MODE.SEARCH) return;
         //this.sys.log('Печать пагинатора языков..');
         jQuery('#lang-pagination-container').pagination({
             dataSource: this._languages,
@@ -388,10 +389,10 @@ class Language {
                     this._languages = response;
                     //sys.log('Загруженные языки:\n' + sys.jsonToStr(response));
                     this.sys.log('Загружено языков: ' + response.length);
-                    if (Const.MODE.SEARCH)  {
+                    if (Const.MODE.SEARCH) {
                         this.ui.fillDropdown('language', this._languages);
                         this.ui.setDropdownState('language', ui.getDropdownState('language'));
-                    }   else {
+                    } else {
                         this.ui.fillDropdown('dropdownUnivNewLang', this._languages);
                         this.printPaginator(this, this.ui);
                     }
@@ -563,10 +564,10 @@ class Program {
                     this._programs = response;
                     //sys.log('Загруженные программы:\n' + sys.jsonToStr(response));
                     this.sys.log('Загружено программ обучения: ' + response.length);
-                    if (Const.MODE.SEARCH)  {
+                    if (Const.MODE.SEARCH) {
                         this.ui.fillDropdown('program', this._programs);
                         this.ui.setDropdownState('program', this.ui.getDropdownState('program'));
-                    }   else {
+                    } else {
                         this.ui.fillDropdown('dropdownUnivNewPrg', this._programs);
                         this.printPaginator(this, this.ui);
                     }
@@ -684,7 +685,7 @@ class Program {
     }
 
     printPaginator(program, ui) {
-        if (Const.MODE.SEARCH)  return;
+        if (Const.MODE.SEARCH) return;
         //this.sys.log('Печать пагинатора программ обучения..');
         jQuery('#prg-pagination-container').pagination({
             dataSource: this._programs,
@@ -756,10 +757,10 @@ class Specialty {
                     this._specialities = response;
                     //sys.log('Загруженные специальности:\n' + sys.jsonToStr(response));
                     this.sys.log('Загружено специальностей: ' + response.length);
-                    if (Const.MODE.SEARCH)  {
+                    if (Const.MODE.SEARCH) {
                         this.ui.fillDropdown('specialty', this._specialities);
                         this.ui.setDropdownState('specialty', this.ui.getDropdownState('specialty'));
-                    }   else {
+                    } else {
                         this.ui.fillDropdown('dropdownUnivNewSpec', this._specialities);
                         this.printPaginator(this, this.ui);
                     }
@@ -896,7 +897,7 @@ class Specialty {
     }
 
     printPaginator(specialty, ui) {
-        if (Const.MODE.SEARCH)  return;
+        if (Const.MODE.SEARCH) return;
         //this.sys.log('Печать пагинатора специальностей..');
         jQuery('#spec-pagination-container').pagination({
             dataSource: this._specialities,
@@ -1336,7 +1337,6 @@ class Type {
 class Ref {
 
 
-
     constructor(sys, ui, data) {
         this.sys = sys;
         this.ui = ui;
@@ -1758,7 +1758,7 @@ class Search {
 
 class System {
 
-    getSortedSet(set)    {
+    getSortedSet(set) {
         return new Set(Array.from(set).sort());
     }
 
@@ -1826,7 +1826,7 @@ class System {
         };
         await data.getData(params).then(
             response => {
-                if (response.res == '200')  {
+                if (response.res == '200') {
                     res = true;
                 }
             });
@@ -2067,27 +2067,27 @@ class University {
         this.id;
     }
 
-    delPrgNew(id)  {
+    delPrgNew(id) {
         this.programs.delete(id);
     }
 
-    delSpecNew(id)  {
+    delSpecNew(id) {
         this.specialities.delete(id);
     }
 
-    delLangNew(id)  {
+    delLangNew(id) {
         this.languages.delete(id);
     }
 
-    delPrgEx(id)  {
+    delPrgEx(id) {
         this.programsEx.delete(id);
     }
 
-    delSpecEx(id)  {
+    delSpecEx(id) {
         this.specialitiesEx.delete(id);
     }
 
-    delLangEx(id)  {
+    delLangEx(id) {
         this.languagesEx.delete(id);
     }
 
@@ -2178,9 +2178,9 @@ class University {
         );
     }
 
-    add()   {
+    add() {
         let newUniv = {
-            name : ui.getField('inpUnivNewName'),
+            name: ui.getField('inpUnivNewName'),
             country: ui.getField('dropdownUnivNewCountry'),
             found: ui.getField('inpUnivNewFound'),
             type: ui.getField('dropdownUnivNewType'),
@@ -2242,11 +2242,11 @@ class University {
         };
         data.getData(params).then(
             response => {
-                if (response.res == '500')  {
+                if (response.res == '500') {
                     this.sys.log(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + response.msg);
                     alert(Const.MSG.ERR_ADD_UNIVERSITY + ' ' + response.msg)
                 }
-                if (response.res == '200')  {
+                if (response.res == '200') {
                     this.sys.log(response.msg + ' ' + JSON.stringify(newUniv));
                     alert(response.msg)
                     this.resetFields();
@@ -2259,58 +2259,58 @@ class University {
             });
     }
 
-    addPrg()    {
+    addPrg() {
         let id = Number(ui.getField('dropdownUnivNewPrg'));
         if (id != 0) this.programs.add(id);
 
     }
 
-    addSpec()    {
+    addSpec() {
         let id = Number(ui.getField('dropdownUnivNewSpec'));
         if (id != 0) this.specialities.add(id);
     }
 
-    addLang()    {
+    addLang() {
         let id = Number(ui.getField('dropdownUnivNewLang'));
         if (id != 0) this.languages.add(id);
     }
 
-    addPrgEx()    {
+    addPrgEx() {
         let id = Number(ui.getField('dropdownUnivPrg'));
         if (id != 0) this.programsEx.add(id);
     }
 
-    addSpecEx()    {
+    addSpecEx() {
         let id = Number(ui.getField('dropdownUnivSpec'));
         if (id != 0) this.specialitiesEx.add(id);
     }
 
-    addLangEx()    {
+    addLangEx() {
         let id = Number(ui.getField('dropdownUnivLang'));
         if (id != 0) this.languagesEx.add(id);
     }
 
-    setLangListNew()    {
+    setLangListNew() {
         this.setList(this.languages, 'language', 'on_click_univ_new_del_lang', 'list_univ_new_langs');
     }
 
-    setSpecListNew()    {
+    setSpecListNew() {
         this.setList(this.specialities, 'specialty', 'on_click_univ_new_del_spec', 'list_univ_new_specs');
     }
 
-    setProgListNew()    {
+    setProgListNew() {
         this.setList(this.programs, 'program', 'on_click_univ_new_del_prg', 'list_univ_new_prgs');
     }
 
-    setLangListEx()    {
+    setLangListEx() {
         this.setList(this.languagesEx, 'language', 'on_click_univ_del_lang_ex', 'list_univ_langs');
     }
 
-    setSpecListEx()    {
+    setSpecListEx() {
         this.setList(this.specialitiesEx, 'specialty', 'on_click_univ_del_spec_ex', 'list_univ_specs');
     }
 
-    setProgListEx()    {
+    setProgListEx() {
         this.setList(this.programsEx, 'program', 'on_click_univ_del_prg_ex', 'list_univ_prgs');
     }
 
@@ -2322,7 +2322,7 @@ class University {
      * @param div
      * @returns {Promise<void>}
      */
-    async setList(set, table, onClickFunc, div)    {
+    async setList(set, table, onClickFunc, div) {
         let htmlRows = '<table>';
         for (let item of set) {
             let params = {
@@ -2348,7 +2348,6 @@ class University {
 
     loadLocations() {
         let id = ui.getField('dropdownUnivNewCountry');
-        //console.log('Chosen country ID ' + id);
         if (id == 0) return;
         let params = {
             'action': 'my_action',
@@ -2366,7 +2365,7 @@ class University {
             });
     }
 
-    resetFields()   {
+    resetFields() {
         this.ui.setField('inpUnivNewName', '');
         this.ui.setField('inpUnivNewFound', '');
         this.ui.setField('inpUnivNewUrl', '');
@@ -2384,7 +2383,7 @@ class University {
         this.ui.clearDiv('list_univ_new_langs');
     }
 
-    resetFieldsEx()   {
+    resetFieldsEx() {
         this.ui.setField('inpUnivName', '');
         this.ui.setField('inpUnivFound', '');
         this.ui.setField('inpUnivUrl', '');
@@ -2402,7 +2401,7 @@ class University {
         this.ui.clearDiv('list_univ_langs');
     }
 
-    loadUniv()  {
+    loadUniv() {
         let params = {
             'action': 'my_action',
             'query': 'get_col_by_id',
@@ -2410,7 +2409,7 @@ class University {
             'id': this.id,
             'col': 'name_en'
         };
-        this.data.getData(params).then( response => {
+        this.data.getData(params).then(response => {
             this.ui.setField('inpUnivName', response.val);
         });
         params = {
@@ -2420,7 +2419,7 @@ class University {
             'id': this.id,
             'col': 'found'
         };
-        this.data.getData(params).then( response => {
+        this.data.getData(params).then(response => {
             let dt = new Date(response.val);
             this.ui.setField('inpUnivFound', dt.getFullYear());
         });
@@ -2431,7 +2430,7 @@ class University {
             'id': this.id,
             'col': 'url'
         };
-        this.data.getData(params).then( response => {
+        this.data.getData(params).then(response => {
             this.ui.setField('inpUnivUrl', response.val);
         });
         params = {
@@ -2441,7 +2440,7 @@ class University {
             'id': this.id,
             'col': 'url_pic'
         };
-        this.data.getData(params).then( response => {
+        this.data.getData(params).then(response => {
             this.ui.setField('inpUnivUrlPhoto', response.val);
         });
         params = {
@@ -2451,32 +2450,28 @@ class University {
             'id': this.id,
             'col': 'country_id'
         };
-        this.data.getData(params).then( response => {
-            //console.log(this.sys.jsonToStr(response));
+        this.data.getData(params).then(response => {
             let countryId = response.val;
-            //console.log('countryId = ' + countryId);
             this.ui.fillDropdown('dropdownUnivCountry', country.countries);
             this.ui.setDropdownState('dropdownUnivCountry', countryId);
+        }).then(countryId => {
             let params = {
                 'action': 'my_action',
-                'query': 'get_locations_by_country',
-                'id': countryId,
+                'query': 'get_col_by_id',
+                'table': 'university',
+                'id': this.id,
+                'col': 'location_id'
             };
-            this.data.getData(params).then( response => {
-                for (let item of response) {
-                    this.locationsEx.push(item.id);
-                }
-                this.ui.fillDropdown('dropdownUnivLoc', response);
-                let params = {
-                    'action': 'my_action',
-                    'query': 'get_col_by_id',
-                    'table': 'university',
-                    'id': countryId,
-                    'col': 'location_id'
-                };
-                this.data.getData(params).then( response => {
-                    this.ui.setDropdownState('dropdownUnivLoc', response.id);
-                });
+            return this.data.getData(params);
+        }).then(locationId => {
+            params = {
+                'action': 'my_action',
+                'query': 'get_locations',
+            };
+            this.data.getData(params).then(response => {
+                this.locationsEx = response;
+                this.ui.fillDropdown('dropdownUnivLoc', this.locationsEx);
+                this.ui.setDropdownState('dropdownUnivLoc', locationId.val);
             });
         });
         params = {
@@ -2486,17 +2481,17 @@ class University {
             'id': this.id,
             'col': 'type_id'
         };
-        this.data.getData(params).then( response => {
+        this.data.getData(params).then(response => {
             this.ui.fillDropdown('dropdownUnivType', this.types);
             this.ui.setDropdownState('dropdownUnivType', response.val);
         });
-
         params = {
             'action': 'my_action',
             'query': 'get_programs_by_university',
             'id': this.id
         };
-        this.data.getData(params).then( response => {
+        this.data.getData(params).then(response => {
+            this.programsEx.clear();
             for (let item of response) {
                 this.programsEx.add(Number(item.id));
             }
@@ -2508,7 +2503,8 @@ class University {
             'query': 'get_specialities_by_university',
             'id': this.id
         };
-        this.data.getData(params).then( response => {
+        this.data.getData(params).then(response => {
+            this.specialitiesEx.clear();
             for (let item of response) {
                 this.specialitiesEx.add(Number(item.id));
             }
@@ -2520,7 +2516,8 @@ class University {
             'query': 'get_languages_by_university',
             'id': this.id
         };
-        this.data.getData(params).then( response => {
+        this.data.getData(params).then(response => {
+            this.languagesEx.clear();
             for (let item of response) {
                 this.languagesEx.add(Number(item.id));
             }
@@ -2529,15 +2526,15 @@ class University {
         });
     }
 
-    change(id)  {
+    change(id) {
         this.id = id;
         this.loadUniv();
     }
 
-    update()    {
+    update() {
         let univ = {
             id: this.id,
-            name : ui.getField('inpUnivName'),
+            name: ui.getField('inpUnivName'),
             country: ui.getField('dropdownUnivCountry'),
             found: ui.getField('inpUnivFound'),
             type: ui.getField('dropdownUnivType'),
@@ -2599,11 +2596,11 @@ class University {
         };
         data.getData(params).then(
             response => {
-                if (response.res == '500')  {
+                if (response.res == '500') {
                     this.sys.log(Const.MSG.ERR_UPDATE_UNIVERSITY + ' ' + response.msg);
                     alert(Const.MSG.ERR_UPDATE_UNIVERSITY + ' ' + response.msg)
                 }
-                if (response.res == '200')  {
+                if (response.res == '200') {
                     this.sys.log(response.msg + ' ' + JSON.stringify(univ));
                     alert(response.msg)
                     this.resetFieldsEx();
@@ -2625,14 +2622,14 @@ class University {
             'id': this.id,
             'col': 'name_en'
         };
-        data.getData(params).then( response => {
+        data.getData(params).then(response => {
             if (confirm('Удалить университет "' + response.val + '" ?')) {
                 this.del();
             }
         });
     }
 
-    del()   {
+    del() {
         let params = {
             'action': 'my_action',
             'query': 'del_univ',
@@ -2640,11 +2637,11 @@ class University {
         };
         data.getData(params).then(
             response => {
-                if (response.res == '500')  {
+                if (response.res == '500') {
                     this.sys.log(Const.MSG.ERR_DEL_UNIVERSITY + ' ' + response.msg);
                     alert(Const.MSG.ERR_DEL_UNIVERSITY + ' ' + response.msg)
                 }
-                if (response.res == '200')  {
+                if (response.res == '200') {
                     alert(response.msg)
                     this.all();
                 }
@@ -2655,21 +2652,38 @@ class University {
             });
     }
 
+    resetBeforeLoad() {
+
+    }
+
 }
 
-let sys;
-let ui;
-let data;
-let country;
-let language;
-let program;
-let specialty;
-let loc;
-let search;
-let univ;
-let type;
+let
+    sys;
+let
+    ui;
+let
+    data;
+let
+    country;
+let
+    language;
+let
+    program;
+let
+    specialty;
+let
+    loc;
+let
+    search;
+let
+    univ;
+let
+    type;
 
-function on_load() {
+function
+
+on_load() {
 
     sys = new System();
     ui = new UI(sys);
@@ -2725,14 +2739,14 @@ function on_load() {
         if (currentURL.indexOf(Const.URL.SEARCH_MANAGEMENT) != -1) {
             Const.MODE.MANAGEMENT = true;
             sys.log('Текущая страница: Const.URL.SEARCH_MANAGEMENT');
-            /*
-            let pwd = prompt('Введите пароль');
-            sys.checkPwd(pwd).then(response => {
-                if (!response)  {
-                    window.location = window.location.origin;
-                }
-            });
-            */
+            if (Const.ASKPWD)   {
+                let pwd = prompt('Введите пароль');
+                sys.checkPwd(pwd).then(response => {
+                    if (!response) {
+                        window.location = window.location.origin;
+                    }
+                });
+            }
             country.all();
             language.all();
             program.all();
@@ -2741,7 +2755,7 @@ function on_load() {
             type.all();
             univ.all();
             univ.geTypes(Const.TYP_EL.DROPDOWN_NEW);
-        }   else {
+        } else {
             Const.MODE.SEARCH = true;
         }
         if (currentURL.indexOf(Const.URL.SEARCH) != -1) {
@@ -2773,71 +2787,105 @@ function on_load() {
 
 }
 
-function on_click_spec_edit(id) {
+function
+
+on_click_spec_edit(id) {
     specialty.setEditVal(id);
 }
 
-function on_click_spec_del(id, val) {
+function
+
+on_click_spec_del(id, val) {
     specialty.del(id, val);
 }
 
-function on_click_spec_new() {
+function
+
+on_click_spec_new() {
     specialty.create();
 }
 
-function on_click_spec_update() {
+function
+
+on_click_spec_update() {
     specialty.update();
 }
 
-function on_click_loc_del(id, val) {
+function
+
+on_click_loc_del(id, val) {
     loc.del(id, val);
 }
 
-function on_click_loc_new() {
+function
+
+on_click_loc_new() {
     loc.create();
 }
 
-function on_click_loc_update() {
+function
+
+on_click_loc_update() {
     loc.update();
 }
 
-function on_click_loc_edit(id) {
+function
+
+on_click_loc_edit(id) {
     loc.setEditVal(id);
 }
 
-function on_click_country_edit(id) {
+function
+
+on_click_country_edit(id) {
     country.setEditVal(id);
 }
 
-function on_click_country_del(id, val) {
+function
+
+on_click_country_del(id, val) {
     country.del(id, val);
 }
 
-function on_click_country_new() {
+function
+
+on_click_country_new() {
     country.create();
 }
 
-function on_click_lang_edit(id) {
+function
+
+on_click_lang_edit(id) {
     language.setEditVal(id);
 }
 
-function on_click_lang_del(id, val) {
+function
+
+on_click_lang_del(id, val) {
     language.del(id, val);
 }
 
-function on_click_lang_new() {
+function
+
+on_click_lang_new() {
     language.create();
 }
 
-function on_click_country_update() {
+function
+
+on_click_country_update() {
     country.update();
 }
 
-function on_click_lang_update() {
+function
+
+on_click_lang_update() {
     language.update();
 }
 
-function on_click_search() {
+function
+
+on_click_search() {
     sys.log('Открывается страница поиска..');
     let currentURL = window.location.href;
     ui.saveAllDropdownState();
@@ -2853,115 +2901,165 @@ function on_click_search() {
     }
 }
 
-function on_click_prg_edit(id) {
+function
+
+on_click_prg_edit(id) {
     program.setEditVal(id);
 }
 
-function on_click_prg_update() {
+function
+
+on_click_prg_update() {
     program.update();
 }
 
-function on_click_prg_new() {
+function
+
+on_click_prg_new() {
     program.create();
 }
 
-function on_click_prg_del(id, val) {
+function
+
+on_click_prg_del(id, val) {
     program.del(id, val);
 }
 
-function on_click_univ_update() {
+function
+
+on_click_univ_update() {
     univ.update();
 }
 
-function on_click_univ_add()    {
+function
+
+on_click_univ_add() {
     univ.add();
 }
 
-function on_click_univ_new_add_prg()    {
+function
+
+on_click_univ_new_add_prg() {
     univ.addPrg();
     univ.setProgListNew();
 }
 
-function on_click_univ_new_add_spec() {
+function
+
+on_click_univ_new_add_spec() {
     univ.addSpec();
     univ.setSpecListNew();
 }
 
-function on_click_univ_new_add_lang() {
+function
+
+on_click_univ_new_add_lang() {
     univ.addLang();
     univ.setLangListNew();
 }
 
-function on_change_univ_new_country() {
-    univ.loadLocations();
+function
+
+on_change_univ_new_country() {
+    //univ.loadLocations();
 }
 
-function on_click_univ_edit(id) {
+function
+
+on_click_univ_edit(id) {
     univ.change(id);
 }
 
-function on_click_univ_new_del_prg(id) {
+function
+
+on_click_univ_new_del_prg(id) {
     univ.delPrgNew(id);
     univ.setProgListNew();
 }
 
-function on_click_univ_new_del_spec(id) {
+function
+
+on_click_univ_new_del_spec(id) {
     univ.delSpecNew(id);
     univ.setSpecListNew();
 }
 
-function on_click_univ_new_del_lang(id) {
+function
+
+on_click_univ_new_del_lang(id) {
     univ.delLangNew(id);
     univ.setLangListNew();
 }
 
-function on_click_univ_add_prg(id) {
+function
+
+on_click_univ_add_prg(id) {
     univ.addPrgEx();
     univ.setProgListEx();
 }
 
-function on_click_univ_add_spec(id) {
+function
+
+on_click_univ_add_spec(id) {
     univ.addSpecEx();
     univ.setSpecListEx();
 }
 
-function on_click_univ_add_lang(id) {
+function
+
+on_click_univ_add_lang(id) {
     univ.addLangEx();
     univ.setLangListEx();
 }
 
-function on_click_univ_del_prg_ex(id) {
+function
+
+on_click_univ_del_prg_ex(id) {
     univ.delPrgEx(id);
     univ.setProgListEx();
 }
 
-function on_click_univ_del_spec_ex(id) {
+function
+
+on_click_univ_del_spec_ex(id) {
     univ.delSpecEx(id);
     univ.setSpecListEx();
 }
 
-function on_click_univ_del_lang_ex(id) {
+function
+
+on_click_univ_del_lang_ex(id) {
     univ.delLangEx(id);
     univ.setLangListEx();
 }
 
-function on_click_univ_del(id) {
+function
+
+on_click_univ_del(id) {
     univ.goDel(id);
 }
 
-function on_click_typ_del(id, val) {
+function
+
+on_click_typ_del(id, val) {
     type.del(id, val);
 }
 
-function on_click_typ_new() {
+function
+
+on_click_typ_new() {
     type.create();
 }
 
-function on_click_typ_update() {
+function
+
+on_click_typ_update() {
     type.update();
 }
 
-function on_click_typ_edit(id) {
+function
+
+on_click_typ_edit(id) {
     type.setEditVal(id);
 }
 

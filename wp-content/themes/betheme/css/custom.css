@@ -89,7 +89,7 @@
 
 .text_container {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 32% 68%;
     grid-template-rows: auto;
     grid-template-areas: ". .";
 }

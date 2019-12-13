@@ -251,7 +251,7 @@ function addUniv($univ)  {
 }
 
 function log1($msg)  {
-    file_put_contents('D:\dev\Bitnami\wampstack-7.1.26-0\apps\learn\htdocs\php_errors_my.log', $msg.PHP_EOL, FILE_APPEND);
+    file_put_contents('D:\dev\Bitnami\wampstack-7.1.26-0\apps\learn\htdocs\php_errors_my.log', date("Y-m-d H:i:s").' '.$msg.PHP_EOL, FILE_APPEND);
     //file_put_contents('D:\dev\Bitnami\wampstack-7.1.26-0\apps\learn\htdocs\php_errors.log', $msg);
 }
 
@@ -273,11 +273,13 @@ function getProgramsByUniversity($id)   {
 
 function getSpecialitiesByUniversity($id)   {
     $conn = getConnection();
-    if ($res = $conn->query ( 'select s.id, trim(s.name_ru) from university_specialities us
+    $query = 'select s.id, trim(s.name_ru) from university_specialities us
           inner join specialty s on s.id = us.specialty_id
         where
           us.university_id = '.$id.'
-        order by trim(s.name_ru) asc;'))   {
+        order by trim(s.name_ru) asc;';
+    log1($query);
+    if ($res = $conn->query ($query))   {
         while($row = $res->fetch_row()) {
             $arr[] = new Reference($row[0], $row[1]);
         }
@@ -308,6 +310,7 @@ function updateUniv($univ)  {
     $val = null;
     $univ = json_decode(stripslashes($univ));
     $sql = 'CALL update_univ('.$univ->id.', \''.$univ->name.'\', '.$univ->country.', \''.$univ->found.'\', '.$univ->type.', '.$univ->location.', \''.$univ->url.'\', \''.$univ->url_pic.'\')';
+    log1('update univ query: '.$sql);
     if (!$conn->query($sql)) {
         $val = new Result('500', $conn->error);
         return json_encode($val, JSON_UNESCAPED_UNICODE);
